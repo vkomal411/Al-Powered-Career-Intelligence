@@ -1,0 +1,32 @@
+# Python Caches & Environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+venv/
+.venv/
+
+# Node & Next.js Caches
+node_modules/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# Environment Files
+.env
+.env.local
+*.env
+
+# Databases & Logs
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# OS & Temp Files
+.DS_Store
+Thumbs.db
+*.tmp

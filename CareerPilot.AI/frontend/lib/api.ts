@@ -36,6 +36,16 @@ function setResolvedApiBase(base: string): void {
   resolvedApiBase = base;
 }
 
+export function getFallbackHost(currentBase: string): string | null {
+  if (currentBase.includes("localhost")) {
+    return currentBase.replace("localhost", "127.0.0.1");
+  }
+  if (currentBase.includes("127.0.0.1")) {
+    return currentBase.replace("127.0.0.1", "localhost");
+  }
+  return null;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Shared fetch helper                                                */
 /* ------------------------------------------------------------------ */
@@ -66,15 +76,29 @@ export function clearStoredSession(): void {
 }
 
 export async function fetchCsrfToken(): Promise<string> {
+  const currentBase = getApiBase();
   try {
-    const res = await fetch(`${getApiBase()}/auth/csrf`, { credentials: "include" });
+    const res = await fetch(`${currentBase}/auth/csrf`, { credentials: "include" });
     if (res.ok) {
       const data = await res.json();
       cachedCsrfToken = data.csrf_token;
       return data.csrf_token;
     }
   } catch {
-    // Ignore error
+    const altHost = getFallbackHost(currentBase);
+    if (altHost) {
+      try {
+        const altRes = await fetch(`${altHost}/auth/csrf`, { credentials: "include" });
+        if (altRes.ok) {
+          setResolvedApiBase(altHost);
+          const data = await altRes.json();
+          cachedCsrfToken = data.csrf_token;
+          return data.csrf_token;
+        }
+      } catch {
+        // Ignore fallback error
+      }
+    }
   }
   return "";
 }
@@ -93,11 +117,29 @@ export async function performTokenRefresh(): Promise<string | null> {
       if (cachedCsrfToken) {
         refreshHeaders["X-CSRF-Token"] = cachedCsrfToken;
       }
-      const refreshRes = await fetch(`${getApiBase()}/auth/refresh`, {
-        method: "POST",
-        headers: refreshHeaders,
-        credentials: "include",
-      });
+      
+      const currentBase = getApiBase();
+      let refreshRes: Response;
+      try {
+        refreshRes = await fetch(`${currentBase}/auth/refresh`, {
+          method: "POST",
+          headers: refreshHeaders,
+          credentials: "include",
+        });
+      } catch {
+        const altHost = getFallbackHost(currentBase);
+        if (altHost) {
+          refreshRes = await fetch(`${altHost}/auth/refresh`, {
+            method: "POST",
+            headers: refreshHeaders,
+            credentials: "include",
+          });
+          setResolvedApiBase(altHost);
+        } else {
+          throw new Error("Connection failed during token refresh");
+        }
+      }
+
       if (refreshRes.ok) {
         const data = await refreshRes.json().catch(() => ({}));
         const newAccessToken = data.access_token;
@@ -138,32 +180,30 @@ export async function apiFetch<T>(path: string, opts: FetchOptions = {}): Promis
   }
 
   let res: Response;
+  const currentBase = getApiBase();
   try {
-    res = await fetch(`${getApiBase()}${path}`, {
+    res = await fetch(`${currentBase}${path}`, {
       method,
       headers,
       body: body ? JSON.stringify(body) : undefined,
       credentials: "include",
     });
   } catch {
-    // Fallback: If original URL was localhost and failed, attempt retry with 127.0.0.1
-    if (getApiBase().includes("localhost")) {
-      const fallbackUrl = getApiBase().replace("localhost", "127.0.0.1");
+    const altHost = getFallbackHost(currentBase);
+    if (altHost) {
       try {
-        res = await fetch(`${fallbackUrl}${path}`, {
+        res = await fetch(`${altHost}${path}`, {
           method,
           headers,
           body: body ? JSON.stringify(body) : undefined,
           credentials: "include",
         });
-        // Pin the working host so every later request (CSRF, refresh, cookies)
-        // hits the same origin as the one that issued the auth cookies.
-        setResolvedApiBase(fallbackUrl);
+        setResolvedApiBase(altHost);
       } catch {
-        throw new Error(`Unable to connect to API server (${getApiBase()}). Please check if the backend server is running.`);
+        throw new Error(`Unable to connect to API server (${currentBase} or ${altHost}). Please check if the backend server is running.`);
       }
     } else {
-      throw new Error(`Unable to connect to API server (${getApiBase()}). Please check if the backend server is running.`);
+      throw new Error(`Unable to connect to API server (${currentBase}). Please check if the backend server is running.`);
     }
   }
 
@@ -251,6 +291,8 @@ export interface UserResponse {
   id: string;
   full_name: string;
   email: string;
+  role?: string;
+  is_admin?: boolean;
   is_active: boolean;
   created_at: string;
   target_role?: string | null;
@@ -320,6 +362,20 @@ export async function loginWithGoogle(idToken: string): Promise<AuthResponse> {
   return res;
 }
 
+export async function requestPasswordReset(email: string): Promise<{ message: string; reset_token?: string }> {
+  return apiFetch<{ message: string; reset_token?: string }>("/auth/forgot-password", {
+    method: "POST",
+    body: { email },
+  });
+}
+
+export async function completePasswordReset(token: string, newPassword: string): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>("/auth/reset-password", {
+    method: "POST",
+    body: { token, new_password: newPassword },
+  });
+}
+
 export interface ResumeHistory {
   id: string;
   original_filename: string;
@@ -375,13 +431,15 @@ async function customFetchWithRefresh(url: string, init: RequestInit = {}): Prom
   try {
     res = await fetch(url, { ...init, headers, credentials: "include" });
   } catch {
-    if (url.includes("localhost")) {
-      const fallbackUrl = url.replace("localhost", "127.0.0.1");
+    const altHost = getFallbackHost(url);
+    if (altHost) {
       try {
-        res = await fetch(fallbackUrl, { ...init, headers, credentials: "include" });
-        setResolvedApiBase(getApiBase().replace("localhost", "127.0.0.1"));
+        res = await fetch(altHost, { ...init, headers, credentials: "include" });
+        if (getFallbackHost(getApiBase())) {
+          setResolvedApiBase(getFallbackHost(getApiBase())!);
+        }
       } catch {
-        throw new Error(`Unable to connect to API server (${getApiBase()}). Please check if the backend server is running.`);
+        throw new Error(`Unable to connect to API server (${getApiBase()} or ${altHost}). Please check if the backend server is running.`);
       }
     } else {
       throw new Error(`Unable to connect to API server (${getApiBase()}). Please check if the backend server is running.`);
@@ -661,6 +719,102 @@ export async function regenerateResumeAdvice(resumeId: string): Promise<ParsedRe
   return apiFetch<ParsedResume>(`/resume/${resumeId}/regenerate-advice`, {
     method: "POST",
   });
+}
+
+/* ------------------------------------------------------------------ */
+/*  Career Suggestion Endpoints (Deterministic + LLM Explainer)       */
+/* ------------------------------------------------------------------ */
+
+export interface CareerPreferences {
+  preferred_categories?: string[];
+  preferred_work_style?: string;
+  location?: string;
+  minimum_salary?: number;
+  experience_level?: string;
+}
+
+export interface MarketInfoSchema {
+  career_id: string;
+  experience_level: string;
+  salary_min: number;
+  salary_max: number;
+  currency: string;
+  market_demand: string;
+  source: string;
+  updated_at: string;
+  salary_display: string;
+}
+
+export interface CareerPathSuggestion {
+  career_id: string;
+  career_title: string;
+  category: string;
+  description: string;
+  match_score: number;
+  match_level: string;
+  matching_skills: string[];
+  matching_skills_display: string[];
+  missing_skills: string[];
+  missing_skills_display: string[];
+  transition_difficulty: "Low" | "Moderate" | "High" | string;
+  why_fit?: string;
+  growth_trajectory?: string;
+  recommended_steps?: string[];
+  missing_skills_summary?: string;
+  market_info: MarketInfoSchema;
+  confidence: number;
+  component_scores?: {
+    skill: number;
+    experience: number;
+    education: number;
+    domain: number;
+    preferences: number;
+  };
+  is_alternative?: boolean;
+}
+
+export interface CareerSuggestionResponse {
+  summary: string;
+  candidate_strengths: string[];
+  top_career_paths: CareerPathSuggestion[];
+  alternative_paths: CareerPathSuggestion[];
+  recommended_certifications: string[];
+  engine_version: string;
+  generated_at: string;
+  evaluated_count: number;
+  cached?: boolean;
+}
+
+export async function getCareerSuggestions(payload: {
+  resume_id?: string;
+  preferences?: CareerPreferences;
+  custom_preferences?: string;
+}): Promise<CareerSuggestionResponse> {
+  return apiFetch<CareerSuggestionResponse>("/ai/career-suggestion", {
+    method: "POST",
+    body: payload,
+  });
+}
+
+export async function uploadAndSuggestCareers(file: File): Promise<CareerSuggestionResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await customFetchWithRefresh("/ai/career-suggestion/upload", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    let errorDetail = "Failed to upload and analyze resume.";
+    try {
+      const errJson = await res.json();
+      errorDetail = errJson.detail || errorDetail;
+    } catch {}
+    throw new Error(errorDetail);
+  }
+
+  return res.json();
 }
 
 /* ------------------------------------------------------------------ */

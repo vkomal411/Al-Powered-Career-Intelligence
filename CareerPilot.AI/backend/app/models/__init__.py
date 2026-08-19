@@ -10,6 +10,7 @@ from sqlalchemy import (
     Text,
     ForeignKey,
     JSON,
+    Index,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -26,6 +27,8 @@ class User(Base):
     hashed_password = Column(String, nullable=True)  # nullable for Google-only accounts
     google_id = Column(String, unique=True, nullable=True)
     is_active = Column(Boolean, default=True)
+    role = Column(String, default="user", index=True, nullable=False)  # superadmin, admin, moderator, user
+    is_admin = Column(Boolean, default=False, index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     # Preferences & Profile settings
@@ -331,6 +334,110 @@ class StudioResumeVersion(Base):
     resume = relationship("StudioResume", back_populates="versions")
 
 
+class AdminAuditLog(Base):
+    __tablename__ = "admin_audit_logs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    admin_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    action = Column(String, nullable=False)
+    target_type = Column(String, nullable=False)
+    target_id = Column(String, nullable=True)
+    before_state = Column(JSON, nullable=True)
+    after_state = Column(JSON, nullable=True)
+    ip_address = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+
+    __table_args__ = (
+        Index("idx_admin_audit_user_created", "admin_user_id", "created_at"),
+    )
+
+    admin_user = relationship("User", foreign_keys=[admin_user_id])
+
+
+class JobDescription(Base):
+    __tablename__ = "job_descriptions"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+    company = Column(String, nullable=True)
+    raw_text = Column(Text, nullable=False)
+    required_skills = Column(JSON, default=list)
+    is_active = Column(Boolean, default=True)
+    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    creator = relationship("User", foreign_keys=[created_by])
+
+
+class CourseCatalog(Base):
+    __tablename__ = "course_catalog"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+    provider = Column(String, nullable=False)
+    url = Column(String, nullable=True)
+    skill_tags = Column(JSON, default=list)
+    category = Column(String, default="General")
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class UserFeedback(Base):
+    __tablename__ = "user_feedback"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    category = Column(String, default="general")  # bug, feature, rating, general
+    rating = Column(Integer, nullable=True)
+    message = Column(Text, nullable=False)
+    status = Column(String, default="new", index=True)  # new, in_progress, closed
+    admin_response = Column(Text, nullable=True)
+    resolved_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    resolved_at = Column(DateTime(timezone=True), nullable=True)
+
+    __table_args__ = (
+        Index("idx_feedback_status_created", "status", "created_at"),
+    )
+
+    user = relationship("User", foreign_keys=[user_id])
+    resolver = relationship("User", foreign_keys=[resolved_by])
+
+
+class SystemAlert(Base):
+    __tablename__ = "system_alerts"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+    message = Column(Text, nullable=False)
+    severity = Column(String, default="info")  # info, warning, critical
+    is_broadcast = Column(Boolean, default=True)
+    target_role = Column(String, nullable=True)
+    target_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    starts_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    ends_at = Column(DateTime(timezone=True), nullable=True)
+    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    creator = relationship("User", foreign_keys=[created_by])
+    target_user = relationship("User", foreign_keys=[target_user_id])
+
+
+class AdminExportJob(Base):
+    __tablename__ = "admin_export_jobs"
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    admin_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    report_type = Column(String, nullable=False)  # users, resumes, ats, feedback, audit
+    format = Column(String, default="csv")  # csv, json
+    status = Column(String, default="pending")  # pending, ready, failed
+    file_path = Column(String, nullable=True)
+    error_message = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    completed_at = Column(DateTime(timezone=True), nullable=True)
+
+    admin_user = relationship("User", foreign_keys=[admin_user_id])
+
+
 from app.models.resume_builder_models import (
     ResumeBuilder,
     ResumeSectionModel,
@@ -341,6 +448,8 @@ from app.models.resume_builder_models import (
     BulletEnhancementModel,
     ResumeVersionModel,
 )
+
+from app.models.career_suggestion import CareerSuggestion, CareerSuggestionItem
 
 __all__ = [
     "User",
@@ -359,6 +468,12 @@ __all__ = [
     "StudioATSAnalysis",
     "StudioJobMatch",
     "StudioResumeVersion",
+    "AdminAuditLog",
+    "JobDescription",
+    "CourseCatalog",
+    "UserFeedback",
+    "SystemAlert",
+    "AdminExportJob",
     "ResumeBuilder",
     "ResumeSectionModel",
     "ResumeExperienceModel",
@@ -367,6 +482,8 @@ __all__ = [
     "JobMatchModel",
     "BulletEnhancementModel",
     "ResumeVersionModel",
+    "CareerSuggestion",
+    "CareerSuggestionItem",
 ]
 
 

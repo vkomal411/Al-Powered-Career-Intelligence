@@ -96,12 +96,12 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
 
   if (!hasResume) {
     return (
-      <div className="bg-white rounded-2xl p-10 border border-slate-100 shadow-sm text-center animate-fade-in space-y-4">
-        <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-10 border border-slate-100 dark:border-white/[0.08] shadow-sm text-center animate-fade-in space-y-4">
+        <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mx-auto text-xl font-bold">
           Skill
         </div>
-        <h3 className="text-lg font-bold text-slate-800">Build Skills for Your Next Role</h3>
-        <p className="text-slate-500 max-w-md mx-auto text-xs leading-relaxed">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-white">Build Skills for Your Next Role</h3>
+        <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-xs leading-relaxed">
           Upload your resume in Resume Check to see your personalized course recommendations and step-by-step learning timeline.
         </p>
         <button
@@ -116,12 +116,12 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm animate-pulse space-y-4">
-        <div className="h-6 w-48 bg-slate-200 rounded"></div>
-        <div className="h-4 w-72 bg-slate-100 rounded"></div>
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-8 border border-slate-100 dark:border-white/[0.08] shadow-sm animate-pulse space-y-4">
+        <div className="h-6 w-48 bg-slate-200 dark:bg-slate-700 rounded"></div>
+        <div className="h-4 w-72 bg-slate-100 dark:bg-slate-800 rounded"></div>
         <div className="space-y-3 pt-4">
-          <div className="h-16 bg-slate-100 rounded-xl"></div>
-          <div className="h-16 bg-slate-100 rounded-xl"></div>
+          <div className="h-16 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+          <div className="h-16 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
         </div>
       </div>
     );
@@ -129,11 +129,11 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
 
   if (error || !data) {
     return (
-      <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm text-center">
-        <p className="text-rose-500 text-xs mb-4">{error || "No recommendations available."}</p>
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-8 border border-slate-100 dark:border-white/[0.08] shadow-sm text-center">
+        <p className="text-rose-500 dark:text-rose-400 text-xs mb-4">{error || "No recommendations available."}</p>
         <button
           onClick={() => fetchRecommendations()}
-          className="text-xs font-medium text-indigo-600 hover:text-indigo-800 underline"
+          className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 underline"
         >
           Try Again
         </button>
@@ -142,15 +142,15 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm animate-fade-in space-y-6">
+    <div className="bg-white dark:bg-[#111726] rounded-2xl p-6 border border-slate-100 dark:border-white/[0.08] shadow-sm animate-fade-in space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-white/[0.08] pb-5">
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-1">
-            <h2 className="text-lg font-bold text-slate-800">Skill Builder</h2>
+            <h2 className="text-lg font-bold text-slate-800 dark:text-white">Skill Builder</h2>
             {!showRolePicker ? (
               <>
-                <span className="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100">
+                <span className="bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-indigo-100 dark:border-indigo-500/30">
                   {data.target_role}
                 </span>
                 <button
@@ -159,7 +159,7 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
                     setSelectedRole(data.target_role);
                     setShowRolePicker(true);
                   }}
-                  className="rounded-lg border border-indigo-200 bg-white px-2.5 py-1 text-[11px] font-bold text-indigo-600 hover:bg-indigo-50"
+                  className="rounded-lg border border-indigo-200 dark:border-indigo-500/30 bg-white dark:bg-slate-800 px-2.5 py-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-slate-700"
                 >
                   Change job
                 </button>
@@ -172,10 +172,10 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
                     setSelectedRole(event.target.value);
                     if (event.target.value !== "Other") setCustomRole("");
                   }}
-                  className="rounded-lg border border-indigo-300 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                  className="rounded-lg border border-indigo-300 dark:border-indigo-500/40 bg-white dark:bg-slate-800 px-2.5 py-1.5 text-xs font-semibold text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-200"
                   autoFocus
                 >
-                  {availableRoles.map((role) => <option key={role}>{role}</option>)}
+                  {availableRoles.map((role) => <option key={role} className="bg-white dark:bg-slate-800 text-slate-800 dark:text-white">{role}</option>)}
                 </select>
                 {selectedRole === "Other" && (
                   <input
@@ -183,7 +183,7 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
                     value={customRole}
                     onChange={(event) => setCustomRole(event.target.value)}
                     placeholder="Enter job title"
-                    className="w-full rounded-lg border border-indigo-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:w-48"
+                    className="w-full rounded-lg border border-indigo-300 dark:border-indigo-500/40 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 sm:w-48"
                     autoFocus
                   />
                 )}
@@ -195,23 +195,23 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
                 >
                   Apply
                 </button>
-                <button type="button" onClick={() => setShowRolePicker(false)} className="text-xs font-semibold text-slate-500 hover:text-slate-800">Cancel</button>
+                <button type="button" onClick={() => setShowRolePicker(false)} className="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white">Cancel</button>
               </div>
             )}
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Handpicked courses to help you master {data.missing_skills.join(", ") || "core skills"}.
           </p>
         </div>
 
         {/* View Switcher */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-medium self-start sm:self-auto">
+        <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs font-medium self-start sm:self-auto">
           <button
             onClick={() => setActiveView("timeline")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               activeView === "timeline"
-                ? "bg-white text-indigo-600 shadow-sm font-semibold"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm font-semibold"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             Step-by-Step Path
@@ -220,8 +220,8 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
             onClick={() => setActiveView("all")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               activeView === "all"
-                ? "bg-white text-indigo-600 shadow-sm font-semibold"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm font-semibold"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             All Courses ({data.recommended_courses.length})
@@ -232,12 +232,12 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
       {/* Step-by-Step Timeline */}
       {activeView === "timeline" && (
         <div className="space-y-6">
-          <div className="flex items-center justify-between bg-indigo-50/60 border border-indigo-100 rounded-xl p-4">
+          <div className="flex items-center justify-between bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-500/20 rounded-xl p-4">
             <div>
-              <h4 className="text-xs font-bold text-indigo-950">Recommended Order</h4>
-              <p className="text-xs text-indigo-700">Follow these steps to learn effectively.</p>
+              <h4 className="text-xs font-bold text-indigo-950 dark:text-indigo-200">Recommended Order</h4>
+              <p className="text-xs text-indigo-700 dark:text-indigo-300">Follow these steps to learn effectively.</p>
             </div>
-            <span className="text-xs font-semibold text-indigo-600 bg-white px-2.5 py-1 rounded-lg border border-indigo-200">
+            <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-300 bg-white dark:bg-slate-800 px-2.5 py-1 rounded-lg border border-indigo-200 dark:border-indigo-500/30">
               Est. {data.learning_path.estimated_duration}
             </span>
           </div>
@@ -247,7 +247,7 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
             {data.learning_path.steps.map((step) => (
               <div
                 key={step.step_number}
-                className="relative flex items-start gap-4 bg-slate-50/70 hover:bg-white p-5 rounded-2xl border border-slate-100 hover:border-indigo-200 transition-all group"
+                className="relative flex items-start gap-4 bg-slate-50/70 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-white/[0.08] hover:border-indigo-200 dark:hover:border-indigo-500/30 transition-all group"
               >
                 <div className="relative z-10 flex-shrink-0 w-7 h-7 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">
                   {step.step_number}
@@ -255,20 +255,20 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
 
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                    <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wider">
+                    <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">
                       {step.title}
                     </span>
-                    <span className="text-xs bg-slate-200/80 text-slate-700 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-slate-200/80 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded">
                       {step.difficulty} • {step.duration}
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-bold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors">
+                  <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                     {step.course_title}
                   </h3>
-                  <p className="text-xs text-slate-500 mb-2">By <span className="font-semibold text-slate-700">{step.provider}</span></p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">By <span className="font-semibold text-slate-700 dark:text-slate-300">{step.provider}</span></p>
 
-                  <div className="bg-amber-50/80 border border-amber-100 text-amber-900 text-xs p-2.5 rounded-lg mb-3">
+                  <div className="bg-amber-50/80 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-500/25 text-amber-900 dark:text-amber-200 text-xs p-2.5 rounded-lg mb-3">
                     <span className="font-semibold">Why start here:</span> {step.reason}
                   </div>
 
@@ -276,7 +276,7 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
                     href={step.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 hover:underline"
                   >
                     View Course Details ↗
                   </a>
@@ -293,28 +293,28 @@ export const SkillBuilderCard: React.FC<SkillBuilderCardProps> = ({
           {data.recommended_courses.map((course) => (
             <div
               key={course.id}
-              className="bg-slate-50/60 hover:bg-white border border-slate-100 hover:border-indigo-200 p-5 rounded-2xl transition-all flex flex-col justify-between"
+              className="bg-slate-50/60 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 border border-slate-100 dark:border-white/[0.08] hover:border-indigo-200 dark:hover:border-indigo-500/30 p-5 rounded-2xl transition-all flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-medium bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full">
+                  <span className="text-xs font-medium bg-indigo-100 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-transparent dark:border-indigo-500/25 px-2.5 py-0.5 rounded-full">
                     {course.provider}
                   </span>
-                  <span className="text-xs font-bold text-amber-600 flex items-center gap-1">
+                  <span className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
                     ★ {course.rating}
                   </span>
                 </div>
 
-                <h3 className="text-sm font-bold text-slate-800 mb-2 leading-snug">
+                <h3 className="text-sm font-bold text-slate-800 dark:text-white mb-2 leading-snug">
                   {course.title}
                 </h3>
-                <p className="text-xs text-slate-500 line-clamp-2 mb-4">
+                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-4">
                   {course.description}
                 </p>
               </div>
 
               <div>
-                <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-200/60 pt-3 mb-3">
+                <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 border-t border-slate-200/60 dark:border-white/[0.08] pt-3 mb-3">
                   <span>Level: <strong>{course.difficulty}</strong></span>
                   <span>Duration: <strong>{course.duration}</strong></span>
                 </div>

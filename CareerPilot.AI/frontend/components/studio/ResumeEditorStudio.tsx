@@ -99,49 +99,47 @@ export const ResumeEditorStudio: React.FC = () => {
             jobTitle: roleName,
             startDate: "2021",
             endDate: "Present",
-            description: "Led end-to-end development of microservice architecture using Next.js and PostgreSQL; improved system throughput by 40%."
+            description: "Architected modern responsive full-stack applications with React, Next.js, and FastAPI microservices; reduced client API latency by 45%."
           }
         ]);
       }
       setIsGenerating(false);
-    }, 400);
+    }, 200);
   }, []);
 
   const handleAddSkill = useCallback(() => {
     if (skillInput.trim() && !skills.includes(skillInput.trim())) {
-      setSkills((prev) => [...prev, skillInput.trim()]);
+      setSkills([...skills, skillInput.trim()]);
       setSkillInput("");
     }
   }, [skillInput, skills]);
 
-  const handleRemoveSkill = useCallback((skill: string) => {
-    setSkills((prev) => prev.filter((s) => s !== skill));
-  }, []);
+  const handleRemoveSkill = useCallback((skillToRemove: string) => {
+    setSkills(skills.filter((s) => s !== skillToRemove));
+  }, [skills]);
 
-  const [education] = useState([
+  const education = useMemo(() => [
     {
       id: "edu-1",
-      degree: "B.S. in Computer Science & Design",
-      school: "State University",
-      year: "2022"
+      school: "University of Technology",
+      degree: "B.S. in Computer Science / Design",
+      year: "2018 - 2022"
     }
-  ]);
+  ], []);
 
-  const exportData = useMemo(
-    () => ({
-      full_name: fullName,
-      target_role: targetRole,
-      email,
-      phone,
-      github_url: githubUrl,
-      summary,
-      skills,
-      experiences,
-      projects,
-      education
-    }),
-    [fullName, targetRole, email, phone, githubUrl, summary, skills, experiences, projects, education]
-  );
+  const exportData = useMemo(() => ({
+    fullName,
+    targetRole,
+    email,
+    phone,
+    githubUrl,
+    summary,
+    skills,
+    experiences,
+    projects,
+    education,
+    template: selectedTemplate
+  }), [fullName, targetRole, email, phone, githubUrl, summary, skills, experiences, projects, education, selectedTemplate]);
 
   const handleExportPDF = useCallback(async () => {
     setIsExporting("pdf");
@@ -149,51 +147,49 @@ export const ResumeEditorStudio: React.FC = () => {
     try {
       await downloadBinary("/api/studio/export/pdf", exportData, `${fullName.trim().replace(/\s+/g, "_") || "Resume"}_Resume.pdf`);
     } catch {
-      // Client-side fallback if backend export service is unreachable
-      const docTitle = `${(fullName || "Resume").replace(/\s+/g, "_")}_Resume`;
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>${docTitle}</title>
-            <meta charset="utf-8">
-            <style>
-              @page { margin: 15mm; size: auto; }
-              body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; color: #0f172a; background: #ffffff; line-height: 1.5; font-size: 12px; }
-              .header { border-bottom: 2px solid #3b82f6; padding-bottom: 12px; margin-bottom: 16px; }
-              .name { font-size: 24px; font-weight: bold; color: #1e1b4b; margin: 0; }
-              .role { font-size: 13px; font-weight: bold; color: #4f46e5; margin-top: 4px; }
-              .contact { font-size: 11px; color: #64748b; margin-top: 6px; }
-              .section { margin-bottom: 18px; }
-              .section-title { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #1e293b; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 8px; }
-              .content { font-size: 11px; color: #334155; }
-              .exp-item { margin-bottom: 10px; }
-              .exp-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 11px; color: #0f172a; }
-              .skills-list { display: flex; flex-wrap: wrap; gap: 6px; }
-              .skill-chip { background: #f1f5f9; color: #1e293b; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 10px; border: 1px solid #e2e8f0; }
-              @media print { body { padding: 0; } }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1 class="name">${fullName || "Your Full Name"}</h1>
+      // Client-side fallback if backend export endpoint is unreachable
+      if (typeof window !== "undefined") {
+        const docTitle = `${fullName || "Resume"} — ${targetRole || "Target Role"}`;
+        const htmlContent = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>${docTitle}</title>
+              <style>
+                @page { size: letter portrait; margin: 18mm 16mm; }
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 10.5pt; line-height: 1.45; color: #111827; margin: 0; padding: 0; }
+                h1 { font-size: 20pt; margin: 0 0 2pt 0; color: #111827; font-weight: 800; letter-spacing: -0.5px; }
+                .role { font-size: 12pt; font-weight: 700; color: #4f46e5; margin-bottom: 6pt; }
+                .contact { font-size: 9.5pt; color: #6b7280; margin-bottom: 14pt; padding-bottom: 8pt; border-bottom: 1.5pt solid #e5e7eb; }
+                h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: 0.8px; color: #1e293b; border-bottom: 1pt solid #cbd5e1; padding-bottom: 3pt; margin-top: 12pt; margin-bottom: 6pt; font-weight: 700; }
+                p { margin: 0 0 5pt 0; }
+                .item-header { display: flex; justify-content: space-between; font-weight: 700; font-size: 10.5pt; color: #0f172a; margin-bottom: 2pt; }
+                .item-sub { font-size: 9.5pt; color: #4f46e5; font-weight: 600; margin-bottom: 3pt; }
+                .skills-box { display: flex; flex-wrap: wrap; gap: 4pt; }
+                .skill-tag { background: #f1f5f9; border: 1pt solid #e2e8f0; padding: 2pt 6pt; border-radius: 4pt; font-size: 9pt; font-weight: 600; color: #334155; }
+              </style>
+            </head>
+            <body>
+              <h1>${fullName || "Your Full Name"}</h1>
               <div class="role">${targetRole || "Target Job Title"}</div>
-              <div class="contact">${email || "email@example.com"} • ${phone || "+1 555-0000"}${githubUrl ? ` • ${githubUrl}` : ""}</div>
-            </div>
-            ${summary ? `<div class="section"><div class="section-title">Professional Summary</div><div class="content">${summary}</div></div>` : ""}
-            ${skills.length > 0 ? `<div class="section"><div class="section-title">Technical Competencies</div><div class="skills-list">${skills.map((s) => `<span class="skill-chip">${s}</span>`).join(" ")}</div></div>` : ""}
-            ${experiences.length > 0 ? `<div class="section"><div class="section-title">Work Experience</div>${experiences.map((e) => `<div class="exp-item"><div class="exp-header"><span>${e.jobTitle || "Role"} — ${e.company || "Company"}</span><span>${e.startDate} - ${e.endDate}</span></div><div class="content" style="margin-top: 3px;">${e.description}</div></div>`).join("")}</div>` : ""}
-            ${projects.length > 0 ? `<div class="section"><div class="section-title">Key Projects</div>${projects.map((p) => `<div class="exp-item"><div class="exp-header"><span>${p.name}${p.technologies ? ` [${p.technologies}]` : ""}</span></div><div class="content" style="margin-top: 3px;">${p.description}</div></div>`).join("")}</div>` : ""}
-            ${education.length > 0 ? `<div class="section"><div class="section-title">Education</div>${education.map((ed) => `<div class="exp-item"><div class="exp-header"><span>${ed.degree || "Degree"} — ${ed.school || "School"}</span><span>${ed.year}</span></div></div>`).join("")}</div>` : ""}
-            <script>window.onload = function() { window.print(); }</script>
-          </body>
-        </html>
-      `;
-      const printWindow = window.open("", "_blank");
-      if (printWindow) {
-        printWindow.document.write(htmlContent);
-        printWindow.document.close();
-      } else {
+              <div class="contact">
+                <span>${email || "email@example.com"}</span> • <span>${phone || "+1 (555) 000-0000"}</span>
+                ${githubUrl ? ` • <span>${githubUrl}</span>` : ""}
+              </div>
+
+              ${summary ? `<h2>Professional Summary</h2><p>${summary}</p>` : ""}
+
+              ${skills.length > 0 ? `<h2>Technical & Domain Skills</h2><div class="skills-box">${skills.map((s) => `<span class="skill-tag">${s}</span>`).join(" ")}</div>` : ""}
+
+              ${experiences.length > 0 ? `<h2>Work Experience</h2>${experiences.map((e) => `<div style="margin-bottom: 10pt;"><div class="item-header"><span>${e.jobTitle || "Role"}</span><span>${e.startDate} – ${e.endDate}</span></div><div class="item-sub">${e.company || "Company"}</div><p>${e.description}</p></div>`).join("")}` : ""}
+
+              ${projects.length > 0 ? `<h2>Key Projects</h2>${projects.map((p) => `<div style="margin-bottom: 10pt;"><div class="item-header"><span>${p.name}</span><span style="font-weight: normal; color: #64748b; font-size: 9pt;">${p.technologies || ""}</span></div>${p.githubUrl ? `<div style="font-size: 9pt; color: #4f46e5; margin-bottom: 2pt;">${p.githubUrl}</div>` : ""}<p>${p.description}</p></div>`).join("")}` : ""}
+
+              ${education.length > 0 ? `<h2>Education</h2>${education.map((ed) => `<div style="margin-bottom: 6pt;"><div class="item-header"><span>${ed.degree}</span><span>${ed.year}</span></div><div style="font-size: 9.5pt; color: #475569;">${ed.school}</div></div>`).join("")}` : ""}
+            </body>
+          </html>
+        `;
         const iframe = document.createElement("iframe");
         iframe.style.position = "fixed";
         iframe.style.right = "0";
@@ -266,24 +262,24 @@ export const ResumeEditorStudio: React.FC = () => {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Top Simple Header & Quick Role Presets */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] p-6 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-white/[0.06] pb-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+              <span className="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-wider border border-indigo-100 dark:border-indigo-500/25">
                 Simple AI Resume Studio
               </span>
               <span className="text-xs text-slate-400">•</span>
-              <span className="text-xs font-semibold text-emerald-600">✓ ATS Optimized</span>
+              <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">✓ ATS Optimized</span>
             </div>
-            <h2 className="font-display text-xl font-bold text-slate-900 mt-1">Automatic Resume Generator</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h2 className="font-display text-xl font-bold text-slate-900 dark:text-white mt-1">Automatic Resume Generator</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Fill in your info below or click a role preset to generate a clean, ATS-ready resume instantly.
             </p>
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
-            <span className="text-xs font-bold text-slate-700">Layout:</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Layout:</span>
             {(["modern", "classic", "minimal"] as const).map((tmpl) => (
               <button
                 key={tmpl}
@@ -291,7 +287,7 @@ export const ResumeEditorStudio: React.FC = () => {
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all border ${
                   selectedTemplate === tmpl
                     ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs"
-                    : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                    : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
                 }`}
               >
                 {tmpl}
@@ -302,7 +298,7 @@ export const ResumeEditorStudio: React.FC = () => {
 
         {/* Quick Presets */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mr-1">1-Click Presets:</span>
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mr-1">1-Click Presets:</span>
           {[
             { label: "UI/UX Designer", role: "UI/UX Designer" },
             { label: "Senior Full Stack Engineer", role: "Senior Full Stack Engineer" },
@@ -316,8 +312,8 @@ export const ResumeEditorStudio: React.FC = () => {
               disabled={isGenerating}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
                 targetRole.toLowerCase() === preset.role.toLowerCase()
-                  ? "bg-indigo-50 text-indigo-700 border-indigo-200 font-bold"
-                  : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-indigo-50/50 hover:text-indigo-600"
+                  ? "bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30 font-bold"
+                  : "bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-indigo-50/50 dark:hover:bg-slate-700 hover:text-indigo-600 dark:hover:text-indigo-300"
               }`}
             >
               {preset.label}
@@ -330,56 +326,56 @@ export const ResumeEditorStudio: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Direct Simple Editor Form */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-5 shadow-sm">
-            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-2">
+          <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] p-6 space-y-5 shadow-sm">
+            <h3 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider border-b border-slate-100 dark:border-white/[0.06] pb-2">
               Personal Information & Target Role
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
                 <input
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Targeted Job Title</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Targeted Job Title</label>
                 <input
                   type="text"
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Email</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Phone</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Phone</label>
                 <input
                   type="text"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
                 />
               </div>
               <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-700 mb-1">GitHub Profile Link</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">GitHub Profile Link</label>
                 <input
                   type="text"
                   placeholder="e.g. github.com/venkatakomal"
                   value={githubUrl}
                   onChange={(e) => setGithubUrl(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-indigo-700 font-semibold"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none text-indigo-700 dark:text-indigo-400 font-semibold placeholder-slate-400 dark:placeholder-slate-500"
                 />
               </div>
             </div>
@@ -387,11 +383,11 @@ export const ResumeEditorStudio: React.FC = () => {
             {/* Summary Input */}
             <div className="space-y-1.5 pt-2">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-slate-700">Professional Summary</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Professional Summary</label>
                 <button
                   type="button"
                   onClick={() => handleSelectPreset(targetRole)}
-                  className="px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 text-[11px] font-bold border border-indigo-200 hover:bg-indigo-100"
+                  className="px-2.5 py-0.5 rounded-lg bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-[11px] font-bold border border-indigo-200 dark:border-indigo-500/25 hover:bg-indigo-100 dark:hover:bg-indigo-500/25"
                 >
                   AI Polish
                 </button>
@@ -400,13 +396,13 @@ export const ResumeEditorStudio: React.FC = () => {
                 rows={3}
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none leading-relaxed"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none leading-relaxed"
               />
             </div>
 
             {/* Skills */}
             <div className="space-y-2 pt-2">
-              <label className="block text-xs font-bold text-slate-700">Technical & Soft Skills</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Technical & Soft Skills</label>
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -414,29 +410,29 @@ export const ResumeEditorStudio: React.FC = () => {
                   onChange={(e) => setSkillInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleAddSkill()}
                   placeholder="e.g. Figma, React, Python..."
-                  className="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 text-xs outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none focus:ring-2 focus:ring-indigo-500/20"
                 />
                 <button
                   onClick={handleAddSkill}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm"
                 >
                   Add
                 </button>
               </div>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {skills.map((s) => (
-                  <span key={s} className="px-3 py-1 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold flex items-center gap-2 border border-slate-200">
+                  <span key={s} className="px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-2 border border-slate-200 dark:border-slate-700">
                     <span>{s}</span>
-                    <button onClick={() => handleRemoveSkill(s)} className="text-slate-400 hover:text-rose-600">×</button>
+                    <button onClick={() => handleRemoveSkill(s)} className="text-slate-400 hover:text-rose-600 dark:hover:text-rose-400">×</button>
                   </span>
                 ))}
               </div>
             </div>
 
             {/* Work Experience */}
-            <div className="space-y-3 pt-3 border-t border-slate-100">
+            <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-white/[0.06]">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Work Experience</h4>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Work Experience</h4>
                 <button
                   type="button"
                   onClick={() =>
@@ -452,18 +448,18 @@ export const ResumeEditorStudio: React.FC = () => {
                       }
                     ])
                   }
-                  className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all border border-indigo-200"
+                  className="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-500/15 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all border border-indigo-200 dark:border-indigo-500/25"
                 >
                   + Add Role
                 </button>
               </div>
               {experiences.map((exp) => (
-                <div key={exp.id} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2 relative group">
+                <div key={exp.id} className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 space-y-2 relative group">
                   {experiences.length > 1 && (
                     <button
                       type="button"
                       onClick={() => setExperiences(experiences.filter((item) => item.id !== exp.id))}
-                      className="absolute top-2 right-2 text-slate-400 hover:text-rose-600 text-xs font-bold px-1.5 py-0.5"
+                      className="absolute top-2 right-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 text-xs font-bold px-1.5 py-0.5"
                       title="Remove Role"
                     >
                       ×
@@ -477,7 +473,7 @@ export const ResumeEditorStudio: React.FC = () => {
                         setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, jobTitle: e.target.value } : item)))
                       }
                       placeholder="Job Title"
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                     />
                     <input
                       type="text"
@@ -486,7 +482,7 @@ export const ResumeEditorStudio: React.FC = () => {
                         setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, company: e.target.value } : item)))
                       }
                       placeholder="Company Name"
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                     />
                   </div>
                   <textarea
@@ -496,16 +492,16 @@ export const ResumeEditorStudio: React.FC = () => {
                       setExperiences(experiences.map((item) => (item.id === exp.id ? { ...item, description: e.target.value } : item)))
                     }
                     placeholder="Bullet point description..."
-                    className="w-full px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs outline-none"
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none"
                   />
                 </div>
               ))}
             </div>
 
             {/* Key Projects */}
-            <div className="space-y-3 pt-3 border-t border-slate-100">
+            <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-white/[0.06]">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Key Projects & Portfolio</h4>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Key Projects & Portfolio</h4>
                 <button
                   type="button"
                   onClick={() =>
@@ -520,18 +516,18 @@ export const ResumeEditorStudio: React.FC = () => {
                       }
                     ])
                   }
-                  className="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all border border-indigo-200"
+                  className="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-500/15 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all border border-indigo-200 dark:border-indigo-500/25"
                 >
                   + Add Project
                 </button>
               </div>
               {projects.map((proj) => (
-                <div key={proj.id} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2 relative group">
+                <div key={proj.id} className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 space-y-2 relative group">
                   {projects.length > 1 && (
                     <button
                       type="button"
                       onClick={() => setProjects(projects.filter((item) => item.id !== proj.id))}
-                      className="absolute top-2 right-2 text-slate-400 hover:text-rose-600 text-xs font-bold px-1.5 py-0.5"
+                      className="absolute top-2 right-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 text-xs font-bold px-1.5 py-0.5"
                       title="Remove Project"
                     >
                       ×
@@ -545,7 +541,7 @@ export const ResumeEditorStudio: React.FC = () => {
                         setProjects(projects.map((item) => (item.id === proj.id ? { ...item, name: e.target.value } : item)))
                       }
                       placeholder="Project Name (e.g. E-Commerce Redesign)"
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                     />
                     <input
                       type="text"
@@ -554,7 +550,7 @@ export const ResumeEditorStudio: React.FC = () => {
                         setProjects(projects.map((item) => (item.id === proj.id ? { ...item, technologies: e.target.value } : item)))
                       }
                       placeholder="Technologies (e.g. Figma, React)"
-                      className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                     />
                   </div>
                   <div>
@@ -565,7 +561,7 @@ export const ResumeEditorStudio: React.FC = () => {
                         setProjects(projects.map((item) => (item.id === proj.id ? { ...item, githubUrl: e.target.value } : item)))
                       }
                       placeholder="GitHub / Repo Link (e.g. github.com/username/project)"
-                      className="w-full px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-indigo-700 outline-none"
+                      className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-medium text-indigo-700 dark:text-indigo-400 outline-none placeholder-slate-400 dark:placeholder-slate-500"
                     />
                   </div>
                   <textarea
@@ -575,7 +571,7 @@ export const ResumeEditorStudio: React.FC = () => {
                       setProjects(projects.map((item) => (item.id === proj.id ? { ...item, description: e.target.value } : item)))
                     }
                     placeholder="Project description and key results..."
-                    className="w-full px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs outline-none"
+                    className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none"
                   />
                 </div>
               ))}
@@ -585,33 +581,33 @@ export const ResumeEditorStudio: React.FC = () => {
 
         {/* Right Column: Live Paper Document Preview & Action Buttons */}
         <div className="lg:col-span-6 space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-sm sticky top-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] p-6 space-y-4 shadow-sm sticky top-6">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06] pb-3">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">Live Document Preview ({selectedTemplate})</span>
+                <span className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Live Document Preview ({selectedTemplate})</span>
               </div>
-              <span className="text-xs font-extrabold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
+              <span className="text-xs font-extrabold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/15 px-2.5 py-1 rounded-full border border-indigo-100 dark:border-indigo-500/25">
                 94% ATS Score
               </span>
             </div>
 
             {/* DYNAMIC TEMPLATE PAPER PREVIEW */}
             {selectedTemplate === "modern" && (
-              <div className="bg-white p-6 sm:p-8 rounded-xl border-l-4 border-indigo-600 border border-slate-200 space-y-4 font-sans text-xs shadow-2xs min-h-[420px] transition-all">
-                <div className="border-b border-indigo-100 pb-3">
-                  <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block">
+              <div className="bg-white dark:bg-slate-900/90 p-6 sm:p-8 rounded-xl border-l-4 border-indigo-600 border border-slate-200 dark:border-slate-800 space-y-4 font-sans text-xs shadow-2xs min-h-[420px] transition-all">
+                <div className="border-b border-indigo-100 dark:border-indigo-900/40 pb-3">
+                  <span className="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold uppercase tracking-wider mb-1 inline-block border border-indigo-100 dark:border-indigo-500/30">
                     Modern Layout
                   </span>
-                  <h3 className="text-xl font-bold text-slate-900 tracking-tight">{fullName || "Candidate Name"}</h3>
-                  <p className="text-xs font-bold text-indigo-600 mt-0.5">{targetRole || "Target Role"}</p>
-                  <p className="text-[11px] text-slate-500 mt-1 flex flex-wrap items-center gap-2">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">{fullName || "Candidate Name"}</h3>
+                  <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">{targetRole || "Target Role"}</p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 flex flex-wrap items-center gap-2">
                     <span>{email}</span>
                     <span>•</span>
                     <BlurredPhone phone={phone} />
                     {githubUrl && (
                       <>
                         <span>•</span>
-                        <span className="text-indigo-600 font-semibold">{githubUrl}</span>
+                        <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{githubUrl}</span>
                       </>
                     )}
                   </p>
@@ -619,17 +615,17 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {summary && (
                   <div className="space-y-1">
-                    <h4 className="font-bold text-indigo-950 text-[11px] uppercase tracking-wider border-b border-indigo-100 pb-1">Professional Summary</h4>
-                    <p className="text-slate-600 text-[11px] leading-relaxed pt-0.5">{summary}</p>
+                    <h4 className="font-bold text-indigo-950 dark:text-indigo-300 text-[11px] uppercase tracking-wider border-b border-indigo-100 dark:border-indigo-900/30 pb-1">Professional Summary</h4>
+                    <p className="text-slate-600 dark:text-slate-300 text-[11px] leading-relaxed pt-0.5">{summary}</p>
                   </div>
                 )}
 
                 {skills.length > 0 && (
                   <div className="space-y-1.5">
-                    <h4 className="font-bold text-indigo-950 text-[11px] uppercase tracking-wider border-b border-indigo-100 pb-1">Technical Skills</h4>
+                    <h4 className="font-bold text-indigo-950 dark:text-indigo-300 text-[11px] uppercase tracking-wider border-b border-indigo-100 dark:border-indigo-900/30 pb-1">Technical Skills</h4>
                     <div className="flex flex-wrap gap-1.5 pt-0.5">
                       {skills.map((s) => (
-                        <span key={s} className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-800 border border-indigo-100 font-semibold text-[10px]">
+                        <span key={s} className="px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-500/30 font-semibold text-[10px]">
                           {s}
                         </span>
                       ))}
@@ -639,14 +635,14 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {experiences.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-bold text-indigo-950 text-[11px] uppercase tracking-wider border-b border-indigo-100 pb-1">Work Experience</h4>
+                    <h4 className="font-bold text-indigo-950 dark:text-indigo-300 text-[11px] uppercase tracking-wider border-b border-indigo-100 dark:border-indigo-900/30 pb-1">Work Experience</h4>
                     {experiences.map((e) => (
                       <div key={e.id} className="space-y-0.5">
-                        <div className="flex justify-between font-bold text-slate-800 text-[11px]">
-                          <span>{e.jobTitle} — <span className="text-indigo-600">{e.company}</span></span>
-                          <span className="text-[10px] text-slate-400 font-normal">{e.startDate} - {e.endDate}</span>
+                        <div className="flex justify-between font-bold text-slate-800 dark:text-slate-200 text-[11px]">
+                          <span>{e.jobTitle} — <span className="text-indigo-600 dark:text-indigo-400">{e.company}</span></span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-normal">{e.startDate} - {e.endDate}</span>
                         </div>
-                        <p className="text-slate-600 text-[10px] leading-relaxed">{e.description}</p>
+                        <p className="text-slate-600 dark:text-slate-300 text-[10px] leading-relaxed">{e.description}</p>
                       </div>
                     ))}
                   </div>
@@ -654,17 +650,17 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {projects.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-bold text-indigo-950 text-[11px] uppercase tracking-wider border-b border-indigo-100 pb-1">Key Projects</h4>
+                    <h4 className="font-bold text-indigo-950 dark:text-indigo-300 text-[11px] uppercase tracking-wider border-b border-indigo-100 dark:border-indigo-900/30 pb-1">Key Projects</h4>
                     {projects.map((p) => (
                       <div key={p.id} className="space-y-0.5">
-                        <div className="flex justify-between items-center font-bold text-slate-800 text-[11px]">
+                        <div className="flex justify-between items-center font-bold text-slate-800 dark:text-slate-200 text-[11px]">
                           <span>{p.name}</span>
                           <div className="flex items-center gap-2 text-[10px]">
-                            {p.githubUrl && <span className="text-indigo-600 font-semibold font-mono">{p.githubUrl}</span>}
-                            {p.technologies && <span className="text-slate-500 font-medium">[{p.technologies}]</span>}
+                            {p.githubUrl && <span className="text-indigo-600 dark:text-indigo-400 font-semibold font-mono">{p.githubUrl}</span>}
+                            {p.technologies && <span className="text-slate-500 dark:text-slate-400 font-medium">[{p.technologies}]</span>}
                           </div>
                         </div>
-                        <p className="text-slate-600 text-[10px] leading-relaxed">{p.description}</p>
+                        <p className="text-slate-600 dark:text-slate-300 text-[10px] leading-relaxed">{p.description}</p>
                       </div>
                     ))}
                   </div>
@@ -673,18 +669,18 @@ export const ResumeEditorStudio: React.FC = () => {
             )}
 
             {selectedTemplate === "classic" && (
-              <div className="bg-stone-50/60 p-6 sm:p-8 rounded-xl border-2 border-stone-800 space-y-4 font-serif text-xs shadow-2xs min-h-[420px] text-stone-900 transition-all">
-                <div className="text-center space-y-1 border-t-2 border-b-2 border-stone-800 py-3">
-                  <h3 className="text-xl font-bold font-serif uppercase tracking-widest text-stone-900">{fullName || "Candidate Name"}</h3>
-                  <p className="text-xs font-semibold text-stone-700 uppercase tracking-wider">{targetRole || "Target Role"}</p>
-                  <p className="text-[10px] text-stone-600 flex justify-center flex-wrap items-center gap-2 pt-1 font-sans">
+              <div className="bg-stone-50/60 dark:bg-stone-900/80 p-6 sm:p-8 rounded-xl border-2 border-stone-800 dark:border-stone-600 space-y-4 font-serif text-xs shadow-2xs min-h-[420px] text-stone-900 dark:text-stone-100 transition-all">
+                <div className="text-center space-y-1 border-t-2 border-b-2 border-stone-800 dark:border-stone-600 py-3">
+                  <h3 className="text-xl font-bold font-serif uppercase tracking-widest text-stone-900 dark:text-stone-100">{fullName || "Candidate Name"}</h3>
+                  <p className="text-xs font-semibold text-stone-700 dark:text-stone-300 uppercase tracking-wider">{targetRole || "Target Role"}</p>
+                  <p className="text-[10px] text-stone-600 dark:text-stone-400 flex justify-center flex-wrap items-center gap-2 pt-1 font-sans">
                     <span>{email}</span>
                     <span>•</span>
                     <BlurredPhone phone={phone} />
                     {githubUrl && (
                       <>
                         <span>•</span>
-                        <span className="font-semibold text-stone-800">{githubUrl}</span>
+                        <span className="font-semibold text-stone-800 dark:text-stone-300">{githubUrl}</span>
                       </>
                     )}
                   </p>
@@ -692,28 +688,28 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {summary && (
                   <div className="space-y-1">
-                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 pb-1 text-stone-900">Professional Summary</h4>
-                    <p className="text-stone-800 text-[11px] leading-relaxed text-justify pt-0.5">{summary}</p>
+                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 dark:border-stone-600 pb-1 text-stone-900 dark:text-stone-100">Professional Summary</h4>
+                    <p className="text-stone-800 dark:text-stone-200 text-[11px] leading-relaxed text-justify pt-0.5">{summary}</p>
                   </div>
                 )}
 
                 {skills.length > 0 && (
                   <div className="space-y-1">
-                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 pb-1 text-stone-900">Technical Competencies</h4>
-                    <p className="text-stone-800 text-[11px] text-center pt-0.5">{skills.join(" • ")}</p>
+                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 dark:border-stone-600 pb-1 text-stone-900 dark:text-stone-100">Technical Competencies</h4>
+                    <p className="text-stone-800 dark:text-stone-200 text-[11px] text-center pt-0.5">{skills.join(" • ")}</p>
                   </div>
                 )}
 
                 {experiences.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 pb-1 text-stone-900">Work History</h4>
+                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 dark:border-stone-600 pb-1 text-stone-900 dark:text-stone-100">Work History</h4>
                     {experiences.map((e) => (
                       <div key={e.id} className="space-y-0.5">
-                        <div className="flex justify-between font-bold text-stone-900 text-[11px]">
+                        <div className="flex justify-between font-bold text-stone-900 dark:text-stone-100 text-[11px]">
                           <span>{e.jobTitle}, <em>{e.company}</em></span>
-                          <span className="text-[10px] text-stone-600 font-sans">{e.startDate} - {e.endDate}</span>
+                          <span className="text-[10px] text-stone-600 dark:text-stone-400 font-sans">{e.startDate} - {e.endDate}</span>
                         </div>
-                        <p className="text-stone-800 text-[10px] leading-relaxed text-justify">{e.description}</p>
+                        <p className="text-stone-800 dark:text-stone-300 text-[10px] leading-relaxed text-justify">{e.description}</p>
                       </div>
                     ))}
                   </div>
@@ -721,14 +717,14 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {projects.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 pb-1 text-stone-900">Portfolio Projects</h4>
+                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 dark:border-stone-600 pb-1 text-stone-900 dark:text-stone-100">Portfolio Projects</h4>
                     {projects.map((p) => (
                       <div key={p.id} className="space-y-0.5">
-                        <div className="flex justify-between font-bold text-stone-900 text-[11px]">
-                          <span>{p.name} {p.technologies && <span className="font-sans font-normal text-stone-600">({p.technologies})</span>}</span>
-                          {p.githubUrl && <span className="text-[10px] font-mono text-stone-700">{p.githubUrl}</span>}
+                        <div className="flex justify-between font-bold text-stone-900 dark:text-stone-100 text-[11px]">
+                          <span>{p.name} {p.technologies && <span className="font-sans font-normal text-stone-600 dark:text-stone-400">({p.technologies})</span>}</span>
+                          {p.githubUrl && <span className="text-[10px] font-mono text-stone-700 dark:text-stone-300">{p.githubUrl}</span>}
                         </div>
-                        <p className="text-stone-800 text-[10px] leading-relaxed text-justify">{p.description}</p>
+                        <p className="text-stone-800 dark:text-stone-300 text-[10px] leading-relaxed text-justify">{p.description}</p>
                       </div>
                     ))}
                   </div>
@@ -737,25 +733,25 @@ export const ResumeEditorStudio: React.FC = () => {
             )}
 
             {selectedTemplate === "minimal" && (
-              <div className="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 border-t-4 border-t-slate-900 space-y-4 font-sans text-xs shadow-2xs min-h-[420px] text-slate-900 transition-all">
-                <div className="border-b border-slate-100 pb-3">
+              <div className="bg-white dark:bg-slate-900/90 p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-slate-800 border-t-4 border-t-slate-900 dark:border-t-indigo-500 space-y-4 font-sans text-xs shadow-2xs min-h-[420px] text-slate-900 dark:text-slate-100 transition-all">
+                <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="text-xl font-bold text-slate-900 uppercase tracking-wider">{fullName || "Candidate Name"}</h3>
-                      <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest mt-0.5">{targetRole || "Target Role"}</p>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-wider">{fullName || "Candidate Name"}</h3>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">{targetRole || "Target Role"}</p>
                     </div>
-                    <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 text-[9px] uppercase font-bold tracking-wider">
+                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 text-[9px] uppercase font-bold tracking-wider">
                       Minimal
                     </span>
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-2 flex flex-wrap items-center gap-2">
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 flex flex-wrap items-center gap-2">
                     <span>{email}</span>
                     <span>•</span>
                     <BlurredPhone phone={phone} />
                     {githubUrl && (
                       <>
                         <span>•</span>
-                        <span className="text-slate-700 font-semibold">{githubUrl}</span>
+                        <span className="text-slate-700 dark:text-slate-300 font-semibold">{githubUrl}</span>
                       </>
                     )}
                   </p>
@@ -763,17 +759,17 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {summary && (
                   <div className="space-y-1">
-                    <h4 className="font-bold text-slate-800 text-[10px] uppercase tracking-widest border-b border-slate-200 pb-1">Professional Summary</h4>
-                    <p className="text-slate-600 text-[10px] leading-relaxed pt-0.5">{summary}</p>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-200 text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-1">Professional Summary</h4>
+                    <p className="text-slate-600 dark:text-slate-300 text-[10px] leading-relaxed pt-0.5">{summary}</p>
                   </div>
                 )}
 
                 {skills.length > 0 && (
                   <div className="space-y-1">
-                    <h4 className="font-bold text-slate-800 text-[10px] uppercase tracking-widest border-b border-slate-200 pb-1">Technical Skills</h4>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-200 text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-1">Technical Skills</h4>
                     <div className="flex flex-wrap gap-1 pt-0.5">
                       {skills.map((s) => (
-                        <span key={s} className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 font-medium text-[10px]">
+                        <span key={s} className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-medium text-[10px]">
                           {s}
                         </span>
                       ))}
@@ -783,14 +779,14 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {experiences.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-bold text-slate-800 text-[10px] uppercase tracking-widest border-b border-slate-200 pb-1">Work Experience</h4>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-200 text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-1">Work Experience</h4>
                     {experiences.map((e) => (
                       <div key={e.id} className="space-y-0.5">
-                        <div className="flex justify-between font-bold text-slate-900 text-[10px]">
-                          <span>{e.jobTitle} <span className="text-slate-400 font-normal">|</span> {e.company}</span>
-                          <span className="text-[9px] text-slate-400 font-normal">{e.startDate} - {e.endDate}</span>
+                        <div className="flex justify-between font-bold text-slate-900 dark:text-slate-100 text-[10px]">
+                          <span>{e.jobTitle} <span className="text-slate-400 dark:text-slate-500 font-normal">|</span> {e.company}</span>
+                          <span className="text-[9px] text-slate-400 dark:text-slate-500 font-normal">{e.startDate} - {e.endDate}</span>
                         </div>
-                        <p className="text-slate-600 text-[10px] leading-relaxed">{e.description}</p>
+                        <p className="text-slate-600 dark:text-slate-300 text-[10px] leading-relaxed">{e.description}</p>
                       </div>
                     ))}
                   </div>
@@ -798,17 +794,17 @@ export const ResumeEditorStudio: React.FC = () => {
 
                 {projects.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-bold text-slate-800 text-[10px] uppercase tracking-widest border-b border-slate-200 pb-1">Key Projects</h4>
+                    <h4 className="font-bold text-slate-800 dark:text-slate-200 text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-1">Key Projects</h4>
                     {projects.map((p) => (
                       <div key={p.id} className="space-y-0.5">
-                        <div className="flex justify-between items-center font-bold text-slate-900 text-[10px]">
+                        <div className="flex justify-between items-center font-bold text-slate-900 dark:text-slate-100 text-[10px]">
                           <span>{p.name}</span>
                           <div className="flex items-center gap-2 text-[9px]">
-                            {p.githubUrl && <span className="text-slate-700 font-medium">{p.githubUrl}</span>}
-                            {p.technologies && <span className="text-slate-400 font-normal">[{p.technologies}]</span>}
+                            {p.githubUrl && <span className="text-slate-700 dark:text-slate-300 font-medium">{p.githubUrl}</span>}
+                            {p.technologies && <span className="text-slate-400 dark:text-slate-500 font-normal">[{p.technologies}]</span>}
                           </div>
                         </div>
-                        <p className="text-slate-600 text-[10px] leading-relaxed">{p.description}</p>
+                        <p className="text-slate-600 dark:text-slate-300 text-[10px] leading-relaxed">{p.description}</p>
                       </div>
                     ))}
                   </div>
@@ -817,16 +813,16 @@ export const ResumeEditorStudio: React.FC = () => {
             )}
 
             {/* Quick Export Actions */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-white/[0.06]">
               <div>
-                <span className="text-xs font-bold text-slate-700">Export Options:</span>
-                {exportError && <p className="text-[11px] text-rose-600 mt-1">{exportError}</p>}
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Export Options:</span>
+                {exportError && <p className="text-[11px] text-rose-600 dark:text-rose-400 mt-1">{exportError}</p>}
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleExportPDF}
                   disabled={Boolean(isExporting)}
-                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
                 >
                   <DownloadIcon className="w-4 h-4 text-white" />
                   <span>📄 Download PDF</span>
@@ -834,7 +830,7 @@ export const ResumeEditorStudio: React.FC = () => {
                 <button
                   onClick={handleExportDocx}
                   disabled={Boolean(isExporting)}
-                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
                 >
                   <DownloadIcon className="w-4 h-4 text-white" />
                   <span>📝 Download Word (.doc)</span>

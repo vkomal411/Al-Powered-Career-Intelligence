@@ -15,10 +15,10 @@ const ExportCenterInner: React.FC<ExportCenterProps> = ({
   onExportJson
 }) => {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 animate-fade-in">
-      <div className="border-b border-slate-100 pb-2">
-        <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Multi-Format Export Center</h4>
-        <p className="text-[11px] text-slate-500">Download ATS-optimized files in high-resolution PDF, Word, TXT, or JSON</p>
+    <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] p-5 space-y-4 animate-fade-in shadow-sm">
+      <div className="border-b border-slate-100 dark:border-white/[0.06] pb-2">
+        <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Multi-Format Export Center</h4>
+        <p className="text-[11px] text-slate-500 dark:text-slate-400">Download ATS-optimized files in high-resolution PDF, Word, TXT, or JSON</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -40,7 +40,7 @@ const ExportCenterInner: React.FC<ExportCenterProps> = ({
 
         <button
           onClick={onExportTxt}
-          className="p-3 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs shadow-sm flex flex-col items-center justify-center gap-1.5 transition-all"
+          className="p-3 rounded-xl bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white font-bold text-xs shadow-sm flex flex-col items-center justify-center gap-1.5 transition-all"
         >
           <DownloadIcon className="w-4 h-4 text-white" />
           <span>📋 Plain Text (.txt)</span>

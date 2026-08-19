@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.routers import (
@@ -14,12 +15,20 @@ from app.routers import (
     roadmap_router,
     studio_router,
     resume_builder_router,
+    admin_router,
 )
 
 
 logger = logging.getLogger("career_platform")
 
-# Database schema is managed via Alembic migrations. Run: alembic upgrade head
+from app.database import Base, engine
+from app import models
+
+# Ensure all application tables exist safely
+try:
+    Base.metadata.create_all(bind=engine)
+except Exception as e:
+    logger.warning("Base.metadata.create_all skipped or failed: %s", e)
 
 # Docs are useful in dev but shouldn't be publicly exposed in production.
 docs_enabled = settings.environment.lower() != "production"
@@ -90,7 +99,11 @@ EXEMPT_CSRF_PATHS = {
     "/auth/register",
     "/auth/google-login",
     "/auth/csrf",
-    "/auth/logout"
+    "/auth/logout",
+    "/auth/forgot-password",
+    "/auth/reset-password",
+    "/admin/auth/login",
+    "/feedback"
 }
 
 @app.middleware("http")
@@ -158,6 +171,9 @@ app.include_router(courses_router.router)
 app.include_router(analytics_router.router)
 app.include_router(roadmap_router.router)
 app.include_router(resume_builder_router.router)
+app.include_router(admin_router.router)
+app.include_router(admin_router.public_feedback_router)
+app.include_router(admin_router.public_alerts_router)
 
 
 

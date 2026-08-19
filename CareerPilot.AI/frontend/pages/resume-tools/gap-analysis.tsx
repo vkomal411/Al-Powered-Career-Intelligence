@@ -33,24 +33,38 @@ function ResumeHealthSummary({ parsed }: { parsed: ParsedResume }) {
     .map(([section]) => section.replace(/_/g, " "));
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+    <div className="rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-5 shadow-sm space-y-4">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-sm font-bold text-slate-900">Resume health & improvement opportunities</h2>
-          <p className="mt-1 text-xs text-slate-500">These are presentation gaps in the uploaded resume, separate from career skill gaps.</p>
+          <h2 className="text-sm font-bold text-slate-900 dark:text-white">Resume health & improvement opportunities</h2>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">These are presentation gaps in the uploaded resume, separate from career skill gaps.</p>
         </div>
-        <div className="rounded-xl bg-indigo-50 px-3 py-2 text-center"><span className="block text-[10px] font-bold uppercase text-indigo-500">ATS score</span><span className="text-xl font-extrabold text-indigo-800">{parsed.ats?.score ?? "—"}</span></div>
+        <div className="rounded-xl bg-indigo-50 dark:bg-indigo-500/15 px-3 py-2 text-center">
+          <span className="block text-[10px] font-bold uppercase text-indigo-500 dark:text-indigo-400">ATS score</span>
+          <span className="text-xl font-extrabold text-indigo-800 dark:text-indigo-300">{parsed.ats?.score ?? "—"}</span>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><span className="text-[10px] font-bold uppercase text-slate-400">Skills detected</span><p className="mt-1 text-lg font-bold text-slate-900">{parsed.extracted_skills?.length || 0}</p></div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><span className="text-[10px] font-bold uppercase text-slate-400">Missing sections</span><p className="mt-1 text-lg font-bold text-slate-900">{missingSections.length}</p></div>
-        <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><span className="text-[10px] font-bold uppercase text-slate-400">Projects found</span><p className="mt-1 text-lg font-bold text-slate-900">{parsed.extracted_projects?.length || 0}</p></div>
+        <div className="rounded-xl border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-slate-800/50 p-3">
+          <span className="text-[10px] font-bold uppercase text-slate-400">Skills detected</span>
+          <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">{parsed.extracted_skills?.length || 0}</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-slate-800/50 p-3">
+          <span className="text-[10px] font-bold uppercase text-slate-400">Missing sections</span>
+          <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">{missingSections.length}</p>
+        </div>
+        <div className="rounded-xl border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-slate-800/50 p-3">
+          <span className="text-[10px] font-bold uppercase text-slate-400">Projects found</span>
+          <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">{parsed.extracted_projects?.length || 0}</p>
+        </div>
       </div>
       {(suggestions.length > 0 || advice?.improvement_areas?.length) && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-4">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-amber-900">Recommended resume improvements</h3>
-          <ul className="mt-2 space-y-1.5 text-xs text-amber-950">
-            {[...suggestions, ...(advice?.improvement_areas || [])].slice(0, 5).map((item, index) => <li key={`${item}-${index}`} className="flex gap-2"><span className="font-bold">→</span>{item}</li>)}
+        <div className="rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50/60 dark:bg-amber-500/10 p-4">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300">Recommended resume improvements</h3>
+          <ul className="mt-2 space-y-1.5 text-xs text-amber-950 dark:text-amber-200">
+            {[...suggestions, ...(advice?.improvement_areas || [])].slice(0, 5).map((item, index) => (
+              <li key={`${item}-${index}`} className="flex gap-2"><span className="font-bold">→</span>{item}</li>
+            ))}
           </ul>
         </div>
       )}
@@ -209,10 +223,10 @@ export default function SkillGapAnalysisPage() {
 
   if (checkingSession) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper">
+      <div className="flex min-h-screen items-center justify-center bg-paper dark:bg-[#090d16]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
-          <p className="text-sm font-medium text-slate-500">Preparing Skill Gap Analysis Hub...</p>
+          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Preparing Skill Gap Analysis Hub...</p>
         </div>
       </div>
     );
@@ -220,13 +234,13 @@ export default function SkillGapAnalysisPage() {
 
   if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper px-6">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-card">
+      <div className="flex min-h-screen items-center justify-center bg-paper dark:bg-[#090d16] px-6">
+        <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-8 text-center shadow-card">
           <div className="flex justify-center mb-6">
             <BrandMark variant="dark" />
           </div>
-          <h1 className="font-display text-xl font-bold text-ink">Sign In Required</h1>
-          <p className="mt-2 text-xs text-slate-500">Please sign in to access Skill Gap Analysis.</p>
+          <h1 className="font-display text-xl font-bold text-ink dark:text-white">Sign In Required</h1>
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Please sign in to access Skill Gap Analysis.</p>
           <button
             type="button"
             onClick={() => router.push("/login?redirect=/resume-tools/gap-analysis")}
@@ -244,24 +258,24 @@ export default function SkillGapAnalysisPage() {
       <Head>
         <title>Resume Analysis & Career Paths — Career Tools</title>
       </Head>
-      <div className="min-h-screen bg-paper">
+      <div className="min-h-screen bg-paper dark:bg-[#090d16]">
         <Topbar fullName={user.full_name} onLogout={handleLogout} activeMenu="resume" />
 
         <main className="mx-auto max-w-7xl px-6 sm:px-8 py-8 space-y-6">
           <GroupNavControl group="resume-tools" activeId="gap-analysis" />
 
           {/* Redesigned Header Banner */}
-          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4">
+          <div className="p-6 rounded-2xl bg-white dark:bg-[#111726] border border-slate-200 dark:border-white/[0.08] shadow-sm space-y-4">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-2xs">
+                <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-500/25 shadow-2xs">
                   <GapAnalysisIcon className="w-6 h-6" />
                 </div>
                 <div>
-                  <h1 className="font-display text-xl font-bold text-slate-900">
+                  <h1 className="font-display text-xl font-bold text-slate-900 dark:text-white">
                     Resume Analysis → Career Paths
                   </h1>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     Upload your resume once, understand what is missing, improve it, and discover career paths that fit your experience.
                   </p>
                 </div>
@@ -269,20 +283,20 @@ export default function SkillGapAnalysisPage() {
 
               {/* Header Quick Stats */}
               <div className="flex items-center gap-3 self-start md:self-auto">
-                <div className="flex items-center gap-2 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200">
+                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-white/[0.06]">
                   <FileIcon className="h-4 w-4 text-indigo-600" />
                   <div>
                     <span className="text-[10px] font-bold text-slate-400 uppercase block">Resumes</span>
-                    <span className="text-xs font-extrabold text-slate-900">{history.length} Saved</span>
+                    <span className="text-xs font-extrabold text-slate-900 dark:text-white">{history.length} Saved</span>
                   </div>
                 </div>
 
                 {parsed && (
-                  <div className="flex items-center gap-2 bg-indigo-50 px-3.5 py-2 rounded-xl border border-indigo-100">
+                  <div className="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-500/15 px-3.5 py-2 rounded-xl border border-indigo-100 dark:border-indigo-500/25">
                     <SparkleIcon className="h-4 w-4 text-indigo-600" />
                     <div>
                       <span className="text-[10px] font-bold text-indigo-400 uppercase block">Active Source</span>
-                      <span className="text-xs font-extrabold text-indigo-900 truncate max-w-[140px] block">
+                      <span className="text-xs font-extrabold text-indigo-900 dark:text-indigo-300 truncate max-w-[140px] block">
                         {parsed.original_filename}
                       </span>
                     </div>
@@ -336,13 +350,13 @@ export default function SkillGapAnalysisPage() {
                   <JobMatchCard resumeId={parsed.id} activeResumeName={parsed.original_filename} />
                 </>
               ) : (
-                <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center space-y-4 shadow-sm">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+                <div className="rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-12 text-center space-y-4 shadow-sm">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
                     <GapAnalysisIcon className="h-6 w-6" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="text-base font-bold text-slate-800">No Resume Selected for Analysis</h3>
-                    <p className="text-xs text-slate-500 max-w-md mx-auto">
+                    <h3 className="text-base font-bold text-slate-800 dark:text-white">No Resume Selected for Analysis</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto">
                       Please upload a new resume or select a past resume from your history on the left to run dedicated Skill Gap Analysis against target job roles.
                     </p>
                   </div>

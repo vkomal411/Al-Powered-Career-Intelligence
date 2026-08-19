@@ -22,11 +22,13 @@ backend/.pytest_cache/
 backend/.env
 frontend/.env.local
 
-# Database & Logs
+# Database, Uploads & Logs
 *.db
 *.sqlite
 *.sqlite3
 *.log
+backend/static/uploads/*
+!backend/static/uploads/.gitkeep
 
 # OS & Editor Files
 .DS_Store

@@ -48,9 +48,23 @@ class ProjectEntry(BaseModel):
     url: Optional[str] = Field(default=None, max_length=500)
 
 
-class ResetPasswordRequest(BaseModel):
+class ForgotPasswordRequest(BaseModel):
     email: EmailStr
-    new_password: str
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, v: str) -> str:
+        return v.strip().lower()
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str = Field(..., description="Cryptographic password reset token", min_length=10)
+    new_password: str = Field(..., description="New password meeting complexity criteria")
+
+    @field_validator("new_password")
+    @classmethod
+    def validate_new_password(cls, v: str) -> str:
+        return _validate_password_strength(v)
 
 
 class UserCreate(BaseModel):
@@ -97,6 +111,8 @@ class UserResponse(BaseModel):
     id: uuid.UUID
     full_name: str
     email: EmailStr
+    role: Optional[str] = "user"
+    is_admin: Optional[bool] = False
     is_active: bool
     created_at: datetime
     target_role: Optional[str] = None
@@ -237,6 +253,35 @@ class CareerAdviceResponse(BaseModel):
     improvement_areas: List[str]
     action_plan: List[str]
     suggested_certifications: List[str]
+
+
+class CoverLetterRequest(BaseModel):
+    resume_text: Optional[str] = Field(default=None, max_length=15000)
+    job_description: str = Field(..., min_length=20, max_length=10000)
+    company_name: Optional[str] = Field(default=None, max_length=100)
+    tone: Optional[str] = Field(default="formal", max_length=50)
+
+
+class CoverLetterResponse(BaseModel):
+    tone: str
+    salutation: str
+    opening_paragraph: str
+    body_paragraph: str
+    closing_paragraph: str
+    sign_off: str
+    full_text: str
+
+
+class ExtendedATSBreakdownResponse(BaseModel):
+    overall_score: int
+    hard_skills_score: int
+    soft_skills_score: int
+    experience_score: int
+    formatting_score: int
+    found_keywords: List[str]
+    missing_keywords: List[str]
+    category_label: str
+
 
 
 # ======================================================
@@ -550,3 +595,12 @@ class SkillGapAnalysisResponse(BaseModel):
     insights: List[str]
     next_actions: List[str]
     certifications_recommended: List[SkillGapCertification]
+
+
+from app.schemas.career_suggestion import (
+    CareerPreferences,
+    CareerSuggestionRequest,
+    MarketInfoSchema,
+    CareerPathSuggestion,
+    CareerSuggestionResponse,
+)

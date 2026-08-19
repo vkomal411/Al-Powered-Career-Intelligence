@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -29,6 +30,11 @@ module.exports = {
           DEFAULT: "#DC2626",
           light: "#FEF2F2",
         },
+        surface: {
+          DEFAULT: "#0f172a",
+          raised: "#1e293b",
+          overlay: "#334155",
+        },
       },
       fontFamily: {
         sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
@@ -39,6 +45,10 @@ module.exports = {
         soft: "0 20px 40px rgba(15,23,42,.08)",
         card: "0 1px 2px rgba(15,23,42,0.04), 0 12px 32px rgba(15,23,42,0.06)",
         panel: "0 30px 80px rgba(2,6,23,0.35)",
+        "glow-indigo": "0 0 20px rgba(99, 102, 241, 0.15), 0 0 60px rgba(99, 102, 241, 0.08)",
+        "glow-emerald": "0 0 20px rgba(16, 185, 129, 0.15), 0 0 60px rgba(16, 185, 129, 0.08)",
+        "glow-purple": "0 0 20px rgba(168, 85, 247, 0.15), 0 0 60px rgba(168, 85, 247, 0.08)",
+        "glow-amber": "0 0 20px rgba(245, 158, 11, 0.15), 0 0 60px rgba(245, 158, 11, 0.08)",
       },
       keyframes: {
         scan: {
@@ -53,11 +63,21 @@ module.exports = {
           "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        "slide-in-right": {
+          "0%": { opacity: "0", transform: "translateX(100%)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
       },
       animation: {
         scan: "scan 2.2s ease-in-out infinite",
         "node-pulse": "node-pulse 3s ease-in-out infinite",
         "fade-up": "fade-up 0.4s ease-out both",
+        shimmer: "shimmer 2s ease-in-out infinite",
+        "slide-in-right": "slide-in-right 0.35s cubic-bezier(0.16, 1, 0.3, 1) both",
       },
     },
   },

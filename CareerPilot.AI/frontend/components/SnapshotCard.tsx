@@ -83,12 +83,12 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm animate-pulse space-y-6">
-        <div className="h-6 w-48 bg-slate-200 rounded"></div>
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-8 border border-slate-200 dark:border-white/[0.08] shadow-sm animate-pulse space-y-6">
+        <div className="h-6 w-48 bg-slate-200 dark:bg-slate-800 rounded-xl"></div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="h-32 bg-slate-100 rounded-2xl"></div>
-          <div className="h-32 bg-slate-100 rounded-2xl"></div>
-          <div className="h-32 bg-slate-100 rounded-2xl"></div>
+          <div className="h-32 bg-slate-100 dark:bg-slate-800/60 rounded-2xl"></div>
+          <div className="h-32 bg-slate-100 dark:bg-slate-800/60 rounded-2xl"></div>
+          <div className="h-32 bg-slate-100 dark:bg-slate-800/60 rounded-2xl"></div>
         </div>
       </div>
     );
@@ -96,11 +96,11 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
 
   if (error || !data) {
     return (
-      <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm text-center">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-8 border border-slate-200 dark:border-white/[0.08] shadow-sm text-center">
         <p className="text-rose-500 text-sm mb-4">{error || "Snapshot unavailable."}</p>
         <button
           onClick={fetchAnalytics}
-          className="text-sm font-medium text-indigo-600 hover:text-indigo-800 underline"
+          className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
         >
           Try Again
         </button>
@@ -115,14 +115,14 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Top Banner: What To Do Next */}
-      <div className="bg-gradient-to-r from-indigo-900 via-indigo-850 to-slate-900 text-white rounded-2xl p-6 shadow-sm border border-indigo-700/40 relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-md border border-indigo-500/20 relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1.5 max-w-2xl">
-            <span className="text-xs font-semibold tracking-wide text-indigo-200 bg-indigo-800/80 px-3 py-1 rounded-full border border-indigo-600/40 inline-flex items-center gap-1.5">
+            <span className="text-xs font-semibold tracking-wide text-indigo-300 bg-indigo-500/15 px-3 py-1 rounded-full border border-indigo-500/30 inline-flex items-center gap-1.5">
               What To Do Next
             </span>
             <h2 className="text-xl font-bold text-white pt-1">Your Next Best Move</h2>
-            <p className="text-sm text-indigo-100 leading-relaxed">
+            <p className="text-sm text-indigo-100/90 leading-relaxed">
               {data.what_to_do_next.summary}
             </p>
           </div>
@@ -139,62 +139,62 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
       {/* 3 Core Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* 1. Resume Score */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-[#111726] p-5 rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-sm flex flex-col justify-between hover:shadow-md dark:hover:border-slate-700 transition-all">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Resume Score
               </span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-500/20">
                 {data.resume_score.label}
               </span>
             </div>
 
             <div className="flex items-baseline gap-1.5 mb-2">
-              <span className="text-4xl font-extrabold text-slate-800">
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">
                 {data.resume_score.score}
               </span>
               <span className="text-xs font-semibold text-slate-400">/ 100</span>
             </div>
 
-            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
               How clearly your resume communicates your strengths to recruiters.
             </p>
           </div>
 
           <button
             onClick={() => handleActionClick("improvements")}
-            className="w-full text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50/60 hover:bg-indigo-100/80 py-2 rounded-xl text-center transition-colors"
+            className="w-full text-xs font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 bg-indigo-50/60 dark:bg-indigo-500/10 hover:bg-indigo-100/80 dark:hover:bg-indigo-500/20 border border-transparent dark:border-indigo-500/20 py-2 rounded-xl text-center transition-colors"
           >
             Improve Resume Score ↗
           </button>
         </div>
 
         {/* 2. Skills You Have vs. Need */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-[#111726] p-5 rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-sm flex flex-col justify-between hover:shadow-md dark:hover:border-slate-700 transition-all">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Skills You Have vs. Need
               </span>
-              <span className="text-xs font-semibold text-indigo-600">
+              <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                 {data.skill_coverage.matched_count}/{data.skill_coverage.total_target_count} Skills
               </span>
             </div>
 
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-4xl font-extrabold text-slate-800">
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">
                 {data.skill_coverage.coverage_percentage}%
               </span>
-              <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+              <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-500/20">
                 Match
               </span>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-4">
+            <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden mb-4">
               <div
-                className="bg-indigo-600 h-full rounded-full transition-all duration-500"
+                className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-500"
                 style={{ width: `${data.skill_coverage.coverage_percentage}%` }}
               ></div>
             </div>
@@ -202,17 +202,17 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
 
           <button
             onClick={() => handleActionClick("courses")}
-            className="w-full text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50/60 hover:bg-indigo-100/80 py-2 rounded-xl text-center transition-colors"
+            className="w-full text-xs font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 bg-indigo-50/60 dark:bg-indigo-500/10 hover:bg-indigo-100/80 dark:hover:bg-indigo-500/20 border border-transparent dark:border-indigo-500/20 py-2 rounded-xl text-center transition-colors"
           >
             See Courses to Grow ↗
           </button>
         </div>
 
         {/* 3. Job Alignment */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-[#111726] p-5 rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-sm flex flex-col justify-between hover:shadow-md dark:hover:border-slate-700 transition-all">
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Job Alignment
               </span>
               <span className="text-xs font-semibold text-slate-400">
@@ -221,22 +221,22 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
             </div>
 
             <div className="flex items-baseline gap-2 mb-2">
-              <span className="text-4xl font-extrabold text-slate-800">
+              <span className="text-4xl font-extrabold text-slate-900 dark:text-white">
                 {data.job_market_fit.average_match_rate}%
               </span>
-              <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
+              <span className="text-xs font-semibold text-sky-700 dark:text-sky-300 bg-sky-50 dark:bg-sky-500/15 px-2 py-0.5 rounded border border-sky-100 dark:border-sky-500/20">
                 Avg Fit
               </span>
             </div>
 
-            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
               Alignment with open target job roles.
             </p>
           </div>
 
           <button
             onClick={() => handleActionClick("jobs")}
-            className="w-full text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50/60 hover:bg-indigo-100/80 py-2 rounded-xl text-center transition-colors"
+            className="w-full text-xs font-semibold text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 bg-indigo-50/60 dark:bg-indigo-500/10 hover:bg-indigo-100/80 dark:hover:bg-indigo-500/20 border border-transparent dark:border-indigo-500/20 py-2 rounded-xl text-center transition-colors"
           >
             Explore Matching Jobs ↗
           </button>
@@ -244,23 +244,23 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
       </div>
 
       {/* Profile Completion Checklist */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-6 border border-slate-200 dark:border-white/[0.08] shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100 dark:border-white/[0.08]">
           <div>
-            <h3 className="text-base font-bold text-slate-800">
+            <h3 className="text-base font-bold text-slate-800 dark:text-white">
               Profile Completion
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">Complete your profile to unlock precision AI job matching and ATS scoring.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Complete your profile to unlock precision AI job matching and ATS scoring.</p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs font-bold text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">
+            <span className="text-xs font-bold text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-500/15 px-3 py-1.5 rounded-full border border-indigo-100 dark:border-indigo-500/25">
               {completedCount} of {totalCount} Completed ({completionPct}%)
             </span>
           </div>
         </div>
 
         {/* Completion Bar */}
-        <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+        <div className="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden">
           <div
             className="bg-gradient-to-r from-indigo-600 to-emerald-500 h-full rounded-full transition-all duration-500"
             style={{ width: `${completionPct}%` }}
@@ -274,23 +274,23 @@ export const SnapshotCard: React.FC<SnapshotCardProps> = ({ onNavigateTab }) => 
               onClick={() => handleActionClick(item.action_tab)}
               className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${
                 item.is_completed
-                  ? "bg-slate-50/60 border-slate-100 hover:border-slate-200"
-                  : "bg-indigo-50/30 border-indigo-100 hover:border-indigo-200 hover:shadow-sm"
+                  ? "bg-slate-50/60 dark:bg-slate-800/30 border-slate-200/80 dark:border-white/[0.06] hover:border-slate-300 dark:hover:border-slate-700"
+                  : "bg-indigo-50/30 dark:bg-indigo-500/[0.06] border-indigo-100 dark:border-indigo-500/20 hover:border-indigo-200 dark:hover:border-indigo-500/40 hover:shadow-sm"
               }`}
             >
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                   item.is_completed
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-indigo-100 text-indigo-700"
+                    ? "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
+                    : "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300"
                 }`}
               >
                 {item.is_completed ? "✓" : "→"}
               </div>
 
               <div className="flex-1 min-w-0">
-                <h4 className="text-xs font-bold text-slate-800 mb-0.5">{item.title}</h4>
-                <p className="text-xs text-slate-500 leading-tight">{item.description}</p>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-white mb-0.5">{item.title}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-tight">{item.description}</p>
               </div>
             </div>
           ))}

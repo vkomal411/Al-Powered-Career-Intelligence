@@ -31,11 +31,28 @@ export default function UploadCard({
   const [dragActive, setDragActive] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  function validateAndSelect(selectedFile: File | null) {
+    if (!selectedFile) {
+      onFileSelect(null);
+      return;
+    }
+    const ext = selectedFile.name.split(".").pop()?.toLowerCase();
+    if (ext !== "pdf" && ext !== "docx") {
+      alert("Invalid file format. Please upload a PDF (.pdf) or Word document (.docx).");
+      return;
+    }
+    if (selectedFile.size > 10 * 1024 * 1024) {
+      alert("File size exceeds 10MB limit. Please select a smaller file.");
+      return;
+    }
+    onFileSelect(selectedFile);
+  }
+
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setDragActive(false);
     const dropped = e.dataTransfer.files?.[0];
-    if (dropped) onFileSelect(dropped);
+    if (dropped) validateAndSelect(dropped);
   }
 
   return (
@@ -68,7 +85,7 @@ export default function UploadCard({
             type="file"
             accept={ACCEPTED.join(",")}
             className="sr-only"
-            onChange={(e) => onFileSelect(e.target.files?.[0] || null)}
+            onChange={(e) => validateAndSelect(e.target.files?.[0] || null)}
           />
           {file ? (
             <div className="flex flex-col items-center gap-1">

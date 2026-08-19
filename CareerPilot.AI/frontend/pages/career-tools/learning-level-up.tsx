@@ -44,10 +44,10 @@ export default function LearningLevelUpPage() {
 
   if (checkingSession) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper">
+      <div className="flex min-h-screen items-center justify-center bg-paper dark:bg-[#090d16]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent" />
-          <p className="text-sm font-medium text-slate-500">Loading Learning & Level Up...</p>
+          <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Loading Learning & Level Up...</p>
         </div>
       </div>
     );
@@ -55,13 +55,13 @@ export default function LearningLevelUpPage() {
 
   if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper px-6">
-        <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-card">
+      <div className="flex min-h-screen items-center justify-center bg-paper dark:bg-[#090d16] px-6">
+        <div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-8 text-center shadow-card">
           <div className="flex justify-center mb-6">
             <BrandMark variant="dark" />
           </div>
-          <h1 className="font-display text-xl font-bold text-ink">Sign In Required</h1>
-          <p className="mt-2 text-xs text-slate-500">Please sign in to access Learning & Level Up.</p>
+          <h1 className="font-display text-xl font-bold text-ink dark:text-white">Sign In Required</h1>
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Please sign in to access Learning & Level Up.</p>
           <button
             type="button"
             onClick={() => router.push("/login?redirect=/career-tools/learning-level-up")}
@@ -79,7 +79,7 @@ export default function LearningLevelUpPage() {
       <Head>
         <title>Learning and Level Up — Career Tools</title>
       </Head>
-      <div className="min-h-screen bg-paper">
+      <div className="min-h-screen bg-paper dark:bg-[#090d16]">
         <Topbar fullName={user.full_name} onLogout={handleLogout} activeMenu="learning" />
 
         <main className="mx-auto max-w-7xl px-6 sm:px-8 py-8 space-y-6">

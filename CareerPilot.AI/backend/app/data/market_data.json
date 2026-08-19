@@ -1,0 +1,107 @@
+{
+  "source": "market_dataset",
+  "updated_at": "2026-08-01",
+  "default_currency": "INR",
+  "roles": {
+    "backend-developer": {
+      "entry": {"salary_min": 450000, "salary_max": 900000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 900000, "salary_max": 1800000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1800000, "salary_max": 3500000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "frontend-developer": {
+      "entry": {"salary_min": 400000, "salary_max": 850000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 850000, "salary_max": 1650000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1650000, "salary_max": 3200000, "currency": "INR", "market_demand": "High"}
+    },
+    "full-stack-developer": {
+      "entry": {"salary_min": 500000, "salary_max": 1000000, "currency": "INR", "market_demand": "Very High"},
+      "mid": {"salary_min": 1000000, "salary_max": 2000000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2000000, "salary_max": 4000000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "python-developer": {
+      "entry": {"salary_min": 420000, "salary_max": 850000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 850000, "salary_max": 1700000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1700000, "salary_max": 3400000, "currency": "INR", "market_demand": "High"}
+    },
+    "java-developer": {
+      "entry": {"salary_min": 450000, "salary_max": 900000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 900000, "salary_max": 1800000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1800000, "salary_max": 3500000, "currency": "INR", "market_demand": "High"}
+    },
+    "devops-engineer": {
+      "entry": {"salary_min": 550000, "salary_max": 1100000, "currency": "INR", "market_demand": "Very High"},
+      "mid": {"salary_min": 1100000, "salary_max": 2200000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2200000, "salary_max": 4200000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "cloud-engineer": {
+      "entry": {"salary_min": 500000, "salary_max": 1000000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 1000000, "salary_max": 2000000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2000000, "salary_max": 3800000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "site-reliability-engineer": {
+      "entry": {"salary_min": 600000, "salary_max": 1200000, "currency": "INR", "market_demand": "Very High"},
+      "mid": {"salary_min": 1200000, "salary_max": 2400000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2400000, "salary_max": 4500000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "data-analyst": {
+      "entry": {"salary_min": 350000, "salary_max": 750000, "currency": "INR", "market_demand": "Moderate"},
+      "mid": {"salary_min": 750000, "salary_max": 1400000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1400000, "salary_max": 2600000, "currency": "INR", "market_demand": "High"}
+    },
+    "data-engineer": {
+      "entry": {"salary_min": 500000, "salary_max": 1050000, "currency": "INR", "market_demand": "Very High"},
+      "mid": {"salary_min": 1050000, "salary_max": 2200000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2200000, "salary_max": 4200000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "data-scientist": {
+      "entry": {"salary_min": 550000, "salary_max": 1150000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 1150000, "salary_max": 2400000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2400000, "salary_max": 4500000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "ai-ml-engineer": {
+      "entry": {"salary_min": 600000, "salary_max": 1300000, "currency": "INR", "market_demand": "Very High"},
+      "mid": {"salary_min": 1300000, "salary_max": 2600000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2600000, "salary_max": 5000000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "cybersecurity-analyst": {
+      "entry": {"salary_min": 400000, "salary_max": 850000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 850000, "salary_max": 1700000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1700000, "salary_max": 3200000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "security-engineer": {
+      "entry": {"salary_min": 500000, "salary_max": 1050000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 1050000, "salary_max": 2100000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2100000, "salary_max": 4000000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "qa-automation-engineer": {
+      "entry": {"salary_min": 380000, "salary_max": 800000, "currency": "INR", "market_demand": "Moderate"},
+      "mid": {"salary_min": 800000, "salary_max": 1500000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1500000, "salary_max": 2800000, "currency": "INR", "market_demand": "High"}
+    },
+    "product-manager": {
+      "entry": {"salary_min": 600000, "salary_max": 1200000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 1200000, "salary_max": 2500000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 2500000, "salary_max": 4800000, "currency": "INR", "market_demand": "Very High"}
+    },
+    "business-analyst": {
+      "entry": {"salary_min": 400000, "salary_max": 800000, "currency": "INR", "market_demand": "Moderate"},
+      "mid": {"salary_min": 800000, "salary_max": 1600000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1600000, "salary_max": 3000000, "currency": "INR", "market_demand": "High"}
+    },
+    "ui-ux-designer": {
+      "entry": {"salary_min": 380000, "salary_max": 800000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 800000, "salary_max": 1600000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1600000, "salary_max": 3000000, "currency": "INR", "market_demand": "High"}
+    },
+    "mobile-developer": {
+      "entry": {"salary_min": 420000, "salary_max": 850000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 850000, "salary_max": 1700000, "currency": "INR", "market_demand": "High"},
+      "senior": {"salary_min": 1700000, "salary_max": 3200000, "currency": "INR", "market_demand": "High"}
+    },
+    "solutions-architect": {
+      "entry": {"salary_min": 1200000, "salary_max": 2000000, "currency": "INR", "market_demand": "High"},
+      "mid": {"salary_min": 2000000, "salary_max": 3600000, "currency": "INR", "market_demand": "Very High"},
+      "senior": {"salary_min": 3600000, "salary_max": 6500000, "currency": "INR", "market_demand": "Very High"}
+    }
+  }
+}

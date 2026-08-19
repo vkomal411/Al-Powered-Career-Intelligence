@@ -140,9 +140,9 @@ export default function AICareerAdviceCard({
   const displaySummary = showFullSummary || !isTruncated ? rawSummary : `${rawSummary.slice(0, 150)}...`;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/90 shadow-card p-6 overflow-hidden relative transition-all animate-fade-up">
+    <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200/90 dark:border-white/[0.08] shadow-card p-6 overflow-hidden relative transition-all animate-fade-up">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-white/[0.08] pb-4 mb-4">
         <div className="flex items-center space-x-3.5">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-primary flex items-center justify-center text-white flex-shrink-0 shadow-md shadow-primary/20">
             {/* Lightning Bolt Icon */}
@@ -152,14 +152,14 @@ export default function AICareerAdviceCard({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-display font-bold text-slate-900 text-base leading-tight">
+              <h3 className="font-display font-bold text-slate-900 dark:text-white text-base leading-tight">
                 AI Career Intelligence Advisor
               </h3>
-              <span className="inline-flex items-center gap-1 bg-primary-light text-primary-dark font-bold text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-primary/20 shadow-2xs">
+              <span className="inline-flex items-center gap-1 bg-primary-light dark:bg-indigo-500/15 text-primary-dark dark:text-indigo-300 font-bold text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-primary/20 dark:border-indigo-500/25 shadow-2xs">
                 ✦ AI Powered
               </span>
             </div>
-            <p className="text-slate-500 text-xs mt-0.5 font-medium">
+            <p className="text-slate-500 dark:text-slate-400 text-xs mt-0.5 font-medium">
               {parsedResume
                 ? `Persisted Resume Audit (${parsedResume.original_filename})`
                 : "Real-time profile optimization & career roadmap"}
@@ -172,12 +172,12 @@ export default function AICareerAdviceCard({
             <button
               onClick={handleRegenerate}
               disabled={loading}
-              className="p-2 border border-slate-200 hover:bg-slate-50 text-slate-600 hover:text-slate-900 rounded-xl transition-all shadow-2xs disabled:opacity-50"
+              className="p-2 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white rounded-xl transition-all shadow-2xs disabled:opacity-50"
               title="Refresh AI Guidance"
               aria-label="Refresh AI Guidance"
             >
               <svg
-                className={`w-4 h-4 ${loading ? "animate-spin text-primary" : "text-slate-500"}`}
+                className={`w-4 h-4 ${loading ? "animate-spin text-primary dark:text-indigo-400" : "text-slate-500 dark:text-slate-400"}`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -197,11 +197,11 @@ export default function AICareerAdviceCard({
       {/* Body: Truncated Summary */}
       {loading ? (
         <div className="py-8 text-center space-y-2">
-          <div className="inline-block animate-spin rounded-full h-7 w-7 border-3 border-primary border-t-transparent"></div>
-          <p className="text-slate-500 text-xs font-semibold">Generating executive summary...</p>
+          <div className="inline-block animate-spin rounded-full h-7 w-7 border-3 border-primary dark:border-indigo-500 border-t-transparent"></div>
+          <p className="text-slate-500 dark:text-slate-400 text-xs font-semibold">Generating executive summary...</p>
         </div>
       ) : error && !advice ? (
-        <div className="bg-amber-50 text-amber-900 text-xs p-3.5 rounded-xl border border-amber-200 flex items-center justify-between gap-3 mb-4">
+        <div className="bg-amber-50 dark:bg-amber-950/30 text-amber-900 dark:text-amber-200 text-xs p-3.5 rounded-xl border border-amber-200 dark:border-amber-500/30 flex items-center justify-between gap-3 mb-4">
           <span>{error}</span>
           <button
             onClick={handleRegenerate}
@@ -212,14 +212,14 @@ export default function AICareerAdviceCard({
         </div>
       ) : advice ? (
         <div className="space-y-4">
-          <div className="bg-slate-50/80 border border-slate-200/80 rounded-xl p-3.5 text-xs text-slate-700 leading-relaxed">
-            <p className="font-medium text-slate-800">
+          <div className="bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/80 dark:border-white/[0.08] rounded-xl p-3.5 text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p className="font-medium text-slate-800 dark:text-slate-200">
               {displaySummary}
               {isTruncated && (
                 <button
                   type="button"
                   onClick={() => setShowFullSummary(!showFullSummary)}
-                  className="ml-1.5 font-bold text-primary hover:text-primary-dark hover:underline transition-colors focus:outline-none"
+                  className="ml-1.5 font-bold text-primary dark:text-indigo-400 hover:text-primary-dark dark:hover:text-indigo-300 hover:underline transition-colors focus:outline-none"
                 >
                   {showFullSummary ? "Show less" : "Show more"}
                 </button>
@@ -229,24 +229,24 @@ export default function AICareerAdviceCard({
 
           {/* Metrics Row: Inline Stats Badges */}
           <div className="flex items-center gap-3">
-            <div className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 border border-emerald-200/60 shadow-2xs">
-              <span className="text-[10px] text-emerald-600 uppercase tracking-wider font-semibold">ATS Score</span>
-              <span className="text-sm font-extrabold text-emerald-700">{atsScore}/100</span>
+            <div className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 px-3 py-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-500/30 shadow-2xs">
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold">ATS Score</span>
+              <span className="text-sm font-extrabold text-emerald-700 dark:text-emerald-300">{atsScore}/100</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-xl bg-amber-50 px-3 py-1.5 text-xs font-bold text-amber-800 border border-amber-200/60 shadow-2xs">
-              <span className="text-[10px] text-amber-600 uppercase tracking-wider font-semibold">Priority Fixes</span>
-              <span className="text-sm font-extrabold text-amber-700">{improvementCount}</span>
+            <div className="inline-flex items-center gap-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/15 px-3 py-1.5 text-xs font-bold text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-500/30 shadow-2xs">
+              <span className="text-[10px] text-amber-600 dark:text-amber-400 uppercase tracking-wider font-semibold">Priority Fixes</span>
+              <span className="text-sm font-extrabold text-amber-700 dark:text-amber-300">{improvementCount}</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-50 px-3 py-1.5 text-xs font-bold text-indigo-800 border border-indigo-200/60 shadow-2xs">
-              <span className="text-[10px] text-indigo-600 uppercase tracking-wider font-semibold">Roadmap Steps</span>
-              <span className="text-sm font-extrabold text-indigo-700">{advice.action_plan?.length || 0}</span>
+            <div className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/15 px-3 py-1.5 text-xs font-bold text-indigo-800 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-500/30 shadow-2xs">
+              <span className="text-[10px] text-indigo-600 dark:text-indigo-400 uppercase tracking-wider font-semibold">Roadmap Steps</span>
+              <span className="text-sm font-extrabold text-indigo-700 dark:text-indigo-300">{advice.action_plan?.length || 0}</span>
             </div>
           </div>
 
           {/* Footer CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100 pt-4 mt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100 dark:border-white/[0.08] pt-4 mt-2">
             <button
               onClick={handleNavigateFullReport}
               className="w-full sm:w-auto bg-primary hover:bg-primary-dark text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md shadow-primary/20 transition-all flex items-center justify-center space-x-1.5 active:scale-95"
@@ -259,7 +259,7 @@ export default function AICareerAdviceCard({
 
             <button
               onClick={onOpenJobMatcher}
-              className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 via-primary to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/40 ring-2 ring-indigo-300/40 transition-all duration-200 hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2"
+              className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 via-primary to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/40 ring-2 ring-indigo-300/40 dark:ring-indigo-500/30 transition-all duration-200 hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-2"
             >
               <svg className="w-4 h-4 text-amber-300 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

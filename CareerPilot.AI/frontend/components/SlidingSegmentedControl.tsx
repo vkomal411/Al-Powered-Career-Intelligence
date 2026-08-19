@@ -60,7 +60,7 @@ export const SlidingSegmentedControl: React.FC<SlidingSegmentedControlProps> = (
     <div
       ref={containerRef}
       onMouseLeave={() => setHoveredId(null)}
-      className="relative inline-flex min-w-full sm:min-w-0 p-1 rounded-2xl bg-slate-100/80 border border-slate-200/70 backdrop-blur-md overflow-x-auto no-scrollbar"
+      className="relative inline-flex min-w-full sm:min-w-0 p-1 rounded-2xl bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/70 backdrop-blur-md overflow-x-auto no-scrollbar"
     >
       {/* GPU-Accelerated Dynamic Island 3D Magnetic Sliding Pill */}
       <div
@@ -89,8 +89,8 @@ export const SlidingSegmentedControl: React.FC<SlidingSegmentedControlProps> = (
             onClick={() => onChange(tab.id)}
             className={`relative z-10 px-4 py-2 rounded-xl text-xs whitespace-nowrap transition-all duration-200 font-bold active:scale-[0.97] ${
               isActive || isHovered
-                ? "text-indigo-950"
-                : "text-slate-600 hover:text-slate-900"
+                ? "text-indigo-950 dark:text-white"
+                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             {tab.label}

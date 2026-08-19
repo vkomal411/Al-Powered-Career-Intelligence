@@ -13,6 +13,9 @@ from app.auth_utils import (
     rotate_refresh_token,
     hash_token,
     get_current_user,
+    create_password_reset_token,
+    verify_password_reset_token,
+    revoke_all_user_sessions,
 )
 from app.google_auth import verify_google_token
 from app.rate_limit import rate_limit
@@ -158,10 +161,14 @@ def login(payload: schemas.UserLogin, response: Response, db: Session = Depends(
 
 
 @router.post(
-    "/reset-password",
-    dependencies=[Depends(rate_limit("reset-password"))],
+    "/forgot-password",
+    dependencies=[Depends(rate_limit("forgot-password"))],
 )
-def reset_password(payload: schemas.ResetPasswordRequest, db: Session = Depends(get_db)):
+def forgot_password(payload: schemas.ForgotPasswordRequest, db: Session = Depends(get_db)):
+    """
+    Generates a secure, time-limited password reset token.
+    Uses a generic response to prevent user enumeration attacks.
+    """
     email_clean = payload.email.strip().lower()
     user = (
         db.query(models.User)
@@ -169,22 +176,42 @@ def reset_password(payload: schemas.ResetPasswordRequest, db: Session = Depends(
         .first()
     )
 
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="We couldn't find an account with that email address."
-        )
+    reset_token = None
+    if user and user.is_active and user.has_password:
+        reset_token = create_password_reset_token(user, expires_delta_minutes=15)
 
-    if len(payload.new_password) < 6:
-        raise HTTPException(
-            status_code=400,
-            detail="Password must be at least 6 characters long."
-        )
+    is_prod = settings.environment.lower() == "production"
 
+    response_data = {
+        "message": "If an account with that email address exists, password reset instructions have been generated."
+    }
+    # In non-production/development environment, include the token for easy developer testing
+    if not is_prod and reset_token:
+        response_data["reset_token"] = reset_token
+
+    return response_data
+
+
+@router.post(
+    "/reset-password",
+    dependencies=[Depends(rate_limit("reset-password"))],
+)
+def reset_password(payload: schemas.ResetPasswordRequest, db: Session = Depends(get_db)):
+    """
+    Validates a cryptographic password reset token and updates the user's password.
+    Revokes all active user sessions for defense-in-depth.
+    """
+    user = verify_password_reset_token(payload.token, db)
+
+    # Update hashed password
     user.hashed_password = hash_password(payload.new_password)
+
+    # Invalidate all active sessions/refresh tokens for security
+    revoke_all_user_sessions(db, user.id)
+
     db.commit()
 
-    return {"message": "Your password has been updated! You can now sign in with your new password."}
+    return {"message": "Your password has been successfully updated! You can now sign in with your new password."}
 
 
 @router.post(

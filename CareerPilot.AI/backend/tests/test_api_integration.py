@@ -121,3 +121,64 @@ def test_auth_and_profile_flow():
     # 10. Test Logout
     logout_res = client.post("/auth/logout", headers=auth_headers)
     assert logout_res.status_code == 200
+
+
+def test_secure_password_reset_flow():
+    # 1. Register a test user
+    email = f"reset.test.{os.urandom(4).hex()}@example.com"
+    reg_res = client.post(
+        "/auth/register",
+        json={
+            "full_name": "Reset Test User",
+            "email": email,
+            "password": "OldPassword123!",
+        },
+    )
+    assert reg_res.status_code in (200, 201)
+
+    # 2. Request password reset (forgot-password)
+    forgot_res = client.post(
+        "/auth/forgot-password",
+        json={"email": email},
+    )
+    assert forgot_res.status_code == 200
+    forgot_data = forgot_res.json()
+    assert "reset_token" in forgot_data
+    reset_token = forgot_data["reset_token"]
+
+    # 3. Test invalid password reset (too weak)
+    weak_reset_res = client.post(
+        "/auth/reset-password",
+        json={"token": reset_token, "new_password": "weak"},
+    )
+    assert weak_reset_res.status_code == 422  # validation error
+
+    # 4. Perform valid password reset
+    valid_reset_res = client.post(
+        "/auth/reset-password",
+        json={"token": reset_token, "new_password": "NewSecurePassword123!"},
+    )
+    assert valid_reset_res.status_code == 200
+    assert "successfully updated" in valid_reset_res.json()["message"]
+
+    # 5. Verify single-use token: repeating reset with same token must fail
+    reuse_res = client.post(
+        "/auth/reset-password",
+        json={"token": reset_token, "new_password": "AnotherPassword123!"},
+    )
+    assert reuse_res.status_code == 400
+
+    # 6. Verify old password no longer works
+    old_login_res = client.post(
+        "/auth/login",
+        json={"email": email, "password": "OldPassword123!"},
+    )
+    assert old_login_res.status_code == 401
+
+    # 7. Verify new password works
+    new_login_res = client.post(
+        "/auth/login",
+        json={"email": email, "password": "NewSecurePassword123!"},
+    )
+    assert new_login_res.status_code == 200
+    assert "access_token" in new_login_res.json()

@@ -21,9 +21,9 @@ export default function Toast({ message, type = "success", duration = 4000, onCl
   }, [duration, onClose]);
 
   const colorMap = {
-    success: "border-emerald-200 bg-emerald-50 text-emerald-800",
-    error: "border-red-200 bg-red-50 text-red-800",
-    info: "border-blue-200 bg-blue-50 text-blue-800",
+    success: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/80 dark:text-emerald-300",
+    error: "border-red-200 bg-red-50 text-red-800 dark:border-red-500/30 dark:bg-red-950/80 dark:text-red-300",
+    info: "border-blue-200 bg-blue-50 text-blue-800 dark:border-indigo-500/30 dark:bg-indigo-950/80 dark:text-indigo-300",
   };
 
   const iconMap = {
@@ -36,7 +36,7 @@ export default function Toast({ message, type = "success", duration = 4000, onCl
     <div
       role="status"
       aria-live="polite"
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border px-5 py-3.5 shadow-lg backdrop-blur-sm transition-all duration-300 ${
+      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border px-5 py-3.5 shadow-lg dark:shadow-[0_8px_24px_rgba(0,0,0,0.5)] backdrop-blur-sm transition-all duration-300 ${
         visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
       } ${colorMap[type]}`}
     >

@@ -115,12 +115,12 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
 
   if (!hasResume) {
     return (
-      <div className="bg-white rounded-2xl p-10 border border-slate-100 shadow-sm text-center animate-fade-in space-y-4">
-        <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-10 border border-slate-100 dark:border-white/[0.08] shadow-sm text-center animate-fade-in space-y-4">
+        <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mx-auto text-2xl">
           ✎
         </div>
-        <h3 className="text-lg font-bold text-slate-800">Upload your resume first</h3>
-        <p className="text-slate-500 max-w-md mx-auto text-xs leading-relaxed">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-white">Upload your resume first</h3>
+        <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-xs leading-relaxed">
           Upload your resume in Resume Check to unlock personalized summary rewrites, missing ATS keywords, STAR bullet point enhancements, and recommended certifications.
         </p>
         <button
@@ -135,15 +135,15 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl p-10 border border-slate-100 shadow-sm text-center space-y-4 animate-pulse-glow">
-        <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl animate-bounce">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-10 border border-slate-100 dark:border-white/[0.08] shadow-sm text-center space-y-4 animate-pulse-glow">
+        <div className="w-12 h-12 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mx-auto text-2xl animate-bounce">
           ✎
         </div>
-        <h3 className="text-sm font-bold text-slate-800">Customizing enhancements for {selectedRole || "your target role"}…</h3>
-        <p className="text-xs text-slate-500 max-w-sm mx-auto">
+        <h3 className="text-sm font-bold text-slate-800 dark:text-white">Customizing enhancements for {selectedRole || "your target role"}…</h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
           Tailoring summary rewrites, ATS keywords, bullet points, and certifications.
         </p>
-        <div className="w-36 h-1.5 bg-indigo-100 rounded-full mx-auto overflow-hidden">
+        <div className="w-36 h-1.5 bg-indigo-100 dark:bg-indigo-950 rounded-full mx-auto overflow-hidden">
           <div className="h-full bg-indigo-600 rounded-full animate-progress"></div>
         </div>
       </div>
@@ -152,11 +152,11 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
 
   if (error || !data) {
     return (
-      <div className="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm text-center">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-8 border border-slate-100 dark:border-white/[0.08] shadow-sm text-center">
         <p className="text-rose-500 text-xs mb-4">{error || "Could not load feedback."}</p>
         <button
           onClick={() => fetchImprovements()}
-          className="text-xs font-medium text-indigo-600 hover:text-indigo-800 underline"
+          className="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 underline"
         >
           Try Again
         </button>
@@ -165,13 +165,13 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm animate-fade-in space-y-6">
+    <div className="bg-white dark:bg-[#111726] rounded-2xl p-6 border border-slate-100 dark:border-white/[0.08] shadow-sm animate-fade-in space-y-6">
       {/* Header */}
-      <div className="border-b border-slate-100 pb-5 space-y-4">
+      <div className="border-b border-slate-100 dark:border-slate-800 pb-5 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-lg font-bold text-slate-800">Resume Boost</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-lg font-bold text-slate-800 dark:text-white">Resume Boost</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Actionable rewrites and ATS keyword optimizations tailored to your target role.
             </p>
           </div>
@@ -188,7 +188,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
                       handleRoleChange(e.target.value);
                     }
                   }}
-                  className="rounded-xl border border-indigo-200 bg-indigo-50/40 px-3 py-1.5 text-xs font-semibold text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none"
+                  className="rounded-xl border border-indigo-200 dark:border-indigo-500/30 bg-indigo-50/40 dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-900 dark:text-white focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-800 focus:outline-none"
                 >
                   {SUGGESTED_ROLES.map((r) => (
                     <option key={r} value={r}>
@@ -210,7 +210,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
                     value={customRoleInput}
                     onChange={(e) => setCustomRoleInput(e.target.value)}
                     placeholder="e.g. Product Manager, iOS Engineer..."
-                    className="rounded-xl border border-indigo-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-900 focus:border-indigo-500 focus:outline-none shadow-2xs min-w-[180px]"
+                    className="rounded-xl border border-indigo-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:border-indigo-500 focus:outline-none shadow-2xs min-w-[180px]"
                     autoFocus
                   />
                   <button
@@ -223,7 +223,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
                   <button
                     type="button"
                     onClick={() => setIsEditingRole(false)}
-                    className="rounded-xl bg-slate-100 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-200"
+                    className="rounded-xl bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-transparent dark:border-white/[0.08]"
                   >
                     Cancel
                   </button>
@@ -231,9 +231,9 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-semibold text-emerald-900 shadow-2xs">
-                  <span className="text-[10px] font-extrabold uppercase text-emerald-600">Target Role:</span>
-                  <span className="font-extrabold text-emerald-800">{selectedRole || data.target_role}</span>
+                <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/25 px-3 py-1 text-xs font-semibold text-emerald-900 dark:text-emerald-300 shadow-2xs">
+                  <span className="text-[10px] font-extrabold uppercase text-emerald-600 dark:text-emerald-400">Target Role:</span>
+                  <span className="font-extrabold text-emerald-800 dark:text-emerald-200">{selectedRole || data.target_role}</span>
                 </div>
                 <button
                   type="button"
@@ -241,7 +241,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
                     setCustomRoleInput(selectedRole || data.target_role);
                     setIsEditingRole(true);
                   }}
-                  className="rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-3 py-1 text-xs font-bold transition-all shadow-2xs"
+                  className="rounded-full bg-indigo-50 dark:bg-indigo-500/15 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 px-3 py-1 text-xs font-bold transition-all shadow-2xs"
                 >
                   ✏️ Change Target Role
                 </button>
@@ -257,7 +257,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
             className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
               activeSubTab === "summary"
                 ? "bg-indigo-600 text-white shadow-sm font-bold"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200/80"
+                : "bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200/80 dark:hover:bg-slate-700 border border-transparent dark:border-white/[0.06]"
             }`}
           >
             Rewrite My Summary
@@ -267,7 +267,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
             className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
               activeSubTab === "keywords"
                 ? "bg-indigo-600 text-white shadow-sm font-bold"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200/80"
+                : "bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200/80 dark:hover:bg-slate-700 border border-transparent dark:border-white/[0.06]"
             }`}
           >
             Add Missing Keywords
@@ -277,7 +277,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
             className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
               activeSubTab === "bullets"
                 ? "bg-indigo-600 text-white shadow-sm font-bold"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200/80"
+                : "bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200/80 dark:hover:bg-slate-700 border border-transparent dark:border-white/[0.06]"
             }`}
           >
             Strengthen My Bullet Points
@@ -287,7 +287,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
             className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
               activeSubTab === "certs"
                 ? "bg-indigo-600 text-white shadow-sm font-bold"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200/80"
+                : "bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200/80 dark:hover:bg-slate-700 border border-transparent dark:border-white/[0.06]"
             }`}
           >
             Certifications Worth Getting
@@ -298,16 +298,16 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
       {/* Sub-Tab 1: Rewrite My Summary */}
       {activeSubTab === "summary" && (
         <div className="space-y-4 animate-fade-in">
-          <div className="bg-slate-50 border border-slate-200/60 p-4 rounded-xl">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">
+          <div className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-white/[0.06] p-4 rounded-xl">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
               Current Summary
             </span>
-            <p className="text-xs text-slate-700 italic">&quot;{data.summary.current}&quot;</p>
+            <p className="text-xs text-slate-700 dark:text-slate-300 italic">&quot;{data.summary.current}&quot;</p>
           </div>
 
-          <div className="bg-indigo-50/70 border border-indigo-200 p-5 rounded-2xl space-y-3">
+          <div className="bg-indigo-50/70 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/25 p-5 rounded-2xl space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-indigo-800 flex items-center gap-1.5">
+              <span className="text-xs font-bold text-indigo-800 dark:text-indigo-300 flex items-center gap-1.5">
                 ✨ Improved Executive Summary
               </span>
               <button
@@ -318,11 +318,11 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
               </button>
             </div>
 
-            <p className="text-xs text-indigo-950 font-medium leading-relaxed">
+            <p className="text-xs text-indigo-950 dark:text-indigo-100 font-medium leading-relaxed">
               &quot;{data.summary.improved}&quot;
             </p>
 
-            <p className="text-xs text-indigo-700 border-t border-indigo-200/60 pt-2.5">
+            <p className="text-xs text-indigo-700 dark:text-indigo-300 border-t border-indigo-200/60 dark:border-indigo-500/20 pt-2.5">
               💡 <strong>Why this works:</strong> {data.summary.improvement_tips}
             </p>
           </div>
@@ -333,7 +333,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
       {activeSubTab === "keywords" && (
         <div className="space-y-6 animate-fade-in">
           <div>
-            <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
+            <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
               Missing Action Verbs (Tap to copy)
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -344,7 +344,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1 border ${
                     copiedKey === verb
                       ? "bg-emerald-600 text-white border-emerald-600"
-                      : "bg-indigo-50 text-indigo-700 border-indigo-100 hover:bg-indigo-100"
+                      : "bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-100 dark:border-indigo-500/25 hover:bg-indigo-100 dark:hover:bg-indigo-500/25"
                   }`}
                 >
                   {copiedKey === verb ? "✓ Copied" : `+ ${verb}`}
@@ -354,7 +354,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
           </div>
 
           <div>
-            <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">
+            <h4 className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
               Missing Technical Keywords
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -365,7 +365,7 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
                   className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1 border ${
                     copiedKey === kw
                       ? "bg-emerald-600 text-white border-emerald-600"
-                      : "bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100"
+                      : "bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-500/25 hover:bg-amber-100 dark:hover:bg-amber-500/25"
                   }`}
                 >
                   {copiedKey === kw ? "✓ Copied" : `+ ${kw}`}
@@ -380,28 +380,28 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
       {activeSubTab === "bullets" && (
         <div className="space-y-4 animate-fade-in">
           {data.bullet_points.map((bullet, idx) => (
-            <div key={idx} className="bg-slate-50 border border-slate-200/70 p-4 rounded-2xl space-y-3">
-              <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
+            <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-white/[0.06] p-4 rounded-2xl space-y-3">
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
                 <span>Bullet #{idx + 1}</span>
                 <button
                   onClick={() => copyToClipboard(bullet.improved, `bullet-${idx}`)}
-                  className="text-indigo-600 hover:text-indigo-800 text-xs font-bold underline"
+                  className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-xs font-bold underline"
                 >
                   {copiedKey === `bullet-${idx}` ? "✓ Copied" : "Copy Improved"}
                 </button>
               </div>
 
-              <div className="bg-rose-50/70 border border-rose-100 text-rose-900 p-3 rounded-xl text-xs">
-                <span className="font-bold text-rose-700 block mb-0.5">Original:</span>
+              <div className="bg-rose-50/70 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 text-rose-900 dark:text-rose-200 p-3 rounded-xl text-xs">
+                <span className="font-bold text-rose-700 dark:text-rose-300 block mb-0.5">Original:</span>
                 &quot;{bullet.original}&quot;
               </div>
 
-              <div className="bg-emerald-50/70 border border-emerald-100 text-emerald-950 p-3 rounded-xl text-xs">
-                <span className="font-bold text-emerald-700 block mb-0.5">Improved:</span>
+              <div className="bg-emerald-50/70 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 text-emerald-950 dark:text-emerald-200 p-3 rounded-xl text-xs">
+                <span className="font-bold text-emerald-700 dark:text-emerald-300 block mb-0.5">Improved:</span>
                 &quot;{bullet.improved}&quot;
               </div>
 
-              <p className="text-xs text-slate-500 italic">
+              <p className="text-xs text-slate-500 dark:text-slate-400 italic">
                 <strong>Why it&apos;s better:</strong> {bullet.reason}
               </p>
             </div>
@@ -413,24 +413,24 @@ export const ResumeBoostCard: React.FC<ResumeBoostCardProps> = ({
       {activeSubTab === "certs" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-in">
           {data.recommended_certifications.map((cert) => (
-            <div key={cert.id} className="bg-slate-50 p-4 rounded-xl border border-slate-200/70 flex flex-col justify-between">
+            <div key={cert.id} className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200/70 dark:border-white/[0.06] flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">
+                  <span className="text-xs font-semibold bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 rounded">
                     {cert.skill_domain}
                   </span>
-                  <span className="text-xs font-bold text-slate-500">{cert.level}</span>
+                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{cert.level}</span>
                 </div>
-                <h4 className="text-xs font-bold text-slate-800 mb-1">{cert.title}</h4>
-                <p className="text-xs text-slate-500 mb-2">By {cert.provider}</p>
-                <p className="text-xs text-slate-600 mb-3">{cert.description}</p>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-white mb-1">{cert.title}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">By {cert.provider}</p>
+                <p className="text-xs text-slate-600 dark:text-slate-300 mb-3">{cert.description}</p>
               </div>
 
               <a
                 href={cert.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-white border border-slate-200 py-1.5 rounded-lg transition-all"
+                className="inline-flex items-center justify-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 py-1.5 rounded-lg transition-all"
               >
                 Learn More ↗
               </a>

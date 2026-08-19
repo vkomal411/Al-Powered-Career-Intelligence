@@ -1,4 +1,7 @@
 import uuid
+import hmac
+import hashlib
+import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -245,4 +248,133 @@ def revoke_token_family(db: Session, family_id: uuid.UUID) -> None:
         models.RefreshToken.family_id == family_id
     ).update({"revoked_at": now})
     db.commit()
+
+
+def revoke_all_user_sessions(db: Session, user_id: uuid.UUID) -> None:
+    """Revokes all active refresh tokens for a user (e.g. after password reset)."""
+    now = datetime.now(timezone.utc)
+    db.query(models.RefreshToken).filter(
+        models.RefreshToken.user_id == user_id,
+        models.RefreshToken.revoked_at.is_(None)
+    ).update({"revoked_at": now})
+    db.commit()
+
+
+def create_password_reset_token(user: models.User, expires_delta_minutes: int = 15) -> str:
+    """
+    Generates a time-bound, cryptographically signed password reset JWT.
+    Includes a hash of the current password hash (pwh) so the token is single-use
+    and immediately becomes invalid once the password is changed.
+    """
+    now = datetime.now(timezone.utc)
+    expire = now + timedelta(minutes=expires_delta_minutes)
+    pwh = hash_token(user.hashed_password or "")
+    payload = {
+        "sub": str(user.id),
+        "type": "password_reset",
+        "pwh": pwh,
+        "iat": now,
+        "exp": expire,
+    }
+    return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+
+
+def verify_password_reset_token(token: str, db: Session) -> models.User:
+    """
+    Verifies the reset token signature, expiration, and single-use validity.
+    Returns the associated User or raises an HTTPException.
+    """
+    invalid_token_exception = HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Password reset link is invalid or has expired. Please request a new one."
+    )
+
+    try:
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
+    except InvalidTokenError:
+        raise invalid_token_exception
+
+    if payload.get("type") != "password_reset":
+        raise invalid_token_exception
+
+    user_id_str = payload.get("sub")
+    if not user_id_str:
+        raise invalid_token_exception
+
+    try:
+        user_uuid = uuid.UUID(str(user_id_str))
+    except (ValueError, TypeError):
+        raise invalid_token_exception
+
+    user = db.query(models.User).filter(models.User.id == user_uuid).first()
+    if not user or not user.is_active:
+        raise invalid_token_exception
+
+    if not user.hashed_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This account signs in with Google. Password reset is not available."
+        )
+
+    # Check that current password hash matches the token's pwh claim (single-use check)
+    current_pwh = hash_token(user.hashed_password)
+    if not hmac.compare_digest(current_pwh, payload.get("pwh", "")):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This password reset link has already been used or is outdated. Please request a new one."
+        )
+
+    return user
+
+
+def require_role(*allowed_roles: str):
+    def role_checker(current_user: models.User = Depends(get_current_user)) -> models.User:
+        user_role = (current_user.role or "user").lower()
+        allowed_lower = [r.lower() for r in allowed_roles]
+        
+        # Superadmin always has access
+        if user_role == "superadmin":
+            return current_user
+            
+        if user_role in allowed_lower or (current_user.is_admin and "admin" in allowed_lower):
+            return current_user
+            
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Access forbidden: requires one of roles [{', '.join(allowed_roles)}]"
+        )
+    return role_checker
+
+
+get_current_admin_user = require_role("superadmin", "admin", "moderator")
+
+
+def create_admin_audit_log(
+    db: Session,
+    admin_user_id: uuid.UUID,
+    action: str,
+    target_type: str,
+    target_id: Optional[str] = None,
+    before_state: Optional[dict] = None,
+    after_state: Optional[dict] = None,
+    ip_address: Optional[str] = None,
+    user_agent: Optional[str] = None,
+):
+    final_after = after_state or {}
+    if user_agent:
+        final_after = {**final_after, "user_agent": user_agent[:200]}
+
+    log_entry = models.AdminAuditLog(
+        admin_user_id=admin_user_id,
+        action=action,
+        target_type=target_type,
+        target_id=target_id,
+        before_state=before_state,
+        after_state=final_after if final_after else None,
+        ip_address=ip_address,
+    )
+    db.add(log_entry)
+    db.commit()
+    return log_entry
+
 

@@ -77,7 +77,7 @@ export default function SkillDetailModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs animate-fade-in">
-      <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl border border-slate-200 space-y-5 overflow-hidden">
+      <div className="relative w-full max-w-lg rounded-2xl bg-white dark:bg-[#111726] p-6 shadow-2xl dark:shadow-[0_16px_48px_rgba(0,0,0,0.7)] border border-slate-200 dark:border-white/[0.1] space-y-5 overflow-hidden">
         {/* Background Decorative Gradient */}
         <div
           className={`absolute -top-24 -right-24 h-48 w-48 rounded-full blur-3xl opacity-20 ${
@@ -91,67 +91,67 @@ export default function SkillDetailModal({
             <div
               className={`flex h-11 w-11 items-center justify-center rounded-xl border ${
                 isMatched
-                  ? "bg-emerald-50 text-emerald-600 border-emerald-200"
-                  : "bg-indigo-50 text-indigo-600 border-indigo-200"
+                  ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30"
+                  : "bg-indigo-50 text-indigo-600 border-indigo-200 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30"
               }`}
             >
               {isMatched ? <CheckCircleIcon className="h-6 w-6" /> : <SparkleIcon className="h-6 w-6" />}
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 px-2 py-0.5 rounded">
                   {category}
                 </span>
                 <span
                   className={`text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${
                     isMatched
-                      ? "text-emerald-700 bg-emerald-100/80"
-                      : "text-amber-700 bg-amber-100/80"
+                      ? "text-emerald-700 bg-emerald-100/80 dark:bg-emerald-500/20 dark:text-emerald-300"
+                      : "text-amber-700 bg-amber-100/80 dark:bg-amber-500/20 dark:text-amber-300"
                   }`}
                 >
                   {isMatched ? "✓ Matched in Resume" : "⚡ Missing Skill Gap"}
                 </span>
               </div>
-              <h3 className="font-display text-xl font-bold text-slate-900 mt-0.5">{skill}</h3>
+              <h3 className="font-display text-xl font-bold text-slate-900 dark:text-white mt-0.5">{skill}</h3>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors"
           >
             ✕
           </button>
         </div>
 
         {/* Description & Metadata */}
-        <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-4 space-y-3">
-          <p className="text-xs text-slate-700 leading-relaxed font-medium">{description}</p>
-          <div className="grid grid-cols-2 gap-3 pt-1 border-t border-slate-200/60">
+        <div className="rounded-xl border border-slate-100 dark:border-white/[0.08] bg-slate-50/70 dark:bg-slate-800/50 p-4 space-y-3">
+          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">{description}</p>
+          <div className="grid grid-cols-2 gap-3 pt-1 border-t border-slate-200/60 dark:border-white/[0.06]">
             <div>
-              <span className="text-[10px] font-bold uppercase text-slate-400 block">Est. Effort</span>
-              <span className="text-xs font-bold text-slate-800">{learningTime}</span>
+              <span className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-400 block">Est. Effort</span>
+              <span className="text-xs font-bold text-slate-800 dark:text-white">{learningTime}</span>
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase text-slate-400 block">Difficulty</span>
-              <span className="text-xs font-bold text-slate-800">{difficulty}</span>
+              <span className="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-400 block">Difficulty</span>
+              <span className="text-xs font-bold text-slate-800 dark:text-white">{difficulty}</span>
             </div>
           </div>
         </div>
 
         {/* Action Items to Close Gap */}
         <div className="space-y-2">
-          <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-            <SparkleIcon className="h-4 w-4 text-indigo-600" />
+          <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+            <SparkleIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
             <span>Recommended Action Steps</span>
           </h4>
           <ul className="space-y-2">
             {actionItems.map((item, idx) => (
               <li
                 key={idx}
-                className="flex items-start gap-2.5 rounded-xl border border-slate-100 bg-white p-3 text-xs text-slate-700 shadow-2xs"
+                className="flex items-start gap-2.5 rounded-xl border border-slate-100 dark:border-white/[0.06] bg-white dark:bg-slate-800/80 p-3 text-xs text-slate-700 dark:text-slate-300 shadow-2xs"
               >
-                <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-indigo-50 text-[11px] font-bold text-indigo-600">
+                <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-[11px] font-bold text-indigo-600 dark:text-indigo-300">
                   {idx + 1}
                 </span>
                 <span>{item}</span>
@@ -161,8 +161,8 @@ export default function SkillDetailModal({
         </div>
 
         {/* External Resources */}
-        <div className="space-y-2 pt-1 border-t border-slate-100">
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="space-y-2 pt-1 border-t border-slate-100 dark:border-white/[0.08]">
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
             Explore Learning Resources
           </span>
           <div className="flex flex-wrap gap-2">
@@ -170,7 +170,7 @@ export default function SkillDetailModal({
               href={`https://www.coursera.org/search?query=${encodedSkill}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 px-3 py-1.5 rounded-lg border border-slate-200 transition-all"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-all"
             >
               <span>Coursera</span>
               <ExternalLinkIcon className="h-3 w-3" />
@@ -179,7 +179,7 @@ export default function SkillDetailModal({
               href={`https://www.youtube.com/results?search_query=${encodedSkill}+tutorial`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 px-3 py-1.5 rounded-lg border border-slate-200 transition-all"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-all"
             >
               <span>YouTube Tutorials</span>
               <ExternalLinkIcon className="h-3 w-3" />
@@ -188,7 +188,7 @@ export default function SkillDetailModal({
               href={`https://github.com/topics/${encodedSkill.toLowerCase()}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 px-3 py-1.5 rounded-lg border border-slate-200 transition-all"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 hover:text-indigo-700 dark:hover:text-indigo-300 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-all"
             >
               <span>GitHub Projects</span>
               <ExternalLinkIcon className="h-3 w-3" />
@@ -197,11 +197,11 @@ export default function SkillDetailModal({
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end pt-2 border-t border-slate-100">
+        <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-white/[0.08]">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl bg-slate-900 px-5 py-2 text-xs font-bold text-white hover:bg-slate-800 transition-all shadow-xs"
+            className="rounded-xl bg-slate-900 dark:bg-slate-800 dark:hover:bg-slate-700 px-5 py-2 text-xs font-bold text-white transition-all shadow-xs"
           >
             Close Details
           </button>

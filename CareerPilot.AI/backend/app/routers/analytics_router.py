@@ -86,7 +86,11 @@ async def get_career_overview(
 
 
     # Actionable Profile Checklist
-    has_edu_exp = bool(current_user.education) or bool(current_user.projects) or (latest_resume and bool(latest_resume.work_experience))
+    has_edu_exp = (
+        bool(current_user.education)
+        or bool(current_user.projects)
+        or bool(latest_resume and (latest_resume.extracted_experience or latest_resume.extracted_education or latest_resume.extracted_projects))
+    )
 
     checklist = [
         {

@@ -1,0 +1,489 @@
+[
+  {
+    "id": "backend-developer",
+    "title": "Backend Developer",
+    "category": "Software Engineering",
+    "description": "Architects, builds, and maintains server-side web applications, APIs, databases, and microservices.",
+    "required_skills": {
+      "python": 1.0,
+      "sql": 0.9,
+      "rest_api": 0.8,
+      "git": 0.6
+    },
+    "optional_skills": {
+      "fastapi": 0.6,
+      "django": 0.5,
+      "flask": 0.4,
+      "docker": 0.6,
+      "postgresql": 0.5,
+      "redis": 0.4,
+      "microservices": 0.5,
+      "system_design": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["software", "backend", "web", "api"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "frontend-developer",
+    "title": "Frontend Developer",
+    "category": "Software Engineering",
+    "description": "Crafts responsive, performant user interfaces and interactive web client experiences using modern frontend frameworks.",
+    "required_skills": {
+      "javascript": 1.0,
+      "react": 0.9,
+      "html": 0.8,
+      "css": 0.8,
+      "git": 0.6
+    },
+    "optional_skills": {
+      "typescript": 0.7,
+      "next.js": 0.6,
+      "tailwind_css": 0.5,
+      "vue": 0.4,
+      "jest": 0.4,
+      "rest_api": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["software", "frontend", "web", "ui"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "full-stack-developer",
+    "title": "Full Stack Developer",
+    "category": "Software Engineering",
+    "description": "Builds end-to-end web applications combining robust backend services with polished, modern frontend user interfaces.",
+    "required_skills": {
+      "javascript": 0.9,
+      "react": 0.8,
+      "python": 0.8,
+      "sql": 0.8,
+      "rest_api": 0.8,
+      "git": 0.6
+    },
+    "optional_skills": {
+      "typescript": 0.7,
+      "next.js": 0.6,
+      "node.js": 0.6,
+      "fastapi": 0.5,
+      "docker": 0.5,
+      "postgresql": 0.5,
+      "tailwind_css": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 1
+    },
+    "domains": ["software", "fullstack", "web", "backend", "frontend"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "python-developer",
+    "title": "Python Developer",
+    "category": "Software Engineering",
+    "description": "Specializes in developing scalable applications, automated workflows, backend services, and data tooling using Python.",
+    "required_skills": {
+      "python": 1.0,
+      "sql": 0.8,
+      "git": 0.7,
+      "rest_api": 0.7
+    },
+    "optional_skills": {
+      "fastapi": 0.6,
+      "django": 0.6,
+      "flask": 0.5,
+      "docker": 0.5,
+      "pytest": 0.5,
+      "pandas": 0.4,
+      "postgresql": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["software", "python", "backend", "scripting"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "java-developer",
+    "title": "Java Developer",
+    "category": "Software Engineering",
+    "description": "Designs and develops enterprise-grade, high-throughput microservices and backend infrastructure using the Java ecosystem.",
+    "required_skills": {
+      "java": 1.0,
+      "spring boot": 0.9,
+      "sql": 0.8,
+      "git": 0.6
+    },
+    "optional_skills": {
+      "microservices": 0.6,
+      "docker": 0.5,
+      "kubernetes": 0.4,
+      "rest_api": 0.5,
+      "kafka": 0.4,
+      "mysql": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["software", "enterprise", "java", "backend"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "devops-engineer",
+    "title": "DevOps Engineer",
+    "category": "Cloud & DevOps",
+    "description": "Automates cloud deployment pipelines, optimizes infrastructure scalability, manages CI/CD, and ensures high availability.",
+    "required_skills": {
+      "docker": 0.9,
+      "kubernetes": 0.9,
+      "cicd": 0.8,
+      "linux": 0.8,
+      "git": 0.6
+    },
+    "optional_skills": {
+      "aws": 0.7,
+      "terraform": 0.6,
+      "ansible": 0.5,
+      "python": 0.5,
+      "gcp": 0.4,
+      "azure": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 1
+    },
+    "domains": ["devops", "cloud", "infrastructure", "automation"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "cloud-engineer",
+    "title": "Cloud Engineer",
+    "category": "Cloud & DevOps",
+    "description": "Architects, configures, and secures enterprise cloud infrastructure and services on platforms like AWS, Azure, and GCP.",
+    "required_skills": {
+      "aws": 0.9,
+      "linux": 0.8,
+      "docker": 0.7,
+      "terraform": 0.7
+    },
+    "optional_skills": {
+      "kubernetes": 0.6,
+      "azure": 0.6,
+      "gcp": 0.5,
+      "cicd": 0.5,
+      "python": 0.4,
+      "network_security": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 1
+    },
+    "domains": ["cloud", "infrastructure", "aws", "devops"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "site-reliability-engineer",
+    "title": "Site Reliability Engineer (SRE)",
+    "category": "Cloud & DevOps",
+    "description": "Applies software engineering practices to system administration, monitoring, incident mitigation, and high-uptime production systems.",
+    "required_skills": {
+      "linux": 0.9,
+      "kubernetes": 0.8,
+      "docker": 0.8,
+      "python": 0.7,
+      "cicd": 0.6
+    },
+    "optional_skills": {
+      "aws": 0.6,
+      "terraform": 0.5,
+      "system_design": 0.6,
+      "go": 0.5,
+      "microservices": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 2
+    },
+    "domains": ["sre", "reliability", "infrastructure", "devops", "monitoring"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "data-analyst",
+    "title": "Data Analyst",
+    "category": "Data & Analytics",
+    "description": "Transforms raw business data into actionable visual dashboards, statistical insights, and strategic reporting.",
+    "required_skills": {
+      "sql": 1.0,
+      "excel": 0.8,
+      "power_bi": 0.8
+    },
+    "optional_skills": {
+      "tableau": 0.7,
+      "python": 0.6,
+      "pandas": 0.5,
+      "numpy": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["data", "analytics", "business_intelligence", "reporting"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "data-engineer",
+    "title": "Data Engineer",
+    "category": "Data & Analytics",
+    "description": "Designs, builds, and maintains data pipelines, big data infrastructure, ETL workflows, and distributed data lakes.",
+    "required_skills": {
+      "python": 0.9,
+      "sql": 0.9,
+      "spark": 0.8,
+      "airflow": 0.7
+    },
+    "optional_skills": {
+      "kafka": 0.6,
+      "postgresql": 0.5,
+      "docker": 0.5,
+      "aws": 0.5,
+      "pandas": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 1
+    },
+    "domains": ["data", "data_engineering", "etl", "big_data", "pipelines"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "data-scientist",
+    "title": "Data Scientist",
+    "category": "Data & Analytics",
+    "description": "Leverages statistical modeling, machine learning, and data visualization to solve complex predictive problems and generate business value.",
+    "required_skills": {
+      "python": 1.0,
+      "sql": 0.8,
+      "machine_learning": 0.9,
+      "pandas": 0.8
+    },
+    "optional_skills": {
+      "scikit_learn": 0.7,
+      "numpy": 0.6,
+      "deep_learning": 0.5,
+      "tableau": 0.4,
+      "tensorflow": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 1
+    },
+    "domains": ["data_science", "machine_learning", "analytics", "statistics"],
+    "education_levels": ["bachelor", "master", "phd"]
+  },
+  {
+    "id": "ai-ml-engineer",
+    "title": "AI/ML Engineer",
+    "category": "AI & Machine Learning",
+    "description": "Develops, trains, fine-tunes, and deploys deep learning models, LLM solutions, and scalable AI inference APIs into production.",
+    "required_skills": {
+      "python": 1.0,
+      "machine_learning": 0.9,
+      "deep_learning": 0.8,
+      "pytorch": 0.8
+    },
+    "optional_skills": {
+      "tensorflow": 0.7,
+      "llms": 0.7,
+      "genai": 0.6,
+      "natural_language_processing": 0.6,
+      "fastapi": 0.5,
+      "docker": 0.5
+    },
+    "preferred_experience": {
+      "min_years": 1
+    },
+    "domains": ["ai", "machine_learning", "deep_learning", "nlp", "llm"],
+    "education_levels": ["bachelor", "master", "phd"]
+  },
+  {
+    "id": "cybersecurity-analyst",
+    "title": "Cybersecurity Analyst",
+    "category": "Cybersecurity",
+    "description": "Monitors network traffic, detects intrusions, investigates security alerts, assesses vulnerabilities, and enforces organizational defense.",
+    "required_skills": {
+      "cybersecurity": 1.0,
+      "network_security": 0.9,
+      "linux": 0.7
+    },
+    "optional_skills": {
+      "siem": 0.7,
+      "pentesting": 0.6,
+      "owasp": 0.6,
+      "python": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["security", "cybersecurity", "soc", "networking"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "security-engineer",
+    "title": "Security Engineer",
+    "category": "Cybersecurity",
+    "description": "Designs and builds secure software architectures, automated vulnerability scanning pipelines, cryptography systems, and auth protocols.",
+    "required_skills": {
+      "cybersecurity": 0.9,
+      "network_security": 0.8,
+      "owasp": 0.8,
+      "python": 0.7
+    },
+    "optional_skills": {
+      "pentesting": 0.7,
+      "aws": 0.6,
+      "linux": 0.6,
+      "docker": 0.5,
+      "cicd": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 1
+    },
+    "domains": ["security", "appsec", "engineering", "devsecops"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "qa-automation-engineer",
+    "title": "QA Automation Engineer",
+    "category": "Quality Assurance",
+    "description": "Designs robust test automation frameworks, writes end-to-end tests, performs regression testing, and ensures software reliability.",
+    "required_skills": {
+      "test_automation": 1.0,
+      "selenium": 0.8,
+      "python": 0.7,
+      "git": 0.6
+    },
+    "optional_skills": {
+      "playwright": 0.7,
+      "cypress": 0.6,
+      "pytest": 0.6,
+      "rest_api": 0.5,
+      "cicd": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["qa", "testing", "automation", "quality"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "product-manager",
+    "title": "Product Manager",
+    "category": "Product & Management",
+    "description": "Defines product vision, prioritizes roadmap features, leads cross-functional teams, and translates user needs into product success.",
+    "required_skills": {
+      "product_management": 1.0,
+      "agile": 0.9,
+      "jira": 0.8
+    },
+    "optional_skills": {
+      "ui_ux_design": 0.5,
+      "sql": 0.4,
+      "wireframing": 0.5,
+      "power_bi": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 2
+    },
+    "domains": ["product", "management", "agile", "strategy"],
+    "education_levels": ["bachelor", "master", "mba"]
+  },
+  {
+    "id": "business-analyst",
+    "title": "Business Analyst",
+    "category": "Product & Management",
+    "description": "Analyzes business workflows, documents stakeholder requirements, maps system processes, and validates operational improvements.",
+    "required_skills": {
+      "agile": 0.9,
+      "sql": 0.8,
+      "excel": 0.8
+    },
+    "optional_skills": {
+      "power_bi": 0.7,
+      "tableau": 0.6,
+      "jira": 0.6,
+      "product_management": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["business", "analytics", "requirements", "strategy"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "ui-ux-designer",
+    "title": "UI/UX Designer",
+    "category": "Design & Creative",
+    "description": "Designs intuitive user journeys, wireframes, high-fidelity prototypes, design systems, and user-centric web/mobile interfaces.",
+    "required_skills": {
+      "ui_ux_design": 1.0,
+      "figma": 1.0,
+      "wireframing": 0.9
+    },
+    "optional_skills": {
+      "html": 0.5,
+      "css": 0.5,
+      "tailwind_css": 0.4,
+      "product_management": 0.4
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["design", "ui", "ux", "figma", "frontend"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "mobile-developer",
+    "title": "Mobile Developer",
+    "category": "Software Engineering",
+    "description": "Builds high-performance native and cross-platform mobile apps for iOS and Android with modern frameworks.",
+    "required_skills": {
+      "react_native": 0.8,
+      "javascript": 0.8,
+      "git": 0.6
+    },
+    "optional_skills": {
+      "flutter": 0.8,
+      "typescript": 0.7,
+      "swift": 0.6,
+      "kotlin": 0.6,
+      "rest_api": 0.5
+    },
+    "preferred_experience": {
+      "min_years": 0
+    },
+    "domains": ["mobile", "ios", "android", "apps"],
+    "education_levels": ["bachelor", "master", "any"]
+  },
+  {
+    "id": "solutions-architect",
+    "title": "Solutions Architect",
+    "category": "Architecture & Strategy",
+    "description": "Translates complex business challenges into resilient, scalable, cost-effective enterprise cloud and software architectures.",
+    "required_skills": {
+      "system_design": 1.0,
+      "aws": 0.9,
+      "microservices": 0.8,
+      "docker": 0.7
+    },
+    "optional_skills": {
+      "kubernetes": 0.7,
+      "azure": 0.6,
+      "gcp": 0.5,
+      "python": 0.5,
+      "terraform": 0.5,
+      "cybersecurity": 0.5
+    },
+    "preferred_experience": {
+      "min_years": 3
+    },
+    "domains": ["architecture", "cloud", "strategy", "enterprise"],
+    "education_levels": ["bachelor", "master", "any"]
+  }
+]

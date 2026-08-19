@@ -65,32 +65,32 @@ export const JobMatcherComponent: React.FC<JobMatcherProps> = ({ resumeId, onMat
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 animate-fade-in">
-      <div className="border-b border-slate-100 pb-3">
-        <h3 className="text-sm font-bold text-slate-900">Job Description Matcher & Keyword Gap Analysis</h3>
-        <p className="text-xs text-slate-500 mt-0.5">Paste target job postings to analyze skill overlap and receive tailored resume tips</p>
+    <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] p-6 space-y-6 animate-fade-in">
+      <div className="border-b border-slate-100 dark:border-white/[0.08] pb-3">
+        <h3 className="text-sm font-bold text-slate-900 dark:text-white">Job Description Matcher & Keyword Gap Analysis</h3>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Paste target job postings to analyze skill overlap and receive tailored resume tips</p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1">Job Title</label>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Job Title</label>
           <input
             type="text"
             placeholder="e.g. Senior Frontend Developer / UI UX Designer"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1">Job Description Text</label>
+          <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Job Description Text</label>
           <textarea
             rows={5}
             placeholder="Paste the target job description requirements here..."
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none leading-relaxed"
+            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none leading-relaxed"
           />
         </div>
 
@@ -111,24 +111,24 @@ export const JobMatcherComponent: React.FC<JobMatcherProps> = ({ resumeId, onMat
       </div>
 
       {matchResult && (
-        <div className="pt-4 border-t border-slate-100 space-y-4 animate-fade-in">
+        <div className="pt-4 border-t border-slate-100 dark:border-white/[0.08] space-y-4 animate-fade-in">
           <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-indigo-50/60 border border-indigo-100 text-center">
-              <div className="text-3xl font-extrabold text-indigo-700">{matchResult.match_score}%</div>
-              <div className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mt-1">Match Percentage</div>
+            <div className="p-4 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-500/20 text-center">
+              <div className="text-3xl font-extrabold text-indigo-700 dark:text-indigo-300">{matchResult.match_score}%</div>
+              <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mt-1">Match Percentage</div>
             </div>
-            <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-100 text-center">
-              <div className="text-2xl font-bold text-emerald-700">{matchResult.matched_skills?.length || 0}</div>
-              <div className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mt-1">Matched Skills</div>
+            <div className="p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-500/20 text-center">
+              <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">{matchResult.matched_skills?.length || 0}</div>
+              <div className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mt-1">Matched Skills</div>
             </div>
           </div>
 
           {matchResult.matched_skills?.length > 0 && (
-            <div className="p-3.5 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-1.5">
-              <span className="text-[11px] font-bold text-emerald-900 uppercase tracking-wide">✓ Matched Required Skills</span>
+            <div className="p-3.5 bg-emerald-50/60 dark:bg-emerald-950/20 rounded-xl border border-emerald-200 dark:border-emerald-500/25 space-y-1.5">
+              <span className="text-[11px] font-bold text-emerald-900 dark:text-emerald-300 uppercase tracking-wide">✓ Matched Required Skills</span>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {matchResult.matched_skills.map((s: string) => (
-                  <span key={s} className="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-bold">
+                  <span key={s} className="px-2.5 py-1 rounded-md bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-200 border border-transparent dark:border-emerald-500/30 text-[11px] font-bold">
                     {s}
                   </span>
                 ))}
@@ -137,11 +137,11 @@ export const JobMatcherComponent: React.FC<JobMatcherProps> = ({ resumeId, onMat
           )}
 
           {matchResult.missing_skills?.length > 0 && (
-            <div className="p-3.5 bg-rose-50/60 rounded-xl border border-rose-200 space-y-1.5">
-              <span className="text-[11px] font-bold text-rose-900 uppercase tracking-wide">❌ Missing Skill Gaps</span>
+            <div className="p-3.5 bg-rose-50/60 dark:bg-rose-950/20 rounded-xl border border-rose-200 dark:border-rose-500/25 space-y-1.5">
+              <span className="text-[11px] font-bold text-rose-900 dark:text-rose-300 uppercase tracking-wide">❌ Missing Skill Gaps</span>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {matchResult.missing_skills.map((s: string) => (
-                  <span key={s} className="px-2.5 py-1 rounded-md bg-rose-100 text-rose-800 text-[11px] font-bold">
+                  <span key={s} className="px-2.5 py-1 rounded-md bg-rose-100 dark:bg-rose-500/20 text-rose-800 dark:text-rose-200 border border-transparent dark:border-rose-500/30 text-[11px] font-bold">
                     + {s}
                   </span>
                 ))}

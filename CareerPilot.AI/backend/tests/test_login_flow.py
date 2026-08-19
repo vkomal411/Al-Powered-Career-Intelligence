@@ -41,3 +41,24 @@ def test_refresh_token_creation_and_rotation():
     
     assert h1 == h2
     assert len(h1) == 64  # SHA-256 hex string length
+
+
+def test_password_reset_token_creation_and_payload():
+    from app.auth_utils import create_password_reset_token
+    import jwt
+    from app.config import settings
+
+    fake_user = models.User(
+        id=uuid.uuid4(),
+        full_name="Test User",
+        email="test@example.com",
+        hashed_password=hash_password("CurrentPassword123!"),
+    )
+
+    token = create_password_reset_token(fake_user, expires_delta_minutes=15)
+    assert token is not None
+
+    decoded = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
+    assert decoded["sub"] == str(fake_user.id)
+    assert decoded["type"] == "password_reset"
+    assert decoded["pwh"] == hash_token(fake_user.hashed_password)

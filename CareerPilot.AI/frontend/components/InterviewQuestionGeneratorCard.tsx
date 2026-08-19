@@ -298,15 +298,15 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
   const getCategoryBadge = (cat: QuestionCategory) => {
     switch (cat) {
       case "Technical":
-        return "bg-blue-50 text-blue-700 border-blue-200";
+        return "bg-blue-50 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-500/25";
       case "System Architecture":
-        return "bg-purple-50 text-purple-700 border-purple-200";
+        return "bg-purple-50 dark:bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-500/25";
       case "Behavioral":
-        return "bg-emerald-50 text-emerald-700 border-emerald-200";
+        return "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/25";
       case "Leadership":
-        return "bg-amber-50 text-amber-800 border-amber-200";
+        return "bg-amber-50 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-500/25";
       default:
-        return "bg-slate-100 text-slate-700 border-slate-200";
+        return "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700";
     }
   };
 
@@ -314,18 +314,18 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
     activeCategory === "All" ? questions : questions.filter((q) => q.category === activeCategory);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-8 animate-fade-in">
+    <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-sm p-6 sm:p-8 space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-white/[0.08] pb-6">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+            <span className="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-100/60 dark:border-indigo-500/25 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
               <InterviewIcon className="w-3.5 h-3.5" />
               Categorized AI Interview Generator
             </span>
           </div>
-          <h2 className="font-display text-2xl font-bold text-slate-900 mt-2">Interview Question Generator</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h2 className="font-display text-2xl font-bold text-slate-900 dark:text-white mt-2">Interview Question Generator</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Generate role-tailored behavioral and technical interview questions with detailed answers & PDF export.
           </p>
         </div>
@@ -333,10 +333,10 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
         <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
           <button
             onClick={handleDownloadPDF}
-            className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold transition-all shadow-2xs flex items-center gap-2"
+            className="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-2"
             title="Download Q&A document as printable PDF"
           >
-            <DownloadIcon className="w-4 h-4 text-indigo-600" />
+            <DownloadIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
             <span>Download Q&A as PDF</span>
           </button>
 
@@ -361,24 +361,24 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
       </div>
 
       {/* Target Role & Category Tabs Bar */}
-      <div className="space-y-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200">
+      <div className="space-y-4 bg-slate-50/80 dark:bg-slate-800/40 p-5 rounded-2xl border border-slate-200 dark:border-white/[0.08]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">🎯 Target Role:</label>
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">🎯 Target Role:</label>
             <input
               type="text"
               value={targetRole}
               onChange={(e) => setTargetRole(e.target.value)}
-              className="px-3.5 py-1.5 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-900 outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition-all"
+              className="px-3.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-bold text-slate-900 dark:text-white outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition-all"
             />
           </div>
-          <span className="text-xs text-slate-400 font-semibold">
+          <span className="text-xs text-slate-400 dark:text-slate-500 font-semibold">
             {filteredQuestions.length} Questions Available
           </span>
         </div>
 
         {/* Category Selector Tabs */}
-        <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-200/80">
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-200/80 dark:border-white/[0.08]">
           {categories.map((cat) => {
             const count = cat.id === "All" ? questions.length : questions.filter((q) => q.category === cat.id).length;
             const isSelected = activeCategory === cat.id;
@@ -389,14 +389,14 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
                   isSelected
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-                    : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+                    : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700"
                 }`}
               >
                 <span>{cat.icon}</span>
                 <span>{cat.label}</span>
                 <span
                   className={`text-[10px] px-1.5 py-0.2 rounded-full font-extrabold ${
-                    isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+                    isSelected ? "bg-white/20 text-white" : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
                   }`}
                 >
                   {count}
@@ -410,9 +410,9 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
       {/* Categorized Question List */}
       <div className="space-y-4">
         {filteredQuestions.length === 0 ? (
-          <div className="text-center py-12 bg-slate-50 rounded-2xl border border-slate-200">
-            <p className="text-sm font-bold text-slate-700">No questions found in this category</p>
-            <p className="text-xs text-slate-500 mt-1">Select another category or click Generate AI Questions.</p>
+          <div className="text-center py-12 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200 dark:border-white/[0.08]">
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-300">No questions found in this category</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Select another category or click Generate AI Questions.</p>
           </div>
         ) : (
           filteredQuestions.map((q, index) => {
@@ -421,7 +421,9 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
               <div
                 key={q.id}
                 className={`rounded-2xl border transition-all ${
-                  isExpanded ? "border-indigo-300 bg-indigo-50/20 shadow-sm" : "border-slate-200 bg-white hover:border-slate-300"
+                  isExpanded
+                    ? "border-indigo-300 dark:border-indigo-500/40 bg-indigo-50/20 dark:bg-indigo-950/20 shadow-sm"
+                    : "border-slate-200 dark:border-white/[0.08] bg-white dark:bg-slate-800/30 hover:border-slate-300 dark:hover:border-slate-750"
                 }`}
               >
                 <button
@@ -430,48 +432,48 @@ export const InterviewQuestionGeneratorCard: React.FC = () => {
                 >
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-extrabold text-slate-400">Q{index + 1}.</span>
+                      <span className="text-xs font-extrabold text-slate-400 dark:text-slate-500">Q{index + 1}.</span>
                       <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase border ${getCategoryBadge(q.category)}`}>
                         {q.category}
                       </span>
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           q.difficulty === "Easy"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            ? "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/25"
                             : q.difficulty === "Medium"
-                            ? "bg-amber-50 text-amber-700 border border-amber-200"
-                            : "bg-rose-50 text-rose-700 border border-rose-200"
+                            ? "bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-500/25"
+                            : "bg-rose-50 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/25"
                         }`}
                       >
                         {q.difficulty}
                       </span>
                     </div>
-                    <h3 className="font-bold text-slate-900 text-sm leading-snug">{q.question}</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug">{q.question}</h3>
                   </div>
 
-                  <span className="text-slate-400 font-bold text-base flex-shrink-0 bg-slate-100 w-6 h-6 rounded-full flex items-center justify-center">
+                  <span className="text-slate-400 dark:text-slate-500 font-bold text-base flex-shrink-0 bg-slate-100 dark:bg-slate-800 w-6 h-6 rounded-full flex items-center justify-center">
                     {isExpanded ? "−" : "+"}
                   </span>
                 </button>
 
                 {isExpanded && (
-                  <div className="px-5 pb-5 pt-1 border-t border-slate-100 space-y-4 animate-fade-in">
+                  <div className="px-5 pb-5 pt-1 border-t border-slate-100 dark:border-white/[0.08] space-y-4 animate-fade-in">
                     <div>
-                      <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                      <h4 className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                         <span>💡 Suggested AI Response Model</span>
                       </h4>
-                      <p className="text-xs text-slate-700 leading-relaxed bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs font-medium">
+                      <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed bg-white dark:bg-slate-800/80 p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs font-medium">
                         {q.suggestedAnswer}
                       </p>
                     </div>
 
                     <div>
-                      <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+                      <h4 className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
                         Key Evaluation Concepts
                       </h4>
                       <div className="flex flex-wrap gap-1.5">
                         {q.keyConcepts.map((concept) => (
-                          <span key={concept} className="px-2.5 py-1 bg-indigo-50 text-indigo-700 rounded-lg text-[11px] font-bold border border-indigo-100">
+                          <span key={concept} className="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 rounded-lg text-[11px] font-bold border border-indigo-100 dark:border-indigo-500/25">
                             {concept}
                           </span>
                         ))}

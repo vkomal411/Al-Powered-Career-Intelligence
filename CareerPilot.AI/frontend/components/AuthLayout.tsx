@@ -12,7 +12,7 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ eyebrow, headline, points, children }: AuthLayoutProps) {
   return (
-    <div className="flex min-h-screen w-full bg-paper">
+    <div className="flex min-h-screen w-full bg-paper dark:bg-[#0B1120] transition-colors duration-150">
       {/* Left: brand / narrative panel */}
       <aside className="relative hidden w-[44%] flex-col justify-between overflow-hidden bg-ink px-12 py-10 text-white lg:flex">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(79,70,229,0.35),transparent_45%),radial-gradient(circle_at_80%_75%,rgba(245,165,36,0.18),transparent_40%)]" />
@@ -46,7 +46,7 @@ export default function AuthLayout({ eyebrow, headline, points, children }: Auth
       </aside>
 
       {/* Right: form panel */}
-      <main className="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:px-10">
+      <main className="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:px-10 dark:bg-[#0B1120]">
         <div className="mb-8 lg:hidden">
           <BrandMark variant="dark" />
         </div>

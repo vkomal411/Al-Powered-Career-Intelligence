@@ -494,7 +494,7 @@ export const ResumeBuilderCard: React.FC = () => {
   const atsScore = calculateATSScore();
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-8 animate-fade-in">
+    <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-sm p-6 sm:p-8 space-y-8 animate-fade-in">
       {/* AUTOMATIC RESUME GENERATOR HERO BANNER */}
       <div className="bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 rounded-2xl p-6 sm:p-7 text-white shadow-md space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -559,17 +559,17 @@ export const ResumeBuilderCard: React.FC = () => {
       </div>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-6">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wider">
+            <span className="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-wider">
               AI-Powered Resume Studio
             </span>
             <span className="text-xs text-slate-400">•</span>
-            <span className="text-xs font-semibold text-emerald-600">✓ ATS Validated</span>
+            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">✓ ATS Validated</span>
           </div>
-          <h2 className="font-display text-xl font-bold text-slate-900 mt-1.5">Automatic & Guided Resume Editor</h2>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <h2 className="font-display text-xl font-bold text-slate-900 dark:text-white mt-1.5">Automatic & Guided Resume Editor</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
             Auto-generated resume fields are instantly editable below. Fine-tune your details or export immediately as PDF or Word (.doc).
           </p>
         </div>
@@ -578,7 +578,7 @@ export const ResumeBuilderCard: React.FC = () => {
           <button
             type="button"
             onClick={() => setActiveStep(4)}
-            className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+            className="px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2"
           >
             <span>📜 View Previous Resume Result</span>
           </button>
@@ -586,7 +586,7 @@ export const ResumeBuilderCard: React.FC = () => {
       </div>
 
       {/* Step Wizard & AI Score Indicator */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-white/[0.06]">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 flex-1">
           {[
             { num: 1, title: "1. Header & Summary" },
@@ -601,8 +601,8 @@ export const ResumeBuilderCard: React.FC = () => {
                 activeStep === step.num
                   ? "bg-indigo-600 text-white border-indigo-600 shadow-sm"
                   : activeStep > step.num
-                  ? "bg-white border-slate-200 text-slate-800"
-                  : "bg-white/60 border-slate-200 text-slate-400 hover:bg-white"
+                  ? "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
+                  : "bg-white/60 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/60 text-slate-400 dark:text-slate-500 hover:bg-white dark:hover:bg-slate-800"
               }`}
             >
               {step.title}
@@ -611,12 +611,12 @@ export const ResumeBuilderCard: React.FC = () => {
         </div>
 
         {/* Live AI ATS Readiness Meter */}
-        <div className="flex items-center gap-2.5 px-4 py-2 bg-white rounded-xl border border-slate-200 shadow-2xs self-start md:self-auto">
+        <div className="flex items-center gap-2.5 px-4 py-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-2xs self-start md:self-auto">
           <div className="text-right">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">AI ATS Score</span>
-            <span className="text-xs font-extrabold text-indigo-700">{atsScore}% Ready</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block">AI ATS Score</span>
+            <span className="text-xs font-extrabold text-indigo-700 dark:text-indigo-300">{atsScore}% Ready</span>
           </div>
-          <div className="w-10 h-10 rounded-full border-2 border-indigo-100 flex items-center justify-center font-bold text-xs bg-indigo-50 text-indigo-700">
+          <div className="w-10 h-10 rounded-full border-2 border-indigo-100 dark:border-indigo-500/30 flex items-center justify-center font-bold text-xs bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300">
             {atsScore}%
           </div>
         </div>
@@ -625,58 +625,58 @@ export const ResumeBuilderCard: React.FC = () => {
       {/* STEP 1: USER INFO & QUESTIONNAIRE */}
       {activeStep === 1 && (
         <div className="space-y-6 animate-fade-in">
-          <div className="border-b border-slate-100 pb-3">
-            <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">1. Personal Information & Target Career Goal</h3>
-            <p className="text-xs text-slate-500 mt-0.5">Enter your details and answer the two quick questions below to automatically generate an ATS-friendly resume.</p>
+          <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wide">1. Personal Information & Target Career Goal</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Enter your details and answer the two quick questions below to automatically generate an ATS-friendly resume.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Full Name *</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Full Name *</label>
               <input
                 type="text"
                 placeholder="e.g. Venkata Komal"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Targeted Job Title *</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Targeted Job Title *</label>
               <input
                 type="text"
                 placeholder="e.g. UI/UX Designer / Senior Full Stack Engineer"
                 value={targetRole}
                 onChange={(e) => setTargetRole(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Email Address *</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Email Address *</label>
               <input
                 type="email"
                 placeholder="venkata@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Phone Number *</label>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Phone Number *</label>
               <input
                 type="text"
                 placeholder="+1 (555) 234-5678"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
               />
             </div>
           </div>
 
           {/* QUESTION 1: WORK EXPERIENCE */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-3">
+          <div className="p-4 rounded-2xl border border-slate-200 dark:border-white/[0.06] bg-slate-50/60 dark:bg-slate-800/40 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <label className="text-xs font-bold text-slate-800">
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                 1. Do you have prior work experience?
               </label>
               <div className="flex items-center gap-2">
@@ -684,7 +684,7 @@ export const ResumeBuilderCard: React.FC = () => {
                   type="button"
                   onClick={() => setHasExperience(true)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
-                    hasExperience ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100"
+                    hasExperience ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
                   }`}
                 >
                   ✓ Yes, I have experience
@@ -693,7 +693,7 @@ export const ResumeBuilderCard: React.FC = () => {
                   type="button"
                   onClick={() => setHasExperience(false)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
-                    !hasExperience ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100"
+                    !hasExperience ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
                   }`}
                 >
                   No / Fresh Graduate
@@ -708,16 +708,16 @@ export const ResumeBuilderCard: React.FC = () => {
                   placeholder="Optional: Briefly mention your previous job roles, companies, or quick notes (e.g., Lead UI/UX designer at Apex Studio)..."
                   value={experienceNotes}
                   onChange={(e) => setExperienceNotes(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none"
                 />
               </div>
             )}
           </div>
 
           {/* QUESTION 2: PROJECTS */}
-          <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-3">
+          <div className="p-4 rounded-2xl border border-slate-200 dark:border-white/[0.06] bg-slate-50/60 dark:bg-slate-800/40 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <label className="text-xs font-bold text-slate-800">
+              <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                 2. Have you completed any key projects or portfolio work?
               </label>
               <div className="flex items-center gap-2">
@@ -725,7 +725,7 @@ export const ResumeBuilderCard: React.FC = () => {
                   type="button"
                   onClick={() => setHasProjects(true)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
-                    hasProjects ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100"
+                    hasProjects ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
                   }`}
                 >
                   ✓ Yes, I have projects
@@ -734,7 +734,7 @@ export const ResumeBuilderCard: React.FC = () => {
                   type="button"
                   onClick={() => setHasProjects(false)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all border ${
-                    !hasProjects ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white text-slate-600 border-slate-200 hover:bg-slate-100"
+                    !hasProjects ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs" : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
                   }`}
                 >
                   No
@@ -749,30 +749,30 @@ export const ResumeBuilderCard: React.FC = () => {
                   placeholder="Optional: Briefly list your project names or technologies used (e.g., Interactive E-Commerce Dashboard in Figma & React)..."
                   value={projectNotes}
                   onChange={(e) => setProjectNotes(e.target.value)}
-                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs outline-none"
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 outline-none"
                 />
               </div>
             )}
           </div>
 
           {/* PROFESSIONAL SUMMARY PREVIEW & AI GENERATE BUTTON */}
-          <div className="space-y-2 pt-2 border-t border-slate-100">
+          <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-700">Professional Summary</label>
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Professional Summary</label>
               <button
                 type="button"
                 onClick={handleGenerateAISummary}
                 disabled={generatingSummary}
-                className="px-3 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 border border-indigo-200"
+                className="px-3 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-500/15 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 border border-indigo-200 dark:border-indigo-500/30"
               >
                 {generatingSummary ? (
                   <>
-                    <div className="w-3 h-3 border-2 border-indigo-700 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-3 h-3 border-2 border-indigo-700 dark:border-indigo-400 border-t-transparent rounded-full animate-spin" />
                     <span>Generating...</span>
                   </>
                 ) : (
                   <>
-                    <SparkleIcon className="w-3.5 h-3.5 text-indigo-600" />
+                    <SparkleIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                     <span>✨ Re-Generate AI Summary</span>
                   </>
                 )}
@@ -783,7 +783,7 @@ export const ResumeBuilderCard: React.FC = () => {
               placeholder="Your summary will be generated automatically below..."
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none leading-relaxed"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none leading-relaxed"
             />
           </div>
 
@@ -816,12 +816,12 @@ export const ResumeBuilderCard: React.FC = () => {
         <div className="space-y-6 animate-fade-in">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">Work History & AI Polish</h3>
-                <p className="text-xs text-slate-500 mt-0.5">Add positions and click &apos;AI Enhance Bullet&apos; to rewrite entries with measurable STAR-impact results.</p>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wide">Work History & AI Polish</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Add positions and click &apos;AI Enhance Bullet&apos; to rewrite entries with measurable STAR-impact results.</p>
             </div>
             <button
               onClick={handleAddExperience}
-              className="px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold hover:bg-indigo-100 transition-colors border border-indigo-200"
+              className="px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-xs font-bold hover:bg-indigo-100 dark:hover:bg-indigo-500/25 transition-colors border border-indigo-200 dark:border-indigo-500/30"
             >
               + Add Experience
             </button>
@@ -829,13 +829,13 @@ export const ResumeBuilderCard: React.FC = () => {
 
           <div className="space-y-5">
             {experiences.map((exp, idx) => (
-              <div key={exp.id} className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-4">
+              <div key={exp.id} className="p-5 rounded-2xl border border-slate-200 dark:border-white/[0.06] bg-slate-50/50 dark:bg-slate-800/40 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-600">Position #{idx + 1}</span>
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-300">Position #{idx + 1}</span>
                   {experiences.length > 1 && (
                     <button
                       onClick={() => setExperiences(experiences.filter((e) => e.id !== exp.id))}
-                      className="text-xs text-rose-600 font-semibold hover:underline"
+                      className="text-xs text-rose-600 dark:text-rose-400 font-semibold hover:underline"
                     >
                       Remove Position
                     </button>
@@ -848,34 +848,34 @@ export const ResumeBuilderCard: React.FC = () => {
                     placeholder="Job Title (e.g. Senior Developer)"
                     value={exp.role}
                     onChange={(e) => handleUpdateExperience(exp.id, "role", e.target.value)}
-                    className="px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold"
+                    className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                   />
                   <input
                     type="text"
                     placeholder="Company Name (e.g. Nexus Tech)"
                     value={exp.company}
                     onChange={(e) => handleUpdateExperience(exp.id, "company", e.target.value)}
-                    className="px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold"
+                    className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                   />
                   <input
                     type="text"
                     placeholder="Start Date (e.g. Jan 2022)"
                     value={exp.startDate}
                     onChange={(e) => handleUpdateExperience(exp.id, "startDate", e.target.value)}
-                    className="px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold"
+                    className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                   />
                   <input
                     type="text"
                     placeholder="End Date (e.g. Present)"
                     value={exp.endDate}
                     onChange={(e) => handleUpdateExperience(exp.id, "endDate", e.target.value)}
-                    className="px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold"
+                    className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Responsibilities & Key Achievements</label>
+                    <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Responsibilities & Key Achievements</label>
                     <button
                       type="button"
                       onClick={() => handleEnhanceExperience(exp.id, exp.description)}
@@ -901,7 +901,7 @@ export const ResumeBuilderCard: React.FC = () => {
                     placeholder="Describe your work (e.g. Developed API endpoints using Node.js)... or click AI Enhance Bullet to optimize."
                     value={exp.description}
                     onChange={(e) => handleUpdateExperience(exp.id, "description", e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs leading-relaxed"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs leading-relaxed text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                   />
                 </div>
               </div>
@@ -913,10 +913,10 @@ export const ResumeBuilderCard: React.FC = () => {
       {/* STEP 3: SKILLS, AI SUGGESTIONS & EDUCATION */}
       {activeStep === 3 && (
         <div className="space-y-6 animate-fade-in">
-          <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">Skills & Qualifications</h3>
+          <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wide">Skills & Qualifications</h3>
           
           <div className="space-y-4">
-            <label className="block text-xs font-bold text-slate-700">Add Technical & Soft Skills</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Add Technical & Soft Skills</label>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -924,7 +924,7 @@ export const ResumeBuilderCard: React.FC = () => {
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addSkill()}
-                className="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
+                className="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none"
               />
               <button
                 onClick={() => addSkill()}
@@ -935,9 +935,9 @@ export const ResumeBuilderCard: React.FC = () => {
             </div>
 
             {/* AI Skill Recommender Chips */}
-            <div className="p-4 bg-indigo-50/60 rounded-2xl border border-indigo-100 space-y-2">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900">
-                <SparkleIcon className="w-3.5 h-3.5 text-indigo-600" />
+            <div className="p-4 bg-indigo-50/60 dark:bg-indigo-500/10 rounded-2xl border border-indigo-100 dark:border-indigo-500/20 space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900 dark:text-indigo-300">
+                <SparkleIcon className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                 <span>💡 AI Skill Suggestions for &quot;{targetRole || 'Software Professional'}&quot;:</span>
               </div>
               <div className="flex flex-wrap gap-1.5 pt-1">
@@ -948,8 +948,8 @@ export const ResumeBuilderCard: React.FC = () => {
                     disabled={skills.includes(rec)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${
                       skills.includes(rec)
-                        ? "bg-indigo-100 text-indigo-800 border-indigo-200 opacity-60 cursor-default"
-                        : "bg-white text-indigo-700 border-indigo-200 hover:bg-indigo-600 hover:text-white shadow-2xs"
+                        ? "bg-indigo-100 dark:bg-indigo-500/20 text-indigo-800 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30 opacity-60 cursor-default"
+                        : "bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30 hover:bg-indigo-600 dark:hover:bg-indigo-600 hover:text-white shadow-2xs"
                     }`}
                   >
                     + {rec}
@@ -963,7 +963,7 @@ export const ResumeBuilderCard: React.FC = () => {
               {skills.map((s) => (
                 <span
                   key={s}
-                  className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800 text-xs font-bold flex items-center gap-2 border border-slate-200"
+                  className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-2 border border-slate-200 dark:border-slate-700"
                 >
                   <span>{s}</span>
                   <button
@@ -977,10 +977,10 @@ export const ResumeBuilderCard: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-4 pt-4 border-t border-slate-100">
-            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wide">Education History</h4>
+          <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wide">Education History</h4>
             {educationList.map((ed) => (
-              <div key={ed.id} className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-xl border border-slate-200 bg-slate-50/50">
+              <div key={ed.id} className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-xl border border-slate-200 dark:border-white/[0.06] bg-slate-50/50 dark:bg-slate-800/40">
                 <input
                   type="text"
                   placeholder="Degree / Diploma"
@@ -990,7 +990,7 @@ export const ResumeBuilderCard: React.FC = () => {
                       educationList.map((item) => (item.id === ed.id ? { ...item, degree: e.target.value } : item))
                     )
                   }
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold"
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                 />
                 <input
                   type="text"
@@ -1001,7 +1001,7 @@ export const ResumeBuilderCard: React.FC = () => {
                       educationList.map((item) => (item.id === ed.id ? { ...item, school: e.target.value } : item))
                     )
                   }
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold"
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                 />
                 <input
                   type="text"
@@ -1012,7 +1012,7 @@ export const ResumeBuilderCard: React.FC = () => {
                       educationList.map((item) => (item.id === ed.id ? { ...item, year: e.target.value } : item))
                     )
                   }
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold"
+                  className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                 />
               </div>
             ))}
@@ -1023,7 +1023,7 @@ export const ResumeBuilderCard: React.FC = () => {
       {/* STEP 4: TEMPLATE, PREVIEW & MULTI-FORMAT EXPORT */}
       {activeStep === 4 && (
         <div className="space-y-6 animate-fade-in">
-          <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">Select Layout Template</h3>
+          <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wide">Select Layout Template</h3>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
@@ -1036,33 +1036,33 @@ export const ResumeBuilderCard: React.FC = () => {
                 onClick={() => setSelectedTemplate(tmpl.id as "modern" | "classic" | "minimal")}
                 className={`p-4 rounded-xl border text-left transition-all space-y-2 ${
                   selectedTemplate === tmpl.id
-                    ? "border-indigo-600 bg-indigo-50/50 shadow-sm ring-2 ring-indigo-500/20"
-                    : "border-slate-200 hover:bg-slate-50"
+                    ? "border-indigo-600 dark:border-indigo-500 bg-indigo-50/50 dark:bg-indigo-500/15 shadow-sm ring-2 ring-indigo-500/20"
+                    : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800"
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-900">{tmpl.name}</span>
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">{tmpl.name}</span>
                   {selectedTemplate === tmpl.id && <span className="w-2 h-2 rounded-full bg-indigo-600" />}
                 </div>
-                <p className="text-[11px] text-slate-500">{tmpl.desc}</p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">{tmpl.desc}</p>
               </button>
             ))}
           </div>
 
           {/* Live Document Preview Box */}
-          <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Live Document Preview</span>
-              <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+          <div className="p-6 rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-slate-50/60 dark:bg-slate-800/40 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-3">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Live Document Preview</span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-300 font-semibold bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/25">
                 ✓ {atsScore}% ATS Validated
               </span>
             </div>
 
-            <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-3 font-sans text-xs shadow-2xs">
-              <div className="border-b border-slate-100 pb-2">
-                <h4 className="text-base font-bold text-slate-900">{fullName || "Your Full Name"}</h4>
-                <p className="text-xs font-semibold text-indigo-600">{targetRole || "Target Job Title"}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5 flex items-center gap-1.5">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3 font-sans text-xs shadow-2xs">
+              <div className="border-b border-slate-100 dark:border-slate-800 pb-2">
+                <h4 className="text-base font-bold text-slate-900 dark:text-white">{fullName || "Your Full Name"}</h4>
+                <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">{targetRole || "Target Job Title"}</p>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 flex items-center gap-1.5">
                   <span>{email || "email@example.com"}</span>
                   <span>•</span>
                   <BlurredPhone phone={phone || "+1 555-0000"} />
@@ -1071,28 +1071,28 @@ export const ResumeBuilderCard: React.FC = () => {
 
               {summary && (
                 <div>
-                  <h5 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider">Summary</h5>
-                  <p className="text-slate-600 leading-relaxed text-[11px] mt-0.5">{summary}</p>
+                  <h5 className="font-bold text-slate-800 dark:text-slate-200 text-[11px] uppercase tracking-wider">Summary</h5>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-[11px] mt-0.5">{summary}</p>
                 </div>
               )}
 
               {skills.length > 0 && (
                 <div>
-                  <h5 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider">Skills</h5>
-                  <p className="text-slate-600 text-[11px] mt-0.5">{skills.join(" • ")}</p>
+                  <h5 className="font-bold text-slate-800 dark:text-slate-200 text-[11px] uppercase tracking-wider">Skills</h5>
+                  <p className="text-slate-600 dark:text-slate-300 text-[11px] mt-0.5">{skills.join(" • ")}</p>
                 </div>
               )}
 
               {experiences.length > 0 && (
                 <div>
-                  <h5 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider">Experience</h5>
+                  <h5 className="font-bold text-slate-800 dark:text-slate-200 text-[11px] uppercase tracking-wider">Experience</h5>
                   {experiences.map((e) => (
                     <div key={e.id} className="mt-1">
-                      <div className="flex justify-between font-semibold text-slate-800 text-[11px]">
+                      <div className="flex justify-between font-semibold text-slate-800 dark:text-slate-200 text-[11px]">
                         <span>{e.role || "Job Title"} — {e.company || "Company"}</span>
-                        <span className="text-[10px] text-slate-400">{e.startDate} - {e.endDate}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500">{e.startDate} - {e.endDate}</span>
                       </div>
-                      <p className="text-slate-500 text-[10px]">{e.description}</p>
+                      <p className="text-slate-500 dark:text-slate-400 text-[10px]">{e.description}</p>
                     </div>
                   ))}
                 </div>
@@ -1100,14 +1100,14 @@ export const ResumeBuilderCard: React.FC = () => {
 
               {projectsList.length > 0 && (
                 <div>
-                  <h5 className="font-bold text-slate-800 text-[11px] uppercase tracking-wider">Key Projects</h5>
+                  <h5 className="font-bold text-slate-800 dark:text-slate-200 text-[11px] uppercase tracking-wider">Key Projects</h5>
                   {projectsList.map((p) => (
                     <div key={p.id} className="mt-1">
-                      <div className="flex justify-between font-semibold text-slate-800 text-[11px]">
+                      <div className="flex justify-between font-semibold text-slate-800 dark:text-slate-200 text-[11px]">
                         <span>{p.name}</span>
-                        {p.technologies && <span className="text-[10px] text-indigo-600 font-medium">[{p.technologies}]</span>}
+                        {p.technologies && <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium">[{p.technologies}]</span>}
                       </div>
-                      <p className="text-slate-500 text-[10px]">{p.description}</p>
+                      <p className="text-slate-500 dark:text-slate-400 text-[10px]">{p.description}</p>
                     </div>
                   ))}
                 </div>
@@ -1115,8 +1115,8 @@ export const ResumeBuilderCard: React.FC = () => {
             </div>
 
             {/* Export Format Action Buttons */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200/80">
-              <span className="text-xs font-bold text-slate-700">Export Options:</span>
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200/80 dark:border-slate-700">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Export Options:</span>
               <div className="flex flex-wrap gap-2.5">
                 <button
                   onClick={handleDownloadPDF}
@@ -1142,17 +1142,17 @@ export const ResumeBuilderCard: React.FC = () => {
       )}
 
       {/* BOTTOM STEP NAVIGATION FOOTER */}
-      <div className="pt-6 border-t border-slate-200 flex items-center justify-between gap-4">
+      <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
         <button
           onClick={() => setActiveStep(Math.max(1, activeStep - 1))}
           disabled={activeStep === 1}
-          className="px-5 py-2.5 rounded-full bg-slate-100/90 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-200 text-xs font-bold disabled:opacity-40 disabled:bg-slate-100 disabled:text-slate-400 transition-all shadow-2xs flex items-center gap-1.5"
+          className="px-5 py-2.5 rounded-full bg-slate-100/90 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-500/20 text-slate-700 dark:text-slate-200 hover:text-indigo-700 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-500/30 text-xs font-bold disabled:opacity-40 disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600 transition-all shadow-2xs flex items-center gap-1.5"
         >
           <span>← Previous</span>
         </button>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-400">Step {activeStep} of 4</span>
+          <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">Step {activeStep} of 4</span>
           <button
             onClick={() => setActiveStep(Math.min(4, activeStep + 1))}
             disabled={activeStep === 4}

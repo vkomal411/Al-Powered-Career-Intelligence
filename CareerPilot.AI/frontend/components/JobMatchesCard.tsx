@@ -40,7 +40,7 @@ function SmoothSelect({ label, value, options, onChange, icon }: SmoothSelectPro
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+      <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
         {label}
       </label>
       <button
@@ -48,17 +48,17 @@ function SmoothSelect({ label, value, options, onChange, icon }: SmoothSelectPro
         onClick={() => setIsOpen((prev) => !prev)}
         className={`w-full px-3 py-2 rounded-xl border text-xs font-semibold flex items-center justify-between transition-all duration-200 shadow-2xs ${
           isOpen
-            ? "border-primary bg-white ring-4 ring-primary/10 text-primary shadow-sm"
-            : "border-slate-200 bg-white text-slate-800 hover:border-indigo-300 hover:bg-slate-50/90"
+            ? "border-primary bg-white dark:bg-slate-800 ring-4 ring-primary/10 text-primary dark:text-indigo-400 shadow-sm"
+            : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:border-indigo-300 dark:hover:border-slate-600 hover:bg-slate-50/90 dark:hover:bg-slate-750"
         }`}
       >
         <div className="flex items-center gap-2 truncate">
-          {icon && <span className="text-slate-400">{icon}</span>}
+          {icon && <span className="text-slate-400 dark:text-slate-500">{icon}</span>}
           <span className="truncate">{selectedOption?.label}</span>
         </div>
         <svg
-          className={`w-4 h-4 text-slate-400 transition-transform duration-300 ease-out flex-shrink-0 ${
-            isOpen ? "rotate-180 text-primary" : ""
+          className={`w-4 h-4 text-slate-400 dark:text-slate-500 transition-transform duration-300 ease-out flex-shrink-0 ${
+            isOpen ? "rotate-180 text-primary dark:text-indigo-400" : ""
           }`}
           fill="none"
           viewBox="0 0 24 24"
@@ -70,7 +70,7 @@ function SmoothSelect({ label, value, options, onChange, icon }: SmoothSelectPro
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 right-0 z-40 mt-1.5 bg-white/95 backdrop-blur-md rounded-xl border border-slate-200 shadow-xl overflow-hidden py-1 transition-all duration-200 ease-out animate-fade-in">
+        <div className="absolute left-0 right-0 z-40 mt-1.5 bg-white/95 dark:bg-[#111726]/95 backdrop-blur-md rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden py-1 transition-all duration-200 ease-out animate-fade-in">
           {options.map((option) => {
             const isSelected = option.value === value;
             return (
@@ -83,14 +83,14 @@ function SmoothSelect({ label, value, options, onChange, icon }: SmoothSelectPro
                 }}
                 className={`w-full px-3 py-2 text-xs font-medium flex items-center justify-between text-left transition-all duration-150 ${
                   isSelected
-                    ? "bg-indigo-50 text-primary font-bold"
-                    : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                    ? "bg-indigo-50 dark:bg-indigo-500/20 text-primary dark:text-indigo-300 font-bold"
+                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
                 }`}
               >
                 <span>{option.label}</span>
                 {isSelected && (
                   <svg
-                    className="w-3.5 h-3.5 text-primary"
+                    className="w-3.5 h-3.5 text-primary dark:text-indigo-400"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -249,15 +249,15 @@ export function JobMatchesCard({
   };
 
   const getMatchScoreBadge = (score: number) => {
-    if (score >= 85) return "bg-emerald-100 text-emerald-800 border-emerald-300";
-    if (score >= 70) return "bg-amber-100 text-amber-800 border-amber-300";
-    return "bg-slate-100 text-slate-700 border-slate-300";
+    if (score >= 85) return "bg-emerald-100 dark:bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30";
+    if (score >= 70) return "bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-500/30";
+    return "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700";
   };
 
   const getReadinessLabel = (score: number) => {
-    if (score >= 85) return { label: "Apply now", className: "text-emerald-700 bg-emerald-50 border-emerald-200" };
-    if (score >= 70) return { label: "Close small gaps", className: "text-amber-700 bg-amber-50 border-amber-200" };
-    return { label: "Stretch opportunity", className: "text-slate-600 bg-slate-50 border-slate-200" };
+    if (score >= 85) return { label: "Apply now", className: "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 border-emerald-200 dark:border-emerald-500/30" };
+    if (score >= 70) return { label: "Close small gaps", className: "text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-500/15 border-amber-200 dark:border-amber-500/30" };
+    return { label: "Stretch opportunity", className: "text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700" };
   };
 
   const workTypeOptions: DropdownOption[] = [
@@ -277,12 +277,12 @@ export function JobMatchesCard({
 
   if (!hasResume) {
     return (
-      <div className="bg-white rounded-2xl p-10 border border-slate-100 shadow-sm text-center animate-fade-in space-y-4">
-        <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
+      <div className="bg-white dark:bg-[#111726] rounded-2xl p-10 border border-slate-100 dark:border-white/[0.08] shadow-sm text-center animate-fade-in space-y-4">
+        <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
           Job
         </div>
-        <h3 className="text-lg font-bold text-slate-800">No job matches yet</h3>
-        <p className="text-slate-500 max-w-md mx-auto text-xs leading-relaxed">
+        <h3 className="text-lg font-bold text-slate-800 dark:text-white">No job matches yet</h3>
+        <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-xs leading-relaxed">
           Upload your resume in Resume Check. We will analyze your skills and match you with open positions tailored to your background.
         </p>
         {onNavigateTab && (
@@ -299,17 +299,17 @@ export function JobMatchesCard({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-panel overflow-hidden animate-fade-up">
+    <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] shadow-panel overflow-hidden animate-fade-up">
       {/* Header & View Filter Toggle */}
-      <div className="border-b border-slate-200 bg-slate-50/70 p-6">
+      <div className="border-b border-slate-200 dark:border-white/[0.08] bg-slate-50/70 dark:bg-slate-800/40 p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <h2 className="font-display text-xl font-bold text-slate-900">
+              <h2 className="font-display text-xl font-bold text-slate-900 dark:text-white">
                 Career Paths & Job Recommendations
               </h2>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold">
-                <span className="text-slate-500">Target Goal:</span>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                <span className="text-slate-500 dark:text-slate-400">Target Goal:</span>
                 {isEditingGoal ? (
                   <input
                     type="text"
@@ -318,35 +318,35 @@ export function JobMatchesCard({
                     onChange={(e) => setCareerGoalRole(e.target.value)}
                     onBlur={() => setIsEditingGoal(false)}
                     onKeyDown={(e) => e.key === "Enter" && setIsEditingGoal(false)}
-                    className="bg-white text-slate-900 px-2 py-0.5 rounded text-xs font-semibold outline-none border border-indigo-400 w-44"
+                    className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-2 py-0.5 rounded text-xs font-semibold outline-none border border-indigo-400 dark:border-indigo-500 w-44"
                   />
                 ) : (
                   <span
                     onClick={() => setIsEditingGoal(true)}
-                    className="font-bold text-slate-900 cursor-pointer hover:text-indigo-600 transition-colors flex items-center gap-1.5"
+                    className="font-bold text-slate-900 dark:text-white cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1.5"
                     title="Click to edit target goal"
                   >
                     <span>{careerGoalRole}</span>
-                    <svg className="w-3 h-3 text-slate-400 hover:text-indigo-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                    <svg className="w-3 h-3 text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                   </span>
                 )}
               </div>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Start with roles that fit your resume today, then use the missing skills to decide what to improve next.
             </p>
           </div>
 
           {/* Inline Filter Toggle: All Matches vs Saved Jobs */}
-          <div className="inline-flex p-1 rounded-xl bg-slate-200/70 border border-slate-300/40 gap-1 self-start md:self-auto">
+          <div className="inline-flex p-1 rounded-xl bg-slate-200/70 dark:bg-slate-800 border border-slate-300/40 dark:border-white/[0.08] gap-1 self-start md:self-auto">
             <button
               onClick={() => setFilterMode("all")}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 filterMode === "all"
-                  ? "bg-white text-indigo-900 shadow-xs font-bold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-white dark:bg-indigo-600 text-indigo-900 dark:text-white shadow-xs font-bold"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               All Matches ({jobs.length})
@@ -356,13 +356,13 @@ export function JobMatchesCard({
               onClick={() => setFilterMode("saved")}
               className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 filterMode === "saved"
-                  ? "bg-white text-indigo-900 shadow-xs font-bold"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-white dark:bg-indigo-600 text-indigo-900 dark:text-white shadow-xs font-bold"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               <span>Saved Jobs</span>
               {savedJobs.length > 0 && (
-                <span className="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
+                <span className="bg-indigo-100 dark:bg-white/20 text-indigo-800 dark:text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                   {savedJobs.length}
                 </span>
               )}
@@ -372,9 +372,9 @@ export function JobMatchesCard({
 
         {/* Filter Controls Bar (Visible in All Matches mode) */}
         {filterMode === "all" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-200/80">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-5 border-t border-slate-200/80 dark:border-white/[0.08]">
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+              <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                 Location
               </label>
               <input
@@ -382,7 +382,7 @@ export function JobMatchesCard({
                 placeholder="e.g. San Francisco or Remote"
                 value={locationFilter}
                 onChange={(e) => setLocationFilter(e.target.value)}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
               />
             </div>
 
@@ -401,7 +401,7 @@ export function JobMatchesCard({
             />
 
             <div>
-              <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+              <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
                 Min Match Score: {minScoreFilter}%
               </label>
               <input
@@ -411,7 +411,7 @@ export function JobMatchesCard({
                 step="5"
                 value={minScoreFilter}
                 onChange={(e) => setMinScoreFilter(Number(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 mt-2"
+                className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600 mt-2"
               />
             </div>
           </div>
@@ -424,7 +424,7 @@ export function JobMatchesCard({
           loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 animate-pulse">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="h-48 bg-slate-100 rounded-2xl p-5 border border-slate-200/60" />
+                <div key={i} className="h-48 bg-slate-100 dark:bg-slate-800/60 rounded-2xl p-5 border border-slate-200/60 dark:border-white/[0.06]" />
               ))}
             </div>
           ) : error ? (
@@ -432,47 +432,58 @@ export function JobMatchesCard({
               <p className="text-rose-500 text-sm mb-3">{error}</p>
               <button
                 onClick={loadRecommendations}
-                className="text-xs font-semibold text-indigo-600 hover:underline"
+                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 Try Again
               </button>
             </div>
           ) : jobs.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-sm font-semibold text-slate-700 mb-1">No matching jobs found</p>
-              <p className="text-xs text-slate-500">Try adjusting your location or match score filters.</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">No matching jobs found</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Try adjusting your location or match score filters.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {jobs.filter((job) => Boolean(job.apply_url && job.apply_url.trim() !== "")).map((job) => (
                 <div
                   key={job.id}
-                  className="bg-white rounded-2xl border border-slate-200/80 p-5 flex flex-col justify-between hover:shadow-card transition-all duration-200 hover:-translate-y-0.5 relative group"
+                  className="bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] p-5 flex flex-col justify-between hover:shadow-card hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 hover:-translate-y-0.5 relative group"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div>
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className={`inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${getMatchScoreBadge(job.overall_score)}`}>
-                            {job.overall_score}% Match
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                          {!hasResume || job.overall_score === 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => onNavigateTab?.("resume-tools", "ats-score-analysis")}
+                              className="inline-block text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-500/30 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 transition-colors cursor-pointer"
+                              title="Upload a resume to see your live match percentage"
+                            >
+                              Upload Resume to Match →
+                            </button>
+                          ) : (
+                            <span className={`inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${getMatchScoreBadge(job.overall_score)}`}>
+                              {job.overall_score}% Match
+                            </span>
+                          )}
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30 px-2 py-0.5 rounded-full">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                             Live Opening
                           </span>
                         </div>
-                        <h3 className="font-display font-bold text-sm text-slate-900 mt-2 line-clamp-1 group-hover:text-primary transition-colors">
+                        <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white mt-2 line-clamp-1 group-hover:text-primary dark:group-hover:text-indigo-400 transition-colors">
                           {job.title}
                         </h3>
-                        <p className="text-xs font-medium text-slate-600">{job.company}</p>
+                        <p className="text-xs font-medium text-slate-600 dark:text-slate-400">{job.company}</p>
                       </div>
 
                       <button
                         onClick={() => handleToggleBookmark(job)}
                         className={`p-2 rounded-xl border transition-all ${
                           job.is_saved
-                            ? "bg-indigo-50 border-indigo-200 text-indigo-600"
-                            : "bg-white border-slate-200 text-slate-400 hover:text-slate-700 hover:border-slate-300"
+                            ? "bg-indigo-50 dark:bg-indigo-500/20 border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400"
+                            : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600"
                         }`}
                         title={job.is_saved ? "Remove bookmark" : "Save job"}
                       >
@@ -482,37 +493,37 @@ export function JobMatchesCard({
                       </button>
                     </div>
 
-                    <div className="mb-3 mt-2 flex flex-wrap gap-2 text-[11px] text-slate-500">
-                      <span className="bg-slate-100 px-2 py-0.5 rounded-md font-medium">{job.location}</span>
-                      <span className="bg-slate-100 px-2 py-0.5 rounded-md font-medium">{job.work_type}</span>
-                      <span className="bg-slate-100 px-2 py-0.5 rounded-md font-medium">{job.salary_range}</span>
+                    <div className="mb-3 mt-2 flex flex-wrap gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md font-medium border border-transparent dark:border-white/[0.06]">{job.location}</span>
+                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md font-medium border border-transparent dark:border-white/[0.06]">{job.work_type}</span>
+                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md font-medium border border-transparent dark:border-white/[0.06]">{job.salary_range}</span>
                     </div>
 
                     <span className={`mb-3 inline-flex rounded-full border px-2 py-1 text-[10px] font-bold ${getReadinessLabel(job.overall_score).className}`}>
                       {getReadinessLabel(job.overall_score).label}
                     </span>
 
-                    <p className="mb-3 line-clamp-2 text-[11px] leading-relaxed text-slate-600">
+                    <p className="mb-3 line-clamp-2 text-[11px] leading-relaxed text-slate-600 dark:text-slate-300">
                       {job.details.match_rationale}
                     </p>
 
                     {job.details.missing_skills.length > 0 && (
-                      <p className="mb-4 text-[10px] font-semibold text-amber-700">
+                      <p className="mb-4 text-[10px] font-semibold text-amber-700 dark:text-amber-400">
                         Next skills: {job.details.missing_skills.slice(0, 3).join(", ")}
                       </p>
                     )}
 
-                    <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed mb-4">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
                       {job.description}
                     </p>
                   </div>
 
-                  <div className="flex flex-col gap-2 pt-2 border-t border-slate-100">
+                  <div className="flex flex-col gap-2 pt-2 border-t border-slate-100 dark:border-white/[0.08]">
                     <a
                       href={job.apply_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 py-2.5 rounded-xl text-center shadow-sm shadow-indigo-200 transition-all flex items-center justify-center gap-1.5"
+                      className="w-full text-xs font-bold text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 py-2.5 rounded-xl text-center shadow-sm shadow-indigo-200 dark:shadow-none transition-all flex items-center justify-center gap-1.5"
                     >
                       <span>Apply Now</span>
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -521,7 +532,7 @@ export function JobMatchesCard({
                     </a>
                     <button
                       onClick={() => handleOpenDetailModal(job)}
-                      className="w-full text-xs font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50/60 hover:bg-indigo-100/80 py-2 rounded-xl text-center transition-colors"
+                      className="w-full text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 bg-indigo-50/60 dark:bg-indigo-500/15 hover:bg-indigo-100/80 dark:hover:bg-indigo-500/25 py-2 rounded-xl text-center transition-colors"
                     >
                       View Fit & Skill Gaps →
                     </button>
@@ -535,16 +546,16 @@ export function JobMatchesCard({
           loadingSaved ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 animate-pulse">
               {[1, 2].map((i) => (
-                <div key={i} className="h-40 bg-slate-100 rounded-2xl p-5 border border-slate-200/60" />
+                <div key={i} className="h-40 bg-slate-100 dark:bg-slate-800/60 rounded-2xl p-5 border border-slate-200/60 dark:border-white/[0.06]" />
               ))}
             </div>
           ) : savedJobs.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-sm font-semibold text-slate-700 mb-1">No saved jobs yet</p>
-              <p className="text-xs text-slate-500 mb-4">Bookmark jobs in All Matches to save them for later.</p>
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">No saved jobs yet</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Bookmark jobs in All Matches to save them for later.</p>
               <button
                 onClick={() => setFilterMode("all")}
-                className="text-xs font-semibold text-indigo-600 hover:underline"
+                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 Browse Job Matches →
               </button>
@@ -554,18 +565,18 @@ export function JobMatchesCard({
               {savedJobs.map((saved) => (
                 <div
                   key={saved.id}
-                  className="bg-white rounded-2xl border border-slate-200/80 p-5 flex flex-col justify-between hover:shadow-card transition-all"
+                  className="bg-white dark:bg-slate-800/40 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] p-5 flex flex-col justify-between hover:shadow-card transition-all"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div>
-                        <h3 className="font-display font-bold text-sm text-slate-900">{saved.job_title}</h3>
-                        <p className="text-xs font-medium text-slate-600">{saved.company}</p>
+                        <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white">{saved.job_title}</h3>
+                        <p className="text-xs font-medium text-slate-600 dark:text-slate-400">{saved.company}</p>
                       </div>
 
                       <button
                         onClick={() => handleRemoveSavedBookmark(saved.job_id)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 transition-colors"
+                        className="p-1.5 text-slate-400 dark:text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
                         title="Remove bookmark"
                       >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
@@ -574,13 +585,13 @@ export function JobMatchesCard({
                       </button>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 text-[11px] text-slate-500 mb-3">
-                      <span className="bg-slate-100 px-2 py-0.5 rounded-md font-medium">{saved.location}</span>
-                      <span className="bg-slate-100 px-2 py-0.5 rounded-md font-medium">{saved.work_type}</span>
+                    <div className="flex flex-wrap gap-2 text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md font-medium border border-transparent dark:border-white/[0.06]">{saved.location}</span>
+                      <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md font-medium border border-transparent dark:border-white/[0.06]">{saved.work_type}</span>
                     </div>
                   </div>
 
-                  <p className="text-[10px] text-slate-400 pt-2 border-t border-slate-100">
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 pt-2 border-t border-slate-100 dark:border-white/[0.08]">
                     Saved on {new Date(saved.saved_at).toLocaleDateString()}
                   </p>
                 </div>

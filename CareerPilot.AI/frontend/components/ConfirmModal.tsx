@@ -43,7 +43,7 @@ export default function ConfirmModal({
   const confirmClass =
     variant === "danger"
       ? "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/20"
-      : "bg-primary text-white hover:bg-primary-dark shadow-lg shadow-primary/25";
+      : "bg-primary text-white hover:bg-primary-dark shadow-lg shadow-primary/25 dark:bg-indigo-600 dark:hover:bg-indigo-500";
 
   return (
     <div
@@ -51,24 +51,24 @@ export default function ConfirmModal({
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
       className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-200 ${
-        visible ? "bg-black/40 backdrop-blur-sm" : "bg-transparent"
+        visible ? "bg-black/50 dark:bg-black/70 backdrop-blur-sm" : "bg-transparent"
       }`}
       onClick={() => handleClose(onCancel)}
     >
       <div
-        className={`w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-200 ${
+        className={`w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-200 dark:bg-[#111726] dark:border-white/[0.1] dark:shadow-[0_16px_48px_rgba(0,0,0,0.7)] ${
           visible ? "scale-100 opacity-100" : "scale-95 opacity-0"
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 id="confirm-modal-title" className="font-display text-lg font-semibold text-ink">
+        <h3 id="confirm-modal-title" className="font-display text-lg font-semibold text-ink dark:text-white">
           {title}
         </h3>
-        <p className="mt-2 text-sm text-slate-500 leading-relaxed">{message}</p>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{message}</p>
         <div className="mt-6 flex gap-3 justify-end">
           <button
             onClick={() => handleClose(onCancel)}
-            className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
+            className="rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700/80 px-4 py-2.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50"
           >
             {cancelLabel}
           </button>

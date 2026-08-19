@@ -150,33 +150,33 @@ export default function ATSReportCard({
   // Determine badge styling based on score
   let strokeColor = "url(#scoreGradientGreen)";
   let badgeText = "Looking great!";
-  let badgeColorClass = "bg-emerald-50 text-verified border-verified/20";
+  let badgeColorClass = "bg-emerald-50 dark:bg-emerald-500/15 text-verified dark:text-emerald-300 border-verified/20 dark:border-emerald-500/25";
 
   if (animatedScore < 50) {
     strokeColor = "url(#scoreGradientRed)";
     badgeText = "Room to grow";
-    badgeColorClass = "bg-amber-50 text-signal border-signal/20";
+    badgeColorClass = "bg-amber-50 dark:bg-amber-500/15 text-signal dark:text-amber-300 border-signal/20 dark:border-amber-500/25";
   } else if (animatedScore < 75) {
     strokeColor = "url(#scoreGradientAmber)";
     badgeText = "On the right track";
-    badgeColorClass = "bg-amber-50 text-signal border-signal/20";
+    badgeColorClass = "bg-amber-50 dark:bg-amber-500/15 text-signal dark:text-amber-300 border-signal/20 dark:border-amber-500/25";
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white shadow-card overflow-hidden">
+    <div className="rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] shadow-card overflow-hidden">
       
       {/* Title Header */}
-      <div className="border-b border-slate-100 px-6 py-5">
-        <h2 className="text-lg font-bold text-ink font-display">
+      <div className="border-b border-slate-100 dark:border-slate-800 px-6 py-5">
+        <h2 className="text-lg font-bold text-ink dark:text-white font-display">
           Your Resume Health Check
         </h2>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           Here&apos;s how your resume looks to hiring software — and how to improve it
         </p>
       </div>
 
       {/* Hero Visual: Gauge & Score Breakdown */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border-b border-slate-100 bg-slate-50/50">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
         
         {/* Animated Radial Gauge */}
         <div className="flex flex-col items-center justify-center text-center">
@@ -202,7 +202,7 @@ export default function ATSReportCard({
                 cx="50"
                 cy="50"
                 r="42"
-                className="stroke-slate-200"
+                className="stroke-slate-200 dark:stroke-slate-700"
                 strokeWidth="7"
                 fill="transparent"
               />
@@ -224,10 +224,10 @@ export default function ATSReportCard({
             
             {/* Center percentage */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="font-display text-3xl font-extrabold text-ink leading-none">
+              <span className="font-display text-3xl font-extrabold text-ink dark:text-white leading-none">
                 {Math.round(animatedScore)}%
               </span>
-              <span className="text-[9px] font-bold text-slate-400 uppercase mt-1 tracking-wider">
+              <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1 tracking-wider">
                 Optimized
               </span>
             </div>
@@ -242,11 +242,11 @@ export default function ATSReportCard({
         {/* Component Score Progress Bars */}
         <div className="flex flex-col justify-center gap-4">
           <div>
-            <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1.5">
+            <div className="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
               <span>Contact Credentials</span>
               <span>{contactScore} / 40 pts</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-slate-200/70 overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-slate-200/70 dark:bg-slate-700/60 overflow-hidden">
               <div 
                 className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${(contactScore / 40) * 100}%` }}
@@ -255,11 +255,11 @@ export default function ATSReportCard({
           </div>
 
           <div>
-            <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1.5">
+            <div className="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
               <span>Essential Sections</span>
               <span>{sectionScore} / 30 pts</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-slate-200/70 overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-slate-200/70 dark:bg-slate-700/60 overflow-hidden">
               <div 
                 className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${(sectionScore / 30) * 100}%` }}
@@ -268,11 +268,11 @@ export default function ATSReportCard({
           </div>
 
           <div>
-            <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1.5">
+            <div className="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">
               <span>Skillset Breadth</span>
               <span>{skillsScore} / 30 pts</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-slate-200/70 overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-slate-200/70 dark:bg-slate-700/60 overflow-hidden">
               <div 
                 className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${(skillsScore / 30) * 100}%` }}
@@ -283,82 +283,82 @@ export default function ATSReportCard({
       </div>
 
       {/* Credentials Audit */}
-      <div className="border-b border-slate-100 px-6 py-5">
-        <h3 className="text-sm font-semibold text-ink mb-3 font-display">
+      <div className="border-b border-slate-100 dark:border-slate-800 px-6 py-5">
+        <h3 className="text-sm font-semibold text-ink dark:text-white mb-3 font-display">
           What We Found on Your Resume
         </h3>
         <div className="grid grid-cols-2 gap-3">
           {/* Email */}
-          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/30">
+          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-white/[0.06] bg-slate-50/30 dark:bg-slate-800/40">
             <div className="flex items-center gap-2">
-              <span className="text-slate-400">
+              <span className="text-slate-400 dark:text-slate-500">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
               </span>
-              <span className="text-xs font-medium text-slate-600">Email</span>
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Email</span>
             </div>
             {parsed.ats.contact.email ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-100">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-500/25">
                 Found
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 border border-slate-200">
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 dark:bg-slate-800 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 Not found yet
               </span>
             )}
           </div>
           
           {/* Phone */}
-          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/30">
+          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-white/[0.06] bg-slate-50/30 dark:bg-slate-800/40">
             <div className="flex items-center gap-2">
-              <span className="text-slate-400">
+              <span className="text-slate-400 dark:text-slate-500">
                 <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
               </span>
-              <span className="text-xs font-medium text-slate-600">Phone</span>
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Phone</span>
             </div>
             {parsed.ats.contact.phone ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-100">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-500/25">
                 Found
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 border border-slate-200">
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 dark:bg-slate-800 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 Not found yet
               </span>
             )}
           </div>
 
           {/* LinkedIn */}
-          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/30">
+          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-white/[0.06] bg-slate-50/30 dark:bg-slate-800/40">
             <div className="flex items-center gap-2">
-              <span className="text-slate-400">
+              <span className="text-slate-400 dark:text-slate-500">
                 <LinkedinIcon className="h-4 w-4" />
               </span>
-              <span className="text-xs font-medium text-slate-600">LinkedIn</span>
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-300">LinkedIn</span>
             </div>
             {parsed.ats.contact.linkedin ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-100">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-500/25">
                 Found
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 border border-slate-200">
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 dark:bg-slate-800 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 Not found yet
               </span>
             )}
           </div>
 
           {/* GitHub */}
-          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/30">
+          <div className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-white/[0.06] bg-slate-50/30 dark:bg-slate-800/40">
             <div className="flex items-center gap-2">
-              <span className="text-slate-400">
+              <span className="text-slate-400 dark:text-slate-500">
                 <GithubIcon className="h-4 w-4" />
               </span>
-              <span className="text-xs font-medium text-slate-600">GitHub</span>
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-300">GitHub</span>
             </div>
             {parsed.ats.contact.github ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-100">
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 dark:bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-500/25">
                 Found
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 border border-slate-200">
+              <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 dark:bg-slate-800 px-2.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 Not found yet
               </span>
             )}
@@ -367,8 +367,8 @@ export default function ATSReportCard({
       </div>
 
       {/* Sections Checklist */}
-      <div className="border-b border-slate-100 px-6 py-5">
-        <h3 className="text-sm font-semibold text-ink mb-3 font-display">
+      <div className="border-b border-slate-100 dark:border-slate-800 px-6 py-5">
+        <h3 className="text-sm font-semibold text-ink dark:text-white mb-3 font-display">
           Resume Sections
         </h3>
         <div className="flex flex-wrap gap-2">
@@ -377,8 +377,8 @@ export default function ATSReportCard({
               key={section}
               className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-medium transition-all ${
                 exists
-                  ? "bg-slate-50 border-slate-200 text-slate-700 shadow-sm"
-                  : "bg-red-50/30 border-red-100 text-red-600"
+                  ? "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 shadow-sm"
+                  : "bg-red-50/30 dark:bg-rose-500/10 border-red-100 dark:border-rose-500/20 text-red-600 dark:text-rose-400"
               }`}
             >
               {exists ? (
@@ -393,24 +393,24 @@ export default function ATSReportCard({
       </div>
 
       {/* Extracted Skills Taxonomy with Accessibility Legend */}
-      <div className="border-b border-slate-100 px-6 py-5">
+      <div className="border-b border-slate-100 dark:border-slate-800 px-6 py-5">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-ink font-display">
+          <h3 className="text-sm font-semibold text-ink dark:text-white font-display">
             Detected Skills Taxonomy
           </h3>
-          <span className="text-xs font-bold text-slate-500">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
             {parsed.ats.skills.length} Detected
           </span>
         </div>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {parsed.ats.skills.length === 0 ? (
-            <p className="text-xs text-slate-400 italic">No skills recognized in the parsed text.</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 italic">No skills recognized in the parsed text.</p>
           ) : (
             parsed.ats.skills.map((skill, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50/60 px-3 py-1 text-xs font-semibold text-emerald-800 shadow-sm"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 dark:border-emerald-500/25 bg-emerald-50/60 dark:bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300 shadow-sm"
               >
                 <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-600 flex-shrink-0" />
                 {skill}
@@ -420,12 +420,12 @@ export default function ATSReportCard({
         </div>
 
         {/* Accessibility Legend */}
-        <div className="flex items-center gap-4 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
-          <span className="font-semibold text-slate-600">Legend:</span>
-          <span className="inline-flex items-center gap-1 font-medium text-emerald-700">
+        <div className="flex items-center gap-4 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400">
+          <span className="font-semibold text-slate-600 dark:text-slate-300">Legend:</span>
+          <span className="inline-flex items-center gap-1 font-medium text-emerald-700 dark:text-emerald-400">
             <CheckCircleIcon className="h-3 w-3 text-emerald-600" /> Verified Match
           </span>
-          <span className="inline-flex items-center gap-1 font-medium text-amber-700">
+          <span className="inline-flex items-center gap-1 font-medium text-amber-700 dark:text-amber-400">
             <AlertTriangleIcon className="h-3 w-3 text-amber-600" /> Action Suggested
           </span>
         </div>
@@ -433,59 +433,58 @@ export default function ATSReportCard({
 
       {/* Prioritized Recommendations */}
       <div className="px-6 py-5">
-
-        <h3 className="text-sm font-semibold text-ink mb-3 font-display">
+        <h3 className="text-sm font-semibold text-ink dark:text-white mb-3 font-display">
           How to Improve
         </h3>
         {parsed.ats.suggestions.length === 0 ? (
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/30 p-4 text-center">
-            <span className="inline-block p-2 rounded-full bg-emerald-100 text-emerald-700 mb-2">
+          <div className="rounded-xl border border-emerald-100 dark:border-emerald-500/25 bg-emerald-50/30 dark:bg-emerald-500/10 p-4 text-center">
+            <span className="inline-block p-2 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 mb-2">
               <CheckCircleIcon className="h-6 w-6" />
             </span>
-            <p className="text-sm font-semibold text-emerald-800">Perfect Layout Scan!</p>
-            <p className="text-xs text-emerald-600 mt-1">
+            <p className="text-sm font-semibold text-emerald-800 dark:text-emerald-200">Perfect Layout Scan!</p>
+            <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
               Your resume contains all contact info, core sections, and skills.
             </p>
           </div>
         ) : (
           <div className="space-y-2.5">
             {criticalRecs.map((item, idx) => (
-              <div key={`crit-${idx}`} className="flex gap-3 p-3.5 rounded-xl border border-red-150 bg-red-50/20">
+              <div key={`crit-${idx}`} className="flex gap-3 p-3.5 rounded-xl border border-red-200 dark:border-rose-500/20 bg-red-50/20 dark:bg-rose-500/10">
                 <span className="text-danger mt-0.5 flex-shrink-0">
                   <AlertTriangleIcon className="h-5 w-5" />
                 </span>
                 <div className="flex-grow">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className="text-[10px] font-bold text-red-800 uppercase tracking-wider">Quick Win</h4>
-                    <span className="inline-flex items-center rounded-full bg-red-100/80 px-2 py-0.5 text-[9px] font-extrabold text-red-800 uppercase tracking-wider">
+                    <h4 className="text-[10px] font-bold text-red-800 dark:text-rose-300 uppercase tracking-wider">Quick Win</h4>
+                    <span className="inline-flex items-center rounded-full bg-red-100/80 dark:bg-rose-500/20 px-2 py-0.5 text-[9px] font-extrabold text-red-800 dark:text-rose-200 uppercase tracking-wider">
                       ⚡ Quick Fix (&lt; 2 min)
                     </span>
                   </div>
-                  <p className="text-sm text-red-900 mt-1">{item}</p>
+                  <p className="text-sm text-red-900 dark:text-rose-100 mt-1">{item}</p>
                 </div>
               </div>
             ))}
             
             {highRecs.map((item, idx) => (
-              <div key={`high-${idx}`} className="flex gap-3 p-3.5 rounded-xl border border-amber-200 bg-amber-50/30">
+              <div key={`high-${idx}`} className="flex gap-3 p-3.5 rounded-xl border border-amber-200 dark:border-amber-500/20 bg-amber-50/30 dark:bg-amber-500/10">
                 <span className="text-signal mt-0.5 flex-shrink-0">
                   <LightbulbIcon className="h-5 w-5" />
                 </span>
                 <div>
-                  <h4 className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">Recommended</h4>
-                  <p className="text-sm text-amber-900 mt-0.5">{item}</p>
+                  <h4 className="text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">Recommended</h4>
+                  <p className="text-sm text-amber-900 dark:text-amber-100 mt-0.5">{item}</p>
                 </div>
               </div>
             ))}
 
             {generalRecs.map((item, idx) => (
-              <div key={`gen-${idx}`} className="flex gap-3 p-3.5 rounded-xl border border-indigo-150 bg-indigo-50/20">
+              <div key={`gen-${idx}`} className="flex gap-3 p-3.5 rounded-xl border border-indigo-200 dark:border-indigo-500/20 bg-indigo-50/20 dark:bg-indigo-500/10">
                 <span className="text-indigo-500 mt-0.5 flex-shrink-0">
                   <InfoIcon className="h-5 w-5" />
                 </span>
                 <div>
-                  <h4 className="text-[10px] font-bold text-indigo-800 uppercase tracking-wider">Nice to Have</h4>
-                  <p className="text-sm text-indigo-950 mt-0.5">{item}</p>
+                  <h4 className="text-[10px] font-bold text-indigo-800 dark:text-indigo-300 uppercase tracking-wider">Nice to Have</h4>
+                  <p className="text-sm text-indigo-950 dark:text-indigo-100 mt-0.5">{item}</p>
                 </div>
               </div>
             ))}
@@ -495,4 +494,4 @@ export default function ATSReportCard({
 
     </div>
   );
-}
+}

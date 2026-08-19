@@ -95,18 +95,18 @@ export default function ResumeViewModal({
       />
 
       {/* Modal Card */}
-      <div className="relative flex h-[90vh] w-full max-w-5xl flex-col rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden z-10">
+      <div className="relative flex h-[90vh] w-full max-w-5xl flex-col rounded-2xl border border-slate-200 bg-white dark:bg-[#111726] dark:border-white/[0.1] shadow-2xl dark:shadow-[0_16px_48px_rgba(0,0,0,0.7)] overflow-hidden z-10">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/80">
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.08] px-6 py-4 bg-slate-50/80 dark:bg-[#111726]">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary-light dark:bg-indigo-500/15 text-primary dark:text-indigo-400">
               <FileIcon className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <h2 className="truncate font-display text-base font-semibold text-ink">
+              <h2 className="truncate font-display text-base font-semibold text-ink dark:text-white">
                 {parsed.original_filename}
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-400 dark:text-slate-500">
                 Uploaded {new Date(parsed.uploaded_at).toLocaleDateString(undefined, { dateStyle: "medium" })}
               </p>
             </div>
@@ -115,14 +115,14 @@ export default function ResumeViewModal({
           {/* Controls & Toolbar */}
           <div className="flex items-center gap-3">
             {/* View Switcher Tabs */}
-            <div className="flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs font-medium">
+            <div className="flex rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 p-0.5 text-xs font-medium">
               <button
                 type="button"
                 onClick={() => setActiveTab("document")}
                 className={`rounded-md px-3 py-1.5 transition-all ${
                   activeTab === "document"
-                    ? "bg-white text-ink shadow-sm font-semibold"
-                    : "text-slate-500 hover:text-ink"
+                    ? "bg-white dark:bg-slate-700 text-ink dark:text-white shadow-sm font-semibold"
+                    : "text-slate-500 dark:text-slate-400 hover:text-ink dark:hover:text-white"
                 }`}
               >
                 Document File
@@ -132,8 +132,8 @@ export default function ResumeViewModal({
                 onClick={() => setActiveTab("extracted")}
                 className={`rounded-md px-3 py-1.5 transition-all ${
                   activeTab === "extracted"
-                    ? "bg-white text-ink shadow-sm font-semibold"
-                    : "text-slate-500 hover:text-ink"
+                    ? "bg-white dark:bg-slate-700 text-ink dark:text-white shadow-sm font-semibold"
+                    : "text-slate-500 dark:text-slate-400 hover:text-ink dark:hover:text-white"
                 }`}
               >
                 Extracted Data
@@ -144,7 +144,7 @@ export default function ResumeViewModal({
             <button
               type="button"
               onClick={() => downloadResume(parsed.id, parsed.original_filename)}
-              className="focus-ring flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:border-primary hover:bg-primary-light hover:text-primary active:scale-95"
+              className="focus-ring flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-all hover:border-primary hover:bg-primary-light hover:text-primary dark:hover:bg-indigo-500/15 dark:hover:text-indigo-300 dark:hover:border-indigo-500/30 active:scale-95"
             >
               <DownloadIcon className="h-4 w-4" />
               Download
@@ -158,7 +158,7 @@ export default function ResumeViewModal({
                   onClose();
                   onReplace(parsed.id);
                 }}
-                className="focus-ring flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition-all hover:border-primary hover:bg-primary-light hover:text-primary active:scale-95"
+                className="focus-ring flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-sm transition-all hover:border-primary hover:bg-primary-light hover:text-primary dark:hover:bg-indigo-500/15 dark:hover:text-indigo-300 dark:hover:border-indigo-500/30 active:scale-95"
               >
                 <ReplaceIcon className="h-4 w-4" />
                 Replace
@@ -169,7 +169,7 @@ export default function ResumeViewModal({
             <button
               type="button"
               onClick={onClose}
-              className="focus-ring rounded-lg p-1 text-slate-400 hover:bg-slate-200/60 hover:text-ink transition-colors"
+              className="focus-ring rounded-lg p-1 text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-ink dark:hover:text-white transition-colors"
               title="Close modal (Esc)"
             >
               <XCircleIcon className="h-6 w-6" />
@@ -178,17 +178,17 @@ export default function ResumeViewModal({
         </div>
 
         {/* Content Viewer Body */}
-        <div className="relative flex-1 bg-slate-100 overflow-hidden">
+        <div className="relative flex-1 bg-slate-100 dark:bg-[#090d16] overflow-hidden">
           {loading ? (
             <div className="flex h-full flex-col items-center justify-center gap-3">
               <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-              <p className="text-sm font-medium text-slate-500">Loading document preview...</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Loading document preview...</p>
             </div>
           ) : error ? (
             <div className="flex h-full flex-col items-center justify-center p-6 text-center">
-              <div className="rounded-xl border border-danger/20 bg-danger-light p-4 text-danger max-w-md">
+              <div className="rounded-xl border border-danger/20 bg-danger-light dark:bg-rose-500/10 dark:text-rose-400 p-4 text-danger max-w-md">
                 <p className="text-sm font-semibold">{error}</p>
-                <p className="text-xs mt-1 text-slate-500">You can still download the file directly using the download button above.</p>
+                <p className="text-xs mt-1 text-slate-500 dark:text-slate-400">You can still download the file directly using the download button above.</p>
               </div>
             </div>
           ) : activeTab === "document" ? (
@@ -199,21 +199,21 @@ export default function ResumeViewModal({
                 title={parsed.original_filename}
               />
             ) : (
-              <div className="flex h-full flex-col items-center justify-center p-8 bg-white overflow-y-auto">
-                <div className="max-w-2xl w-full rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm">
-                  <div className="flex items-center gap-2 border-b border-slate-200 pb-3 mb-4">
-                    <FileIcon className="h-5 w-5 text-primary" />
-                    <span className="font-semibold text-sm text-ink">{parsed.original_filename}</span>
-                    <span className="ml-auto text-xs font-mono bg-slate-200 px-2 py-0.5 rounded text-slate-600">
+              <div className="flex h-full flex-col items-center justify-center p-8 bg-white dark:bg-[#090d16] overflow-y-auto">
+                <div className="max-w-2xl w-full rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#111726] p-6 shadow-sm">
+                  <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/[0.08] pb-3 mb-4">
+                    <FileIcon className="h-5 w-5 text-primary dark:text-indigo-400" />
+                    <span className="font-semibold text-sm text-ink dark:text-white">{parsed.original_filename}</span>
+                    <span className="ml-auto text-xs font-mono bg-slate-200 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">
                       {blobData?.mimeType.includes("word") ? "DOCX Document" : "Document File"}
                     </span>
                   </div>
                   {parsed.raw_text ? (
-                    <pre className="font-sans text-xs text-slate-700 leading-relaxed whitespace-pre-wrap font-medium">
+                    <pre className="font-sans text-xs text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap font-medium">
                       {parsed.raw_text}
                     </pre>
                   ) : (
-                    <p className="text-sm text-slate-500 italic text-center py-6">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 italic text-center py-6">
                       Word document preview. Click Download above to open in Microsoft Word.
                     </p>
                   )}
@@ -222,22 +222,22 @@ export default function ResumeViewModal({
             )
           ) : (
             /* Extracted Data Tab */
-            <div className="h-full overflow-y-auto p-6 bg-paper">
+            <div className="h-full overflow-y-auto p-6 bg-paper dark:bg-[#090d16]">
               <div className="mx-auto max-w-3xl space-y-4">
                 {/* Candidate Summary */}
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Extracted Contact Info</h3>
+                <div className="rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-6 shadow-sm">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-3">Extracted Contact Info</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                     <div>
-                      <span className="text-xs text-slate-400 block">Name</span>
-                      <span className="font-semibold text-ink">{parsed.extracted_name || "N/A"}</span>
+                      <span className="text-xs text-slate-400 dark:text-slate-400 block">Name</span>
+                      <span className="font-semibold text-ink dark:text-white">{parsed.extracted_name || "N/A"}</span>
                     </div>
                     <div>
-                      <span className="text-xs text-slate-400 block">Email</span>
-                      <span className="font-semibold text-ink">{parsed.extracted_email || "N/A"}</span>
+                      <span className="text-xs text-slate-400 dark:text-slate-400 block">Email</span>
+                      <span className="font-semibold text-ink dark:text-white">{parsed.extracted_email || "N/A"}</span>
                     </div>
                     <div>
-                      <span className="text-xs text-slate-400 block mb-0.5">Phone</span>
+                      <span className="text-xs text-slate-400 dark:text-slate-400 block mb-0.5">Phone</span>
                       <BlurredPhone phone={parsed.extracted_phone} />
                     </div>
                   </div>
@@ -245,11 +245,11 @@ export default function ResumeViewModal({
 
                 {/* Extracted Education */}
                 {parsed.extracted_education && parsed.extracted_education.length > 0 && (
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Education History</h3>
+                  <div className="rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-6 shadow-sm">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-3">Education History</h3>
                     <ul className="space-y-2">
                       {parsed.extracted_education.map((edu, idx) => (
-                        <li key={idx} className="text-xs font-medium text-slate-800 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                        <li key={idx} className="text-xs font-medium text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-white/[0.06]">
                           🎓 {edu.degree_or_institution}
                         </li>
                       ))}
@@ -259,11 +259,11 @@ export default function ResumeViewModal({
 
                 {/* Extracted Experience */}
                 {parsed.extracted_experience && parsed.extracted_experience.length > 0 && (
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Work Experience</h3>
+                  <div className="rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-6 shadow-sm">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-3">Work Experience</h3>
                     <ul className="space-y-2">
                       {parsed.extracted_experience.map((exp, idx) => (
-                        <li key={idx} className="text-xs font-medium text-slate-800 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                        <li key={idx} className="text-xs font-medium text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-white/[0.06]">
                           💼 {exp.role_or_company}
                         </li>
                       ))}
@@ -273,11 +273,11 @@ export default function ResumeViewModal({
 
                 {/* Extracted Skills */}
                 {parsed.extracted_skills && parsed.extracted_skills.length > 0 && (
-                  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Detected Skills ({parsed.extracted_skills.length})</h3>
+                  <div className="rounded-2xl border border-slate-200 dark:border-white/[0.08] bg-white dark:bg-[#111726] p-6 shadow-sm">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-3">Detected Skills ({parsed.extracted_skills.length})</h3>
                     <div className="flex flex-wrap gap-1.5">
                       {parsed.extracted_skills.map((skill) => (
-                        <span key={skill} className="rounded-full bg-primary-light px-2.5 py-0.5 text-xs font-medium text-primary-dark">
+                        <span key={skill} className="rounded-full bg-primary-light dark:bg-indigo-500/15 dark:text-indigo-300 dark:border dark:border-indigo-500/25 px-2.5 py-0.5 text-xs font-medium text-primary-dark">
                           {skill}
                         </span>
                       ))}

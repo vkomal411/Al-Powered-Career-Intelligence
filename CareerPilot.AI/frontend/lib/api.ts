@@ -11,11 +11,14 @@ import type { ParsedResume } from "../components/ResumeReportCard";
 // working host on first use and reuse it for every request.
 let resolvedApiBase: string | null = null;
 
+const PRODUCTION_DEFAULT_API = "https://careerpilot-backend-8c6n.onrender.com";
+
 export function getApiBase(): string {
   if (resolvedApiBase) return resolvedApiBase;
   
-  if (process.env.NEXT_PUBLIC_API_URL) {
-    resolvedApiBase = process.env.NEXT_PUBLIC_API_URL;
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE;
+  if (envUrl && envUrl.trim() !== "") {
+    resolvedApiBase = envUrl.trim().replace(/\/+$/, "");
   } else if (typeof window !== "undefined") {
     const host = window.location.hostname;
     if (host === "localhost") {
@@ -23,10 +26,11 @@ export function getApiBase(): string {
     } else if (host === "127.0.0.1") {
       resolvedApiBase = "http://127.0.0.1:8000";
     } else {
-      resolvedApiBase = `http://${host}:8000`;
+      // In cloud production deployment, route to the live Render backend
+      resolvedApiBase = PRODUCTION_DEFAULT_API;
     }
   } else {
-    resolvedApiBase = "http://127.0.0.1:8000";
+    resolvedApiBase = PRODUCTION_DEFAULT_API;
   }
 
   return resolvedApiBase;

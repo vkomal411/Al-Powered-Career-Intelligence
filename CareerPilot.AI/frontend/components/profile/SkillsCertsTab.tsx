@@ -1,5 +1,6 @@
 import React from "react";
 import { BriefcaseIcon, AwardIcon, PlusIcon, TrashIcon, SyncIcon } from "../icons";
+import { getApiBase } from "../../lib/api";
 
 export interface CertificationItem {
   name: string;
@@ -134,7 +135,7 @@ export default function SkillsCertsTab({
                     {cert.name}
                     {cert.file_url && (
                       <a
-                        href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}${cert.file_url}`}
+                        href={`${getApiBase()}${cert.file_url}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="ml-2.5 inline-flex items-center gap-0.5 text-xs font-semibold text-primary dark:text-indigo-400 hover:underline"

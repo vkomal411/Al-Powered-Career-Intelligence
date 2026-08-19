@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Topbar from "../components/Topbar";
-import { apiFetch, UserResponse, logoutUser, syncProfileFromResume } from "../lib/api";
+import { apiFetch, UserResponse, logoutUser, syncProfileFromResume, getApiBase } from "../lib/api";
 import {
   UserIcon,
   BriefcaseIcon,
@@ -247,7 +247,7 @@ export default function ProfilePage() {
         if (authToken) uploadHeaders["Authorization"] = `Bearer ${authToken}`;
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/auth/upload-certificate`,
+          `${getApiBase()}/auth/upload-certificate`,
           {
             method: "POST",
             credentials: "include",
@@ -344,7 +344,7 @@ export default function ProfilePage() {
       if (authToken) profileHeaders["Authorization"] = `Bearer ${authToken}`;
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/auth/profile`,
+        `${getApiBase()}/auth/profile`,
         {
           method: "PUT",
           headers: profileHeaders,

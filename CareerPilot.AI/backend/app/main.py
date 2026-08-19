@@ -30,6 +30,84 @@ try:
 except Exception as e:
     logger.warning("Base.metadata.create_all skipped or failed: %s", e)
 
+
+def auto_seed_database_if_needed():
+    from app.database import SessionLocal
+    from app.auth_utils import hash_password
+    import uuid
+    db = SessionLocal()
+    try:
+        # Check if admin exists
+        admin_user = db.query(models.User).filter(models.User.email == "admin@careerpilot.ai").first()
+        if not admin_user:
+            admin_user = models.User(
+                id=uuid.uuid4(),
+                full_name="Platform Admin",
+                email="admin@careerpilot.ai",
+                hashed_password=hash_password("AdminPass123!"),
+                is_active=True,
+                role="superadmin",
+                is_admin=True,
+                target_role="Platform Administrator",
+                experience_level="Executive",
+                industry="Software Engineering",
+            )
+            db.add(admin_user)
+            logger.info("Auto-seeded superadmin user: admin@careerpilot.ai")
+
+        # Check if ops admin exists
+        if not db.query(models.User).filter(models.User.email == "ops.admin@careerpilot.ai").first():
+            db.add(models.User(
+                id=uuid.uuid4(),
+                full_name="Operations Admin",
+                email="ops.admin@careerpilot.ai",
+                hashed_password=hash_password("AdminPass123!"),
+                is_active=True,
+                role="admin",
+                is_admin=True,
+                target_role="Operations Manager",
+                experience_level="Senior",
+                industry="Operations",
+            ))
+
+        # Check if moderator exists
+        if not db.query(models.User).filter(models.User.email == "moderator@careerpilot.ai").first():
+            db.add(models.User(
+                id=uuid.uuid4(),
+                full_name="Content & Feedback Moderator",
+                email="moderator@careerpilot.ai",
+                hashed_password=hash_password("ModeratorPass123!"),
+                is_active=True,
+                role="moderator",
+                is_admin=True,
+                target_role="Moderator",
+                experience_level="Mid",
+                industry="Quality Assurance",
+            ))
+
+        # Check if demo user exists
+        if not db.query(models.User).filter(models.User.email == "demo@career.ai").first():
+            db.add(models.User(
+                id=uuid.uuid4(),
+                full_name="Demo User",
+                email="demo@career.ai",
+                hashed_password=hash_password("Demo123456!"),
+                is_active=True,
+                role="user",
+                is_admin=False,
+                target_role="Software Engineer",
+                experience_level="mid",
+                industry="Technology",
+            ))
+
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        logger.warning("Auto-seed error on startup: %s", e)
+    finally:
+        db.close()
+
+
 # Docs are useful in dev but shouldn't be publicly exposed in production.
 docs_enabled = settings.environment.lower() != "production"
 
@@ -40,6 +118,10 @@ app = FastAPI(
     redoc_url="/redoc" if docs_enabled else None,
     openapi_url="/openapi.json" if docs_enabled else None,
 )
+
+@app.on_event("startup")
+def on_startup():
+    auto_seed_database_if_needed()
 
 import os
 os.makedirs("static/uploads", exist_ok=True)

@@ -71,5 +71,4 @@ services:
 databases:
   - name: careerpilot-db
     databaseName: career_platform
-    user: postgres
     plan: free

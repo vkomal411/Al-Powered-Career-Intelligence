@@ -36,6 +36,11 @@ class Settings(BaseSettings):
             v = v.replace("postgresql://", "postgresql+psycopg://", 1)
         return v
 
+    @field_validator("frontend_origin")
+    @classmethod
+    def sanitize_frontend_origin(cls, v: str) -> str:
+        return v.strip().replace("\r", "").replace("\n", "") if v else "http://localhost:3000"
+
     @field_validator("jwt_secret_key")
     @classmethod
     def jwt_secret_must_be_strong(cls, v: str) -> str:

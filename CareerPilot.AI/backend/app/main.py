@@ -158,19 +158,23 @@ async def add_security_headers(request: Request, call_next):
             content={"detail": "Internal server error"}
         )
 
+    clean_origin = (settings.frontend_origin or "").strip().replace("\r", "").replace("\n", "")
+
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
-    response.headers["Content-Security-Policy"] = (
+    csp_value = (
         "default-src 'self'; "
         "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
-        "style-src 'self' 'unsafe-inline' fonts.googleapis.com; "
-        "font-src 'self' fonts.gstatic.com data:; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com data:; "
         "img-src 'self' data: blob:; "
-        f"connect-src 'self' accounts.google.com {settings.frontend_origin} https://careerplatform-three.vercel.app https://*.vercel.app http://localhost:8000 http://localhost:3000 http://127.0.0.1:8000 http://127.0.0.1:3000; "
+        f"connect-src 'self' https://accounts.google.com {clean_origin} https://careerplatform-three.vercel.app https://*.vercel.app https://careerpilot-backend-8c6n.onrender.com http://localhost:8000 http://localhost:3000 http://127.0.0.1:8000 http://127.0.0.1:3000; "
         "frame-ancestors 'none';"
-    )
+    ).replace("\r", "").replace("\n", " ").strip()
+    
+    response.headers["Content-Security-Policy"] = csp_value
     
     if is_prod:
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"

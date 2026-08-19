@@ -46,22 +46,19 @@ os.makedirs("static/uploads", exist_ok=True)
 
 is_prod = settings.environment.lower() == "production"
 
-allowed_origins_list = (
-    [settings.frontend_origin]
-    if is_prod
-    else list(set([
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        settings.frontend_origin
-    ]))
-)
+allowed_origins_list = list(set([
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://careerplatform-three.vercel.app",
+    settings.frontend_origin
+]))
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins_list,
-    allow_origin_regex=None if is_prod else r"http://(localhost|127\.0\.0\.1)(:[0-9]+)?",
+    allow_origin_regex=r"https://.*\.vercel\.app|http://(localhost|127\.0\.0\.1)(:[0-9]+)?",
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
@@ -81,7 +78,7 @@ async def add_security_headers(request: Request, call_next):
         "style-src 'self' 'unsafe-inline' fonts.googleapis.com; "
         "font-src 'self' fonts.gstatic.com data:; "
         "img-src 'self' data: blob:; "
-        f"connect-src 'self' accounts.google.com {settings.frontend_origin} http://localhost:8000 http://localhost:3000 http://127.0.0.1:8000 http://127.0.0.1:3000; "
+        f"connect-src 'self' accounts.google.com {settings.frontend_origin} https://careerplatform-three.vercel.app https://*.vercel.app http://localhost:8000 http://localhost:3000 http://127.0.0.1:8000 http://127.0.0.1:3000; "
         "frame-ancestors 'none';"
     )
     

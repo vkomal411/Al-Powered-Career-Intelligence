@@ -54,13 +54,14 @@ def _sniff_and_validate_certificate(filename: str, file_bytes: bytes) -> None:
 
 def _set_auth_cookies(response: Response, access_token: str, refresh_token: str) -> None:
     is_prod = settings.environment.lower() == "production"
+    cookie_samesite = "none" if is_prod else "lax"
     # Access token cookie (short-lived)
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
         max_age=settings.access_token_expire_minutes * 60,
-        samesite="lax",
+        samesite=cookie_samesite,
         secure=is_prod,
     )
     # Refresh token cookie (long-lived 7 days)
@@ -69,15 +70,16 @@ def _set_auth_cookies(response: Response, access_token: str, refresh_token: str)
         value=refresh_token,
         httponly=True,
         max_age=7 * 24 * 60 * 60,
-        samesite="lax",
+        samesite=cookie_samesite,
         secure=is_prod,
     )
 
 
 def _clear_auth_cookies(response: Response) -> None:
     is_prod = settings.environment.lower() == "production"
-    response.delete_cookie(key="access_token", httponly=True, samesite="lax", secure=is_prod)
-    response.delete_cookie(key="refresh_token", httponly=True, samesite="lax", secure=is_prod)
+    cookie_samesite = "none" if is_prod else "lax"
+    response.delete_cookie(key="access_token", httponly=True, samesite=cookie_samesite, secure=is_prod)
+    response.delete_cookie(key="refresh_token", httponly=True, samesite=cookie_samesite, secure=is_prod)
 
 
 @router.post(

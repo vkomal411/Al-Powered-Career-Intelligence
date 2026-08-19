@@ -149,7 +149,15 @@ app.add_middleware(
 
 @app.middleware("http")
 async def add_security_headers(request: Request, call_next):
-    response = await call_next(request)
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        logger.exception("Error processing request %s %s: %s", request.method, request.url.path, exc)
+        response = JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={"detail": "Internal server error"}
+        )
+
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
@@ -182,7 +190,9 @@ EXEMPT_CSRF_PATHS = {
     "/auth/forgot-password",
     "/auth/reset-password",
     "/admin/auth/login",
-    "/feedback"
+    "/feedback",
+    "/health",
+    "/"
 }
 
 @app.middleware("http")
@@ -192,7 +202,7 @@ async def verify_csrf_token(request: Request, call_next):
         return await call_next(request)
 
     # Exempt public auth entry paths
-    if request.url.path in EXEMPT_CSRF_PATHS:
+    if request.url.path in EXEMPT_CSRF_PATHS or any(request.url.path.startswith(p) for p in EXEMPT_CSRF_PATHS):
         return await call_next(request)
 
     header_token = request.headers.get("X-CSRF-Token")

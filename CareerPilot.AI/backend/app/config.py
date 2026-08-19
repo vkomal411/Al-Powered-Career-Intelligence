@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     jwt_secret_key: str
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 15
-    google_client_id: str
+    google_client_id: str = ""
     frontend_origin: str = "http://localhost:3000"
 
     # --- Security / hardening settings ---

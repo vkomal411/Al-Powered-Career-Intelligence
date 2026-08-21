@@ -1,22 +1,29 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { DownloadIcon } from "../icons";
 import { BlurredPhone } from "../BlurredPhone";
-import { downloadBinary } from "../../lib/api";
+import { downloadBinary, apiFetch } from "../../lib/api";
+import { useAuth } from "../../context/AuthContext";
 
 export const ResumeEditorStudio: React.FC = () => {
+  const { user } = useAuth();
   const [selectedTemplate, setSelectedTemplate] = useState<"modern" | "classic" | "minimal">("modern");
+  const [loadedFromProfile, setLoadedFromProfile] = useState<boolean>(false);
 
   // Form State
-  const [fullName, setFullName] = useState("Venkata Komal");
-  const [email, setEmail] = useState("venkata@example.com");
+  const [fullName, setFullName] = useState(user?.full_name || "Venkata Komal");
+  const [email, setEmail] = useState(user?.email || "venkata@example.com");
   const [phone, setPhone] = useState("+1 (555) 234-5678");
   const [githubUrl, setGithubUrl] = useState("github.com/venkatakomal");
-  const [targetRole, setTargetRole] = useState("UI/UX Designer");
+  const [targetRole, setTargetRole] = useState(user?.target_role || "UI/UX Designer");
   const [summary, setSummary] = useState(
     "Creative and user-centered UI/UX Designer with 5+ years of experience crafting intuitive digital products in Figma, User Research, Wireframing, and Design Systems. Proven track record of conducting usability studies and increasing WCAG-compliant adoption by 38%."
   );
 
-  const [skills, setSkills] = useState<string[]>(["Figma", "User Research", "Wireframing", "Design Systems", "Usability Testing"]);
+  const [skills, setSkills] = useState<string[]>(
+    user?.skills && user.skills.length > 0
+      ? user.skills
+      : ["Figma", "User Research", "Wireframing", "Design Systems", "Usability Testing"]
+  );
   const [skillInput, setSkillInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isExporting, setIsExporting] = useState<"pdf" | "docx" | null>(null);
@@ -42,6 +49,90 @@ export const ResumeEditorStudio: React.FC = () => {
       technologies: "Figma, User Research, Wireframing, React"
     }
   ]);
+
+  const [education, setEducation] = useState([
+    {
+      id: "edu-1",
+      school: "University of Technology",
+      degree: "B.S. in Computer Science / Design",
+      year: "2018 - 2022"
+    }
+  ]);
+
+  // Automatically load active parsed resume and user profile
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCandidateData() {
+      try {
+        const resumes = await apiFetch<any[]>("/resume/my-resumes");
+        if (!isMounted) return;
+        if (Array.isArray(resumes) && resumes.length > 0) {
+          const latest = resumes[0];
+          if (latest.extracted_name || user?.full_name) setFullName(latest.extracted_name || user?.full_name || "");
+          if (latest.extracted_email || user?.email) setEmail(latest.extracted_email || user?.email || "");
+          if (latest.extracted_phone) setPhone(latest.extracted_phone);
+          if (latest.target_role || user?.target_role) setTargetRole(latest.target_role || user?.target_role || "");
+          if (latest.summary || latest.extracted_summary) setSummary(latest.summary || latest.extracted_summary);
+          if (Array.isArray(latest.extracted_skills) && latest.extracted_skills.length > 0) {
+            setSkills(latest.extracted_skills);
+          } else if (Array.isArray(user?.skills) && user.skills.length > 0) {
+            setSkills(user.skills);
+          }
+          if (Array.isArray(latest.extracted_experience) && latest.extracted_experience.length > 0) {
+            setExperiences(
+              latest.extracted_experience.map((exp: any, i: number) => ({
+                id: `exp-${i + 1}`,
+                company: exp.company || exp.title || "Company",
+                jobTitle: exp.title || exp.role || "Job Title",
+                startDate: exp.start_date || exp.dates?.split("-")[0]?.trim() || "2022",
+                endDate: exp.end_date || exp.dates?.split("-")[1]?.trim() || "Present",
+                description: exp.description || exp.summary || exp.responsibilities || ""
+              }))
+            );
+          }
+          if (Array.isArray(latest.extracted_education) && latest.extracted_education.length > 0) {
+            setEducation(
+              latest.extracted_education.map((ed: any, i: number) => ({
+                id: `edu-${i + 1}`,
+                school: ed.school || ed.institution || ed.name || "University",
+                degree: ed.degree || ed.field || ed.major || "Degree",
+                year: ed.year || ed.dates || "2020 - 2024"
+              }))
+            );
+          }
+          if (Array.isArray(latest.extracted_projects) && latest.extracted_projects.length > 0) {
+            setProjects(
+              latest.extracted_projects.map((proj: any, i: number) => ({
+                id: `proj-${i + 1}`,
+                name: proj.name || proj.title || "Project",
+                githubUrl: proj.url || proj.link || "",
+                description: proj.description || "",
+                technologies: Array.isArray(proj.technologies) ? proj.technologies.join(", ") : (proj.technologies || "")
+              }))
+            );
+          }
+          setLoadedFromProfile(true);
+        } else if (user) {
+          if (user.full_name) setFullName(user.full_name);
+          if (user.email) setEmail(user.email);
+          if (user.target_role) setTargetRole(user.target_role);
+          if (Array.isArray(user.skills) && user.skills.length > 0) setSkills(user.skills);
+          setLoadedFromProfile(true);
+        }
+      } catch {
+        if (user && isMounted) {
+          if (user.full_name) setFullName(user.full_name);
+          if (user.email) setEmail(user.email);
+          if (user.target_role) setTargetRole(user.target_role);
+          if (Array.isArray(user.skills) && user.skills.length > 0) setSkills(user.skills);
+        }
+      }
+    }
+    loadCandidateData();
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   // Quick 1-Click Role Presets
   const handleSelectPreset = useCallback((roleName: string) => {
@@ -117,15 +208,6 @@ export const ResumeEditorStudio: React.FC = () => {
   const handleRemoveSkill = useCallback((skillToRemove: string) => {
     setSkills(skills.filter((s) => s !== skillToRemove));
   }, [skills]);
-
-  const education = useMemo(() => [
-    {
-      id: "edu-1",
-      school: "University of Technology",
-      degree: "B.S. in Computer Science / Design",
-      year: "2018 - 2022"
-    }
-  ], []);
 
   const exportData = useMemo(() => ({
     fullName,
@@ -265,12 +347,20 @@ export const ResumeEditorStudio: React.FC = () => {
       <div className="bg-white dark:bg-[#111726] rounded-2xl border border-slate-200 dark:border-white/[0.08] p-6 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-white/[0.06] pb-4">
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-wider border border-indigo-100 dark:border-indigo-500/25">
                 Simple AI Resume Studio
               </span>
               <span className="text-xs text-slate-400">•</span>
               <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">✓ ATS Optimized</span>
+              {loadedFromProfile && (
+                <>
+                  <span className="text-xs text-slate-400">•</span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-2xs font-semibold border border-emerald-200 dark:border-emerald-800/40">
+                    ⚡ Auto-filled from your profile
+                  </span>
+                </>
+              )}
             </div>
             <h2 className="font-display text-xl font-bold text-slate-900 dark:text-white mt-1">Automatic Resume Generator</h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">

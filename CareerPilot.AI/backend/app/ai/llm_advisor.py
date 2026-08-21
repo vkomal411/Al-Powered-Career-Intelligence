@@ -65,8 +65,16 @@ def generate_heuristic_advice(user_profile: Dict[str, Any], resume_data: Dict[st
     }
 
 
+import time
+import hashlib
+
+ADVISOR_PROMPT_VERSION = "v1.0"
+ADVISOR_CACHE_TTL = 86400  # 24 hours
+_ADVICE_CACHE: Dict[str, Dict[str, Any]] = {}
+
+
 def generate_gemini_advice(user_profile: Dict[str, Any], resume_data: Dict[str, Any], custom_prompt: str = "") -> Dict[str, Any]:
-    """Calls Gemini REST / SDK to generate AI Career Advice."""
+    """Calls Gemini REST / SDK to generate AI Career Advice with TTL caching."""
     api_key = settings.gemini_api_key
     if not api_key:
         logger.info("Gemini API Key not set. Falling back to heuristic AI advisor.")
@@ -74,6 +82,17 @@ def generate_gemini_advice(user_profile: Dict[str, Any], resume_data: Dict[str, 
 
     target_role = user_profile.get("target_role") or "Software Engineer"
     skills = user_profile.get("skills") or resume_data.get("extracted_skills") or []
+    skills_sorted = sorted(list(set(skills)))
+    exp_level = user_profile.get("experience_level", "Mid-Level")
+
+    # Fast cache lookup for common career queries
+    cache_raw = f"{ADVISOR_PROMPT_VERSION}:{target_role}:{','.join(skills_sorted)}:{exp_level}:{custom_prompt}"
+    cache_key = hashlib.sha256(cache_raw.encode("utf-8")).hexdigest()
+
+    cached = _ADVICE_CACHE.get(cache_key)
+    if cached and (time.time() - cached["timestamp"] < ADVISOR_CACHE_TTL):
+        logger.debug("Serving career advice from cache (%s)", cache_key[:10])
+        return cached["data"]
 
     prompt = f"""
 You are an expert AI Career Coach and Resume Intelligence Specialist.
@@ -85,43 +104,53 @@ Analyze the following candidate profile and return a JSON object with EXACTLY th
 - "suggested_certifications": list of strings (3 top certifications)
 
 Candidate Target Role: {target_role}
-Candidate Skills: {', '.join(skills)}
-Candidate Experience Level: {user_profile.get('experience_level', 'Mid-Level')}
+Candidate Skills: {', '.join(skills_sorted)}
+Candidate Experience Level: {exp_level}
 Custom Query: {custom_prompt or 'None'}
 
 Return ONLY valid raw JSON without markdown formatting.
 """
 
-    if HAS_GEMINI_SDK:
-        try:
-            client = genai.Client(api_key=api_key)
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt
-            )
-            text = response.text.strip()
-            # Clean markdown JSON formatting if present
-            if text.startswith("```json"):
-                text = text.replace("```json", "").replace("```", "").strip()
-            return json.loads(text)
-        except Exception as e:
-            logger.warning("Gemini SDK call failed (%s). Attempting REST API fallback.", e)
+    models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash"]
 
-    if HAS_REQUESTS:
-        try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
-            payload = {
-                "contents": [{"parts": [{"text": prompt}]}]
-            }
-            resp = requests.post(url, json=payload, timeout=10)
-            if resp.status_code == 200:
-                data = resp.json()
-                raw_text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                if raw_text.startswith("```json"):
-                    raw_text = raw_text.replace("```json", "").replace("```", "").strip()
-                return json.loads(raw_text)
-        except Exception as e:
-            logger.warning("Gemini REST API call failed: %s", e)
+    for model_name in models_to_try:
+        if HAS_GEMINI_SDK:
+            try:
+                client = genai.Client(api_key=api_key)
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
+                text = response.text.strip()
+                if text.startswith("```json"):
+                    text = text.replace("```json", "", 1).rsplit("```", 1)[0].strip()
+                elif text.startswith("```"):
+                    text = text.replace("```", "", 1).rsplit("```", 1)[0].strip()
+                parsed = json.loads(text)
+                _ADVICE_CACHE[cache_key] = {"timestamp": time.time(), "data": parsed}
+                return parsed
+            except Exception as e:
+                logger.warning("Gemini SDK (%s) failed: %s. Attempting REST fallback.", model_name, e)
+
+        if HAS_REQUESTS:
+            try:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+                payload = {
+                    "contents": [{"parts": [{"text": prompt}]}]
+                }
+                resp = requests.post(url, json=payload, timeout=8)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    raw_text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    if raw_text.startswith("```json"):
+                        raw_text = raw_text.replace("```json", "", 1).rsplit("```", 1)[0].strip()
+                    elif raw_text.startswith("```"):
+                        raw_text = raw_text.replace("```", "", 1).rsplit("```", 1)[0].strip()
+                    parsed = json.loads(raw_text)
+                    _ADVICE_CACHE[cache_key] = {"timestamp": time.time(), "data": parsed}
+                    return parsed
+            except Exception as e:
+                logger.warning("Gemini REST API (%s) failed: %s", model_name, e)
 
     return generate_heuristic_advice(user_profile, resume_data)
 

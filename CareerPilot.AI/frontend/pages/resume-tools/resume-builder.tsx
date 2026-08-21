@@ -1,33 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Topbar from "../../components/Topbar";
 import BrandMark from "../../components/BrandMark";
 import GroupNavControl from "../../components/GroupNavControl";
 import { ResumeEditorStudio } from "../../components/studio/ResumeEditorStudio";
-import { apiFetch, UserResponse, logoutUser } from "../../lib/api";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ResumeBuilderPage() {
   const router = useRouter();
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [checkingSession, setCheckingSession] = useState(true);
-
-  useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then((userData) => {
-        setUser(userData);
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => {
-        setCheckingSession(false);
-      });
-  }, []);
+  const { user, loading: checkingSession, logout } = useAuth();
 
   async function handleLogout() {
     try {
-      await logoutUser();
+      await logout();
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {

@@ -9,7 +9,8 @@ try:
     from spacy.pipeline import EntityRuler
 
     try:
-        NLP = spacy.load("en_core_web_sm")
+        # Disable heavy unused syntactic components while keeping EntityRuler & NER fast and accurate
+        NLP = spacy.load("en_core_web_sm", disable=["parser", "tagger", "lemmatizer", "attribute_ruler"])
     except Exception:
         # Fallback to downloading or creating blank english model
         NLP = spacy.blank("en")
@@ -27,13 +28,20 @@ try:
             "Microservices", "CI/CD", "DevOps", "Agile", "Scrum", "Jira", "HTML", "CSS",
             "Tailwind CSS", "Bootstrap", "Data Analysis", "Tableau", "Power BI", "Excel"
         ]
-        patterns = [{"label": "SKILL", "pattern": skill} for skill in SKILLS_TAXONOMY]
+        patterns = []
+        for skill in SKILLS_TAXONOMY:
+            patterns.append({"label": "SKILL", "pattern": skill})
+            # Also add token pattern for case-insensitive matching
+            patterns.append({"label": "SKILL", "pattern": [{"LOWER": t.lower()} for t in skill.split()]})
+
         ruler.add_patterns(patterns)
+        CANONICAL_SKILLS = {s.lower(): s for s in SKILLS_TAXONOMY}
 
     HAS_SPACY = True
     logger.info("spaCy NLP engine with EntityRuler initialized successfully.")
 except Exception as e:
     NLP = None
+    CANONICAL_SKILLS = {}
     HAS_SPACY = False
     logger.warning("spaCy not available or failed to load (%s). Standard parsing active.", e)
 
@@ -50,7 +58,8 @@ def parse_resume_with_spacy(text: str) -> Dict[str, Any]:
 
         for ent in doc.ents:
             if ent.label_ == "SKILL":
-                skills.add(ent.text)
+                canonical = CANONICAL_SKILLS.get(ent.text.lower(), ent.text)
+                skills.add(canonical)
             else:
                 entities.append({"text": ent.text, "label": ent.label_})
 

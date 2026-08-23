@@ -32,19 +32,35 @@ except Exception as e:
 
 
 def auto_seed_database_if_needed():
+    # Never auto-seed default dummy accounts in production without explicit configuration
+    if settings.environment.lower() == "production" and not os.getenv("ADMIN_INITIAL_PASSWORD"):
+        logger.info("Production mode detected without ADMIN_INITIAL_PASSWORD: auto-seeding skipped.")
+        return
+
     from app.database import SessionLocal
     from app.auth_utils import hash_password
     import uuid
+    import os
+
+    admin_email = os.getenv("ADMIN_EMAIL", "admin@careerpilot.ai")
+    admin_password = os.getenv("ADMIN_INITIAL_PASSWORD", "AdminPass123!")
+    ops_admin_email = os.getenv("OPS_ADMIN_EMAIL", "ops.admin@careerpilot.ai")
+    ops_admin_password = os.getenv("OPS_ADMIN_INITIAL_PASSWORD", "AdminPass123!")
+    moderator_email = os.getenv("MODERATOR_EMAIL", "moderator@careerpilot.ai")
+    moderator_password = os.getenv("MODERATOR_INITIAL_PASSWORD", "ModeratorPass123!")
+    demo_email = os.getenv("DEMO_EMAIL", "demo@career.ai")
+    demo_password = os.getenv("DEMO_INITIAL_PASSWORD", "Demo123456!")
+
     db = SessionLocal()
     try:
         # Check if admin exists
-        admin_user = db.query(models.User).filter(models.User.email == "admin@careerpilot.ai").first()
+        admin_user = db.query(models.User).filter(models.User.email == admin_email).first()
         if not admin_user:
             admin_user = models.User(
                 id=uuid.uuid4(),
                 full_name="Platform Admin",
-                email="admin@careerpilot.ai",
-                hashed_password=hash_password("AdminPass123!"),
+                email=admin_email,
+                hashed_password=hash_password(admin_password),
                 is_active=True,
                 role="superadmin",
                 is_admin=True,
@@ -53,15 +69,15 @@ def auto_seed_database_if_needed():
                 industry="Software Engineering",
             )
             db.add(admin_user)
-            logger.info("Auto-seeded superadmin user: admin@careerpilot.ai")
+            logger.info("Auto-seeded superadmin user: %s", admin_email)
 
         # Check if ops admin exists
-        if not db.query(models.User).filter(models.User.email == "ops.admin@careerpilot.ai").first():
+        if not db.query(models.User).filter(models.User.email == ops_admin_email).first():
             db.add(models.User(
                 id=uuid.uuid4(),
                 full_name="Operations Admin",
-                email="ops.admin@careerpilot.ai",
-                hashed_password=hash_password("AdminPass123!"),
+                email=ops_admin_email,
+                hashed_password=hash_password(ops_admin_password),
                 is_active=True,
                 role="admin",
                 is_admin=True,
@@ -71,12 +87,12 @@ def auto_seed_database_if_needed():
             ))
 
         # Check if moderator exists
-        if not db.query(models.User).filter(models.User.email == "moderator@careerpilot.ai").first():
+        if not db.query(models.User).filter(models.User.email == moderator_email).first():
             db.add(models.User(
                 id=uuid.uuid4(),
                 full_name="Content & Feedback Moderator",
-                email="moderator@careerpilot.ai",
-                hashed_password=hash_password("ModeratorPass123!"),
+                email=moderator_email,
+                hashed_password=hash_password(moderator_password),
                 is_active=True,
                 role="moderator",
                 is_admin=True,
@@ -86,12 +102,12 @@ def auto_seed_database_if_needed():
             ))
 
         # Check if demo user exists
-        if not db.query(models.User).filter(models.User.email == "demo@career.ai").first():
+        if not db.query(models.User).filter(models.User.email == demo_email).first():
             db.add(models.User(
                 id=uuid.uuid4(),
                 full_name="Demo User",
-                email="demo@career.ai",
-                hashed_password=hash_password("Demo123456!"),
+                email=demo_email,
+                hashed_password=hash_password(demo_password),
                 is_active=True,
                 role="user",
                 is_admin=False,

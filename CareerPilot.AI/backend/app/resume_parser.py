@@ -1,9 +1,12 @@
 import re
 import io
+import logging
 from typing import Optional, List
 
 import pdfplumber
 import docx
+
+logger = logging.getLogger("resume_parser")
 
 from app.ats.text_cleaner import clean_resume_text
 from app.ats.contact_detector import (
@@ -219,8 +222,8 @@ def extract_name(text: str) -> Optional[str]:
                 words = cleaned_name.split()
                 if 1 <= len(words) <= 4 and all(w.replace(".", "").isalpha() for w in words):
                     return cleaned_name.title()
-    except Exception:
-        pass  # Fall back seamlessly to rule-based line parsing
+    except Exception as exc:
+        logger.debug("spaCy name extraction skipped or unavailable (%s), falling back to rule-based parser", exc)
 
     # 2. Rule-based line parsing fallback (Authoritative for non-standard layouts)
     lines = [line.strip() for line in text.splitlines() if line.strip()]
@@ -633,8 +636,8 @@ def parse_resume(filename: str, file_bytes: bytes) -> dict:
         if spacy_result.get("skills"):
             combined = set(skills + spacy_result["skills"])
             skills = sorted(list(combined))
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.debug("spaCy skill extraction skipped (%s), using rule-based detected skills", exc)
 
     # 5. Scores
     contact_points = contact_score(contact)

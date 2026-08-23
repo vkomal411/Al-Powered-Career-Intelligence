@@ -26,7 +26,14 @@ def seed_database():
 
     try:
         admin_email = os.getenv("ADMIN_EMAIL", "admin@careerpilot.ai")
-        admin_password = os.getenv("ADMIN_INITIAL_PASSWORD", "AdminPass123!")
+        admin_password = os.getenv("ADMIN_INITIAL_PASSWORD")
+        if not admin_password:
+            if os.getenv("ENVIRONMENT", "development").lower() == "production":
+                import secrets
+                admin_password = secrets.token_urlsafe(16) + "!Aa1"
+                print(f"Generated secure initial admin password for production: {admin_password}")
+            else:
+                admin_password = "AdminPass123!"
 
         # 1. Seed / Elevate Superadmin User
         admin_user = db.query(models.User).filter(models.User.email == admin_email).first()

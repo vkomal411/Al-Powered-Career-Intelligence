@@ -106,18 +106,7 @@ export default function AdminPortal() {
     beforeRole: string;
     newRole: string;
   } | null>(null);
-  const [latencyHistory, setLatencyHistory] = useState<{ time: string; latency: number; rps: number }[]>([
-    { time: "10:18:00", latency: 38.2, rps: 128 },
-    { time: "10:18:05", latency: 42.1, rps: 135 },
-    { time: "10:18:10", latency: 35.8, rps: 142 },
-    { time: "10:18:15", latency: 49.0, rps: 138 },
-    { time: "10:18:20", latency: 39.5, rps: 146 },
-    { time: "10:18:25", latency: 44.3, rps: 152 },
-    { time: "10:18:30", latency: 36.7, rps: 140 },
-    { time: "10:18:35", latency: 41.2, rps: 144 },
-    { time: "10:18:40", latency: 38.9, rps: 148 },
-    { time: "10:18:45", latency: 43.5, rps: 150 },
-  ]);
+  const [latencyHistory, setLatencyHistory] = useState<{ time: string; latency: number; rps: number }[]>([]);
   const [liveMetricMode, setLiveMetricMode] = useState<"latency" | "throughput">("latency");
   const [isLivePolling, setIsLivePolling] = useState(true);
   const [isPinging, setIsPinging] = useState(false);
@@ -566,6 +555,7 @@ export default function AdminPortal() {
   // Live polling effect for System Health
   useEffect(() => {
     if (activeTab !== "system" || !isLivePolling) return;
+    handlePingApi();
     const interval = setInterval(() => {
       handlePingApi();
     }, 3000);

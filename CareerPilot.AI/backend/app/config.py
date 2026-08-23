@@ -1,10 +1,12 @@
+import os
+import secrets
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/career_platform"
-    jwt_secret_key: str = "production_secure_careerpilot_default_jwt_secret_key_2026_x9k2"
+    jwt_secret_key: str = ""
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 15
     google_client_id: str = ""
@@ -48,11 +50,22 @@ class Settings(BaseSettings):
             "change_this_to_a_long_random_string",
             "secret",
             "changeme",
+            "generate_a_secure_random_key_with_at_least_32_characters_here",
             "",
         }
-        if v.strip().lower() in placeholder_values or len(v) < 32:
-            return "production_secure_careerpilot_default_jwt_secret_key_2026_x9k2"
-        return v
+        val = (v or "").strip()
+        env = os.getenv("ENVIRONMENT", "development").lower()
+
+        if val.lower() in placeholder_values or len(val) < 32:
+            if env == "production":
+                raise ValueError(
+                    "CRITICAL SECURITY CONFIGURATION: JWT_SECRET_KEY must be set in production "
+                    "with at least 32 cryptographically secure random characters. Placeholder values are forbidden."
+                )
+            # In development/test mode, use a stable dev key or generate an ephemeral random key
+            dev_fallback = os.getenv("DEV_JWT_SECRET", "dev_secure_careerpilot_ephemeral_jwt_secret_key_2026_x9k2")
+            return dev_fallback
+        return val
 
 
 settings = Settings()

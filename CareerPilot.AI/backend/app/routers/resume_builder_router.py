@@ -4,6 +4,7 @@ FastAPI Router for CareerPilot.AI Resume Builder Architecture.
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Response
 from fastapi.responses import StreamingResponse
+from starlette.concurrency import run_in_threadpool
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import io
@@ -64,7 +65,7 @@ async def upload_resume(
     contents = await file.read()
     file_ext = file.filename.split(".")[-1] if "." in file.filename else "txt"
 
-    parsed = parser_service.parse_file_content(contents, file_ext)
+    parsed = await run_in_threadpool(parser_service.parse_file_content, contents, file_ext)
 
     resume = ResumeBuilder(
         user_id=current_user.id,

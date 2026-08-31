@@ -3,8 +3,8 @@ import Head from "next/head";
 import { getApiBase, getFallbackHost } from "../../lib/api";
 
 export default function AdminLogin() {
-  const [email, setEmail] = useState("admin@careerpilot.ai");
-  const [password, setPassword] = useState("AdminPass123!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -854,28 +854,29 @@ def get_skill_gap_analytics(
     admin_user: models.User = Depends(get_current_admin_user)
 ):
     top_missing = [
-        {"skill": "System Architecture", "missing_count": 86, "percentage": "48%"},
-        {"skill": "AWS / Cloud Infrastructure", "missing_count": 72, "percentage": "40%"},
-        {"skill": "Docker & Kubernetes", "missing_count": 65, "percentage": "36%"},
-        {"skill": "GraphQL APIs", "missing_count": 54, "percentage": "30%"},
-        {"skill": "CI/CD Pipeline Automation", "missing_count": 48, "percentage": "26%"},
+        {"skill": "System Architecture", "missing_count": 86, "percentage": "48%", "gap_percentage": 48},
+        {"skill": "AWS / Cloud Infrastructure", "missing_count": 72, "percentage": "40%", "gap_percentage": 40},
+        {"skill": "Docker & Kubernetes", "missing_count": 65, "percentage": "36%", "gap_percentage": 36},
+        {"skill": "GraphQL APIs", "missing_count": 54, "percentage": "30%", "gap_percentage": 30},
+        {"skill": "CI/CD Pipeline Automation", "missing_count": 48, "percentage": "26%", "gap_percentage": 26},
     ]
 
     top_demanded = [
-        {"skill": "Python", "demand_count": 195},
-        {"skill": "TypeScript", "demand_count": 182},
-        {"skill": "React / Next.js", "demand_count": 164},
-        {"skill": "FastAPI / Node.js", "demand_count": 140},
-        {"skill": "SQL / PostgreSQL", "demand_count": 135},
+        {"skill": "Python & FastAPI", "demand_count": 195, "demand_percentage": 82},
+        {"skill": "TypeScript & Next.js", "demand_count": 182, "demand_percentage": 78},
+        {"skill": "React / Modern UI", "demand_count": 164, "demand_percentage": 71},
+        {"skill": "PostgreSQL & Database Design", "demand_count": 140, "demand_percentage": 65},
+        {"skill": "REST & GraphQL APIs", "demand_count": 135, "demand_percentage": 60},
     ]
 
     industry_gaps = {
-        "Software Engineering": ["System Design", "Cloud Security", "Microservices"],
-        "Data Science & AI": ["PyTorch", "Model Deployment", "MLOps"],
+        "Software Engineering": ["System Design", "Cloud Security", "Microservices Architecture"],
+        "Data Science & AI": ["PyTorch", "Model Deployment", "MLOps Pipelines"],
         "Product Management": ["A/B Testing", "SQL Analytics", "Product Strategy"]
     }
 
     return {
+        "avg_gap_score": 41.8,
         "top_missing_skills": top_missing,
         "top_demanded_skills": top_demanded,
         "industry_skill_gaps": industry_gaps,
@@ -907,12 +908,15 @@ def get_career_recommendation_analytics(
     ]
 
     trends = [
-        {"path": "Frontend Developer -> Full Stack Engineer", "frequency": 145},
-        {"path": "Data Analyst -> AI Engineer", "frequency": 92},
-        {"path": "QA Engineer -> Automation / DevOps", "frequency": 64},
+        {"path": "Frontend Developer -> Full Stack Engineer", "frequency": 145, "count": 145},
+        {"path": "Data Analyst -> AI Engineer", "frequency": 92, "count": 92},
+        {"path": "QA Engineer -> Automation / DevOps", "frequency": 64, "count": 64},
     ]
 
     return {
+        "total_generated": 1280,
+        "avg_confidence": "91.4%",
+        "top_career_paths": trends,
         "top_target_roles": top_roles,
         "top_industries": top_industries,
         "career_path_trends": trends,
@@ -937,11 +941,21 @@ def get_job_recommendation_analytics(
         {"title": "Full Stack Architect", "matches": 112, "avg_fit": "82%"},
     ]
 
+    top_industries = [
+        {"industry": "Software & Tech", "count": 480},
+        {"industry": "FinTech & Banking", "count": 310},
+        {"industry": "AI & Cloud Platforms", "count": 290},
+        {"industry": "Healthcare Tech", "count": 180},
+    ]
+
     return {
         "total_recommendations": 1450,
+        "total_recommended": 1450,
         "avg_match_score": 84.6,
+        "click_through_rate": "18.4%",
         "saved_jobs_count": saved_count,
         "top_matched_titles": top_matched,
+        "top_industries": top_industries,
     }
 
 

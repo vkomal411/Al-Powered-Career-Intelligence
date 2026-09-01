@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Topbar from "../../../components/Topbar";
-import JobMatcherModal from "../../../components/JobMatcherModal";
 import { ParsedResume } from "../../../components/ResumeReportCard";
 import {
   getResume,
@@ -13,6 +13,9 @@ import {
   AICareerAdvice,
   logoutUser,
 } from "../../../lib/api";
+import { useAuth } from "../../../context/AuthContext";
+
+const JobMatcherModal = dynamic(() => import("../../../components/JobMatcherModal"), { ssr: false });
 
 type TabId = "strengths" | "improvements" | "roadmap" | "certifications";
 
@@ -20,8 +23,7 @@ export default function ResumeAuditPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [checkingSession, setCheckingSession] = useState(true);
+  const { user, loading: checkingSession } = useAuth();
   const [resume, setResume] = useState<ParsedResume | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -31,17 +33,10 @@ export default function ResumeAuditPage() {
 
   // Authenticate user
   useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then((userData) => {
-        setUser(userData);
-      })
-      .catch(() => {
-        router.replace("/login?redirect=" + encodeURIComponent(router.asPath));
-      })
-      .finally(() => {
-        setCheckingSession(false);
-      });
-  }, [router]);
+    if (!checkingSession && !user) {
+      router.replace("/login?redirect=" + encodeURIComponent(router.asPath));
+    }
+  }, [user, checkingSession, router]);
 
   // Load resume data by ID
   useEffect(() => {

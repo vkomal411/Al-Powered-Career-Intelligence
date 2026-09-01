@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
 import {
   fetchJobRecommendations,
   saveJobBookmark,
@@ -7,7 +8,8 @@ import {
   type JobRecommendationItem,
   type SavedJobResponse,
 } from "../lib/api";
-import JobDetailModal from "./JobDetailModal";
+
+const JobDetailModal = dynamic(() => import("./JobDetailModal"), { ssr: false });
 
 interface DropdownOption {
   value: string;

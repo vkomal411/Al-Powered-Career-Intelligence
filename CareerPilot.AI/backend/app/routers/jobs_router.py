@@ -20,7 +20,7 @@ router = APIRouter(prefix="/jobs", tags=["Job Recommendations & Saved Jobs"])
     response_model=schemas.JobRecommendationResponse,
     dependencies=[Depends(rate_limit("jobs-recommendations"))],
 )
-async def get_job_recommendations(
+def get_job_recommendations(
     location: Optional[str] = Query(None, description="Location search query (e.g. Remote, Austin, India)"),
     work_type: Optional[str] = Query(None, description="Work type filter: Remote, Hybrid, Onsite, or All"),
     experience_level: Optional[str] = Query(None, description="Experience level filter: Entry, Mid, Senior, Executive"),
@@ -88,7 +88,7 @@ async def get_job_recommendations(
     status_code=status.HTTP_201_CREATED,
     dependencies=[Depends(rate_limit("jobs-save"))],
 )
-async def save_job_bookmark(
+def save_job_bookmark(
     payload: schemas.SaveJobRequest,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -127,7 +127,7 @@ async def save_job_bookmark(
     status_code=status.HTTP_200_OK,
     dependencies=[Depends(rate_limit("jobs-unsave"))],
 )
-async def remove_saved_job_bookmark(
+def remove_saved_job_bookmark(
     job_id: str,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -157,15 +157,22 @@ async def remove_saved_job_bookmark(
     response_model=List[schemas.SavedJobResponse],
     dependencies=[Depends(rate_limit("jobs-list-saved"))],
 )
-async def list_saved_jobs(
+def list_saved_jobs(
+    skip: int = Query(0, ge=0, description="Offset"),
+    limit: int = Query(50, ge=1, le=100, description="Limit"),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
     """
-    Returns all bookmarked/saved jobs for the authenticated user.
+    Returns bookmarked/saved jobs for the authenticated user.
     """
-    saved_jobs = db.query(models.SavedJob).filter(
-        models.SavedJob.user_id == current_user.id
-    ).order_by(models.SavedJob.saved_at.desc()).all()
+    saved_jobs = (
+        db.query(models.SavedJob)
+        .filter(models.SavedJob.user_id == current_user.id)
+        .order_by(models.SavedJob.saved_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
     return saved_jobs

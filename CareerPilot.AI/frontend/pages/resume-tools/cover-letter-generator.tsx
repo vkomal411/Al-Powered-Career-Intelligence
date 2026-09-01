@@ -3,7 +3,8 @@ import Head from "next/head";
 import Link from "next/link";
 import Topbar from "../../components/Topbar";
 import Breadcrumbs from "../../components/Breadcrumbs";
-import { apiFetch, UserResponse, logoutUser } from "../../lib/api";
+import { apiFetch, logoutUser } from "../../lib/api";
+import { useAuth } from "../../context/AuthContext";
 
 interface CoverLetterData {
   tone: string;
@@ -16,7 +17,7 @@ interface CoverLetterData {
 }
 
 export default function CoverLetterGeneratorPage() {
-  const [user, setUser] = useState<UserResponse | null>(null);
+  const { user } = useAuth();
   const [jobDescription, setJobDescription] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [tone, setTone] = useState<"formal" | "startup" | "technical">("formal");
@@ -30,10 +31,6 @@ export default function CoverLetterGeneratorPage() {
 
   // Restore state from sessionStorage on mount
   useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then(setUser)
-      .catch(() => {});
-
     if (typeof window !== "undefined") {
       const savedJd = sessionStorage.getItem("cl_jd");
       const savedCompany = sessionStorage.getItem("cl_company");

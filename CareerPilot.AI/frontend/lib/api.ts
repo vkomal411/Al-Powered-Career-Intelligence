@@ -79,32 +79,43 @@ export function clearStoredSession(): void {
   cachedCsrfToken = null;
 }
 
+let activeCsrfPromise: Promise<string> | null = null;
+
 export async function fetchCsrfToken(): Promise<string> {
-  const currentBase = getApiBase();
-  try {
-    const res = await fetch(`${currentBase}/auth/csrf`, { credentials: "include" });
-    if (res.ok) {
-      const data = await res.json();
-      cachedCsrfToken = data.csrf_token;
-      return data.csrf_token;
-    }
-  } catch {
-    const altHost = getFallbackHost(currentBase);
-    if (altHost) {
-      try {
-        const altRes = await fetch(`${altHost}/auth/csrf`, { credentials: "include" });
-        if (altRes.ok) {
-          setResolvedApiBase(altHost);
-          const data = await altRes.json();
-          cachedCsrfToken = data.csrf_token;
-          return data.csrf_token;
-        }
-      } catch {
-        // Ignore fallback error
+  if (cachedCsrfToken) return cachedCsrfToken;
+  if (activeCsrfPromise) return activeCsrfPromise;
+
+  activeCsrfPromise = (async () => {
+    const currentBase = getApiBase();
+    try {
+      const res = await fetch(`${currentBase}/auth/csrf`, { credentials: "include" });
+      if (res.ok) {
+        const data = await res.json();
+        cachedCsrfToken = data.csrf_token;
+        return data.csrf_token;
       }
+    } catch {
+      const altHost = getFallbackHost(currentBase);
+      if (altHost) {
+        try {
+          const altRes = await fetch(`${altHost}/auth/csrf`, { credentials: "include" });
+          if (altRes.ok) {
+            setResolvedApiBase(altHost);
+            const data = await altRes.json();
+            cachedCsrfToken = data.csrf_token;
+            return data.csrf_token;
+          }
+        } catch {
+          // Ignore fallback error
+        }
+      }
+    } finally {
+      activeCsrfPromise = null;
     }
-  }
-  return "";
+    return "";
+  })();
+
+  return activeCsrfPromise;
 }
 
 export async function performTokenRefresh(): Promise<string | null> {

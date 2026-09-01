@@ -168,6 +168,9 @@ def get_text_embedding(text: str):
         logger.warning("Error encoding text embedding: %s", e)
         return None
 
+_SHARED_TFIDF = TfidfVectorizer(stop_words="english") if HAS_SKLEARN else None
+
+
 def compute_semantic_similarity(text1: str, text2: str) -> float:
     """Computes semantic similarity score (0.0 to 1.0) between two text blocks."""
     if not text1.strip() or not text2.strip():
@@ -183,10 +186,9 @@ def compute_semantic_similarity(text1: str, text2: str) -> float:
         except Exception as e:
             logger.warning("Error computing sentence-transformers embedding: %s", e)
 
-    if HAS_SKLEARN:
+    if HAS_SKLEARN and _SHARED_TFIDF is not None:
         try:
-            vectorizer = TfidfVectorizer(stop_words="english")
-            tfidf = vectorizer.fit_transform([text1, text2])
+            tfidf = _SHARED_TFIDF.fit_transform([text1, text2])
             matrix = cosine_similarity(tfidf[0:1], tfidf[1:2])
             return float(matrix[0][0])
         except Exception as e:

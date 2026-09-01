@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { apiFetch, UserResponse } from "../lib/api";
 import BrandMark from "../components/BrandMark";
 import { CheckCircleIcon, SparkleIcon, FileIcon } from "../components/icons";
+import { useAuth } from "../context/AuthContext";
 
 // Interactive Widget Data
 interface DemoState {
@@ -21,27 +21,14 @@ const initialDemoState: DemoState = {
 };
 
 export default function LandingPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
+  const { user, loading: checkingAuth } = useAuth();
+  const isLoggedIn = !!user;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Demo Widget State
   const [demoState, setDemoState] = useState<DemoState>(initialDemoState);
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const [isScanning, setIsScanning] = useState(false);
-
-  useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then(() => {
-        setIsLoggedIn(true);
-      })
-      .catch(() => {
-        setIsLoggedIn(false);
-      })
-      .finally(() => {
-        setCheckingAuth(false);
-      });
-  }, []);
 
   const triggerDemoStep = (step: number) => {
     if (isScanning || activeStep === step) return;

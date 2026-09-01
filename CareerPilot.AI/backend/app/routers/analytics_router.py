@@ -24,7 +24,7 @@ router = APIRouter(prefix="/analytics", tags=["Career Analytics & Intelligence"]
     "/career-overview",
     dependencies=[Depends(rate_limit("analytics-overview"))],
 )
-async def get_career_overview(
+def get_career_overview(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):

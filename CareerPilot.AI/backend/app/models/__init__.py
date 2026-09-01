@@ -53,7 +53,7 @@ class Resume(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
 
     original_filename = Column(String, nullable=False)
 
@@ -99,7 +99,7 @@ class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
     token_hash = Column(String, unique=True, index=True, nullable=False)
     family_id = Column(UUID(as_uuid=True), nullable=False, index=True)
     issued_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
@@ -115,7 +115,7 @@ class SavedJob(Base):
     __tablename__ = "saved_jobs"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
     job_id = Column(String, nullable=False, index=True)
     job_title = Column(String, nullable=False)
     company = Column(String, nullable=False)
@@ -149,7 +149,7 @@ class StudioResume(Base):
     __tablename__ = "studio_resumes"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
     title = Column(String, default="My AI Resume", nullable=False)
     target_role = Column(String, nullable=True, default="UI/UX Designer")
     experience_level = Column(String, nullable=True, default="Senior")
@@ -185,7 +185,7 @@ class StudioExperience(Base):
     __tablename__ = "studio_experiences"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     company = Column(String, nullable=False)
     job_title = Column(String, nullable=False)
     location = Column(String, nullable=True)
@@ -204,7 +204,7 @@ class StudioEducation(Base):
     __tablename__ = "studio_educations"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     school = Column(String, nullable=False)
     degree = Column(String, nullable=False)
     location = Column(String, nullable=True)
@@ -220,7 +220,7 @@ class StudioProjects(Base):
     __tablename__ = "studio_projects"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     description = Column(Text, nullable=True)
     technologies = Column(String, nullable=True)
@@ -234,7 +234,7 @@ class StudioSkills(Base):
     __tablename__ = "studio_skills"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     category = Column(String, default="Technical")
     proficiency = Column(String, default="intermediate")
@@ -247,7 +247,7 @@ class StudioCertifications(Base):
     __tablename__ = "studio_certifications"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     issuing_organization = Column(String, nullable=True)
     issue_date = Column(String, nullable=True)
@@ -261,7 +261,7 @@ class StudioLanguages(Base):
     __tablename__ = "studio_languages"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     language = Column(String, nullable=False)
     fluency = Column(String, default="Fluent")
 
@@ -272,7 +272,7 @@ class StudioAwards(Base):
     __tablename__ = "studio_awards"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     title = Column(String, nullable=False)
     issuer = Column(String, nullable=True)
     date_received = Column(String, nullable=True)
@@ -285,7 +285,7 @@ class StudioATSAnalysis(Base):
     __tablename__ = "studio_ats_analyses"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     overall_score = Column(Integer, nullable=False, default=85)
     
     structure_score = Column(Integer, default=90)
@@ -308,7 +308,7 @@ class StudioJobMatch(Base):
     __tablename__ = "studio_job_matches"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     job_title = Column(String, nullable=False)
     job_description = Column(Text, nullable=False)
     match_score = Column(Integer, nullable=False, default=82)
@@ -325,7 +325,7 @@ class StudioResumeVersion(Base):
     __tablename__ = "studio_resume_versions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("studio_resumes.id"), nullable=False, index=True)
     version_number = Column(Integer, nullable=False)
     action_name = Column(String, default="auto-save")
     snapshot = Column(JSON, nullable=False)
@@ -363,7 +363,7 @@ class JobDescription(Base):
     raw_text = Column(Text, nullable=False)
     required_skills = Column(JSON, default=list)
     is_active = Column(Boolean, default=True)
-    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     creator = relationship("User", foreign_keys=[created_by])
@@ -385,13 +385,13 @@ class UserFeedback(Base):
     __tablename__ = "user_feedback"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
     category = Column(String, default="general")  # bug, feature, rating, general
     rating = Column(Integer, nullable=True)
     message = Column(Text, nullable=False)
     status = Column(String, default="new", index=True)  # new, in_progress, closed
     admin_response = Column(Text, nullable=True)
-    resolved_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    resolved_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     resolved_at = Column(DateTime(timezone=True), nullable=True)
 
@@ -412,10 +412,10 @@ class SystemAlert(Base):
     severity = Column(String, default="info")  # info, warning, critical
     is_broadcast = Column(Boolean, default=True)
     target_role = Column(String, nullable=True)
-    target_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    target_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
     starts_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     ends_at = Column(DateTime(timezone=True), nullable=True)
-    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    created_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     creator = relationship("User", foreign_keys=[created_by])
@@ -426,7 +426,7 @@ class AdminExportJob(Base):
     __tablename__ = "admin_export_jobs"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    admin_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    admin_user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
     report_type = Column(String, nullable=False)  # users, resumes, ats, feedback, audit
     format = Column(String, default="csv")  # csv, json
     status = Column(String, default="pending")  # pending, ready, failed

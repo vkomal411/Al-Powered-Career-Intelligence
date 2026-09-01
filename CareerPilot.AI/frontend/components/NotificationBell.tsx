@@ -56,9 +56,24 @@ export default function NotificationBell() {
 
     fetchActiveAlerts();
 
-    // Poll every 60 seconds
-    const timer = setInterval(fetchActiveAlerts, 60000);
-    return () => clearInterval(timer);
+    // Poll every 60 seconds (only if tab is visible)
+    const timer = setInterval(() => {
+      if (typeof document !== "undefined" && !document.hidden) {
+        fetchActiveAlerts();
+      }
+    }, 60000);
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchActiveAlerts();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, []);
 
   // Close dropdown when clicking outside

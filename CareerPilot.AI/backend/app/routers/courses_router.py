@@ -50,7 +50,7 @@ router = APIRouter(prefix="/courses", tags=["Course & Skill-Gap Recommendations"
     "/recommendations",
     dependencies=[Depends(rate_limit("courses-recommendations"))],
 )
-async def get_course_recommendations(
+def get_course_recommendations(
     missing_skills: Optional[str] = Query(None, description="Comma-separated missing skills"),
     target_role: Optional[str] = Query(None, description="Target job title or role"),
     db: Session = Depends(get_db),

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import BrandMark from "./BrandMark";
 import ThemeToggle from "./ThemeToggle";
 import NotificationBell from "./NotificationBell";
-import UserFeedbackModal from "./UserFeedbackModal";
 import {
   LogOutIcon,
   OverviewIcon,
@@ -24,7 +24,10 @@ import {
 } from "./icons";
 
 import { calculateProfileCompletion } from "./ProfileCard";
-import { apiFetch, UserResponse } from "../lib/api";
+import { UserResponse } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
+
+const UserFeedbackModal = dynamic(() => import("./UserFeedbackModal"), { ssr: false });
 
 interface TopbarProps {
   fullName?: string;
@@ -39,50 +42,40 @@ function getInitials(name: string) {
   return initials.join("") || "VK";
 }
 
-export default function Topbar({ fullName: propFullName, user: propUser, onLogout, activeMenu }: TopbarProps) {
-  if (activeMenu) void activeMenu;
-  const [userName, setUserName] = useState<string>(propFullName || propUser?.full_name || "Venkata Komal");
-  const [userRole, setUserRole] = useState<string>(propUser?.role?.toLowerCase() || "user");
-  const [completionPercentage, setCompletionPercentage] = useState<number>(
-    propUser ? calculateProfileCompletion(propUser) : 85
-  );
+export default function Topbar({
+  fullName: propFullName,
+  user: propUser,
+  onLogout,
+  activeMenu,
+}: TopbarProps) {
+  const { user: authUser } = useAuth();
+  const activeUser = propUser || authUser;
+  const [userName, setUserName] = useState<string>(activeUser?.full_name || propFullName || "Venkata Komal");
+  const [userRole, setUserRole] = useState<string>(activeUser?.role?.toLowerCase() || "user");
+  const [completionPercentage, setCompletionPercentage] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(true);
   const [isCareerOpen, setIsCareerOpen] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState<"resume" | "career" | null>(null);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const router = useRouter();
   const currentPath = router.pathname;
 
   React.useEffect(() => {
-    if (propUser) {
-      setUserName(propUser.full_name);
-      if (propUser.role) {
-        setUserRole(propUser.role.toLowerCase());
+    if (activeUser) {
+      if (activeUser.full_name) {
+        setUserName(activeUser.full_name);
       }
-      setCompletionPercentage(calculateProfileCompletion(propUser));
-      return;
+      if (activeUser.role) {
+        setUserRole(activeUser.role.toLowerCase());
+      }
+      setCompletionPercentage(calculateProfileCompletion(activeUser));
+    } else if (propFullName) {
+      setUserName(propFullName);
     }
-
-    apiFetch<UserResponse>("/auth/me")
-      .then((data) => {
-        if (data) {
-          if (data.full_name) {
-            setUserName(data.full_name);
-          }
-          if (data.role) {
-            setUserRole(data.role.toLowerCase());
-          }
-          setCompletionPercentage(calculateProfileCompletion(data));
-        }
-      })
-      .catch(() => {
-        if (propFullName) {
-          setUserName(propFullName);
-        }
-      });
-  }, [propFullName, propUser]);
+  }, [activeUser, propFullName]);
 
   // Handle clicking outside of desktop dropdowns to close them
   React.useEffect(() => {

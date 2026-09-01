@@ -19,7 +19,6 @@ import ResumeViewModal from "../../components/ResumeViewModal";
 import Toast from "../../components/Toast";
 import ConfirmModal from "../../components/ConfirmModal";
 import {
-  apiFetch,
   UserResponse,
   getResumeHistory,
   getResume,
@@ -30,11 +29,11 @@ import {
   ResumeHistory,
   logoutUser,
 } from "../../lib/api";
+import { useAuth } from "../../context/AuthContext";
 
 export default function AtsScoreAnalysisPage() {
   const router = useRouter();
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [checkingSession, setCheckingSession] = useState(true);
+  const { user, loading: checkingSession, logout } = useAuth();
   const [file, setFile] = useState<File | null>(null);
 
   const [parsed, setParsed] = useState<ParsedResume | null>(null);
@@ -48,27 +47,24 @@ export default function AtsScoreAnalysisPage() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then(async (userData) => {
-        setUser(userData);
-        try {
-          const resumes = await getResumeHistory();
+    if (user) {
+      getResumeHistory()
+        .then((resumes) => {
           setHistory(resumes);
           if (resumes.length > 0) {
             setParsed(resumes[0] as unknown as ParsedResume);
           }
-        } catch (err) {
-          console.error("Failed to fetch resume history:", err);
-        }
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => {
-        setCheckingSession(false);
-        setHistoryLoading(false);
-      });
-  }, []);
+        })
+        .catch((err) => {
+          console.error("Failed to load history:", err);
+        })
+        .finally(() => {
+          setHistoryLoading(false);
+        });
+    } else if (!checkingSession) {
+      setHistoryLoading(false);
+    }
+  }, [user, checkingSession]);
 
   async function handleLogout() {
     try {

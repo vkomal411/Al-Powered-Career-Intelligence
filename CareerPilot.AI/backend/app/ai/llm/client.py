@@ -21,11 +21,12 @@ except ImportError:
 
 import time
 import hashlib
+from cachetools import TTLCache
 
 PROMPT_VERSION = "v1.0"
 CACHE_TTL_SECONDS = 86400  # 24 hours
 
-_LLM_CACHE: Dict[str, Dict[str, Any]] = {}
+_LLM_CACHE: TTLCache = TTLCache(maxsize=500, ttl=CACHE_TTL_SECONDS)
 
 
 def _get_cache_key(prompt: str) -> str:
@@ -38,6 +39,12 @@ class LLMClient:
         self.api_key = settings.gemini_api_key
         self.provider = settings.ai_provider.lower()
         self.models_to_try = ["gemini-2.0-flash", "gemini-1.5-flash"]
+        self._sdk_client = None
+        if HAS_GEMINI_SDK and self.api_key and self.provider != "offline":
+            try:
+                self._sdk_client = genai.Client(api_key=self.api_key)
+            except Exception as e:
+                logger.warning("Failed to initialize genai.Client: %s", e)
 
     def generate_json(self, prompt: str, timeout_seconds: int = 8) -> Optional[Dict[str, Any]]:
         """
@@ -50,19 +57,17 @@ class LLMClient:
         # Check TTL cache first
         cache_key = _get_cache_key(prompt)
         cached_entry = _LLM_CACHE.get(cache_key)
-        if cached_entry:
-            if time.time() - cached_entry["timestamp"] < CACHE_TTL_SECONDS:
-                logger.debug("Serving AI response from memory cache (%s)", cache_key[:12])
-                return cached_entry["data"]
-            else:
-                _LLM_CACHE.pop(cache_key, None)
+        if cached_entry is not None:
+            logger.debug("Serving AI response from memory cache (%s)", cache_key[:12])
+            return cached_entry
 
         for model_name in self.models_to_try:
             # 1. Try Gemini Official SDK
             if HAS_GEMINI_SDK:
                 try:
-                    client = genai.Client(api_key=self.api_key)
-                    response = client.models.generate_content(
+                    if self._sdk_client is None:
+                        self._sdk_client = genai.Client(api_key=self.api_key)
+                    response = self._sdk_client.models.generate_content(
                         model=model_name,
                         contents=prompt
                     )
@@ -72,7 +77,7 @@ class LLMClient:
                     elif text.startswith("```"):
                         text = text.replace("```", "", 1).rsplit("```", 1)[0].strip()
                     parsed = json.loads(text)
-                    _LLM_CACHE[cache_key] = {"timestamp": time.time(), "data": parsed}
+                    _LLM_CACHE[cache_key] = parsed
                     return parsed
                 except Exception as e:
                     logger.warning("Gemini SDK (%s) failed: %s. Trying fallback.", model_name, e)
@@ -93,7 +98,7 @@ class LLMClient:
                         elif raw_text.startswith("```"):
                             raw_text = raw_text.replace("```", "", 1).rsplit("```", 1)[0].strip()
                         parsed = json.loads(raw_text)
-                        _LLM_CACHE[cache_key] = {"timestamp": time.time(), "data": parsed}
+                        _LLM_CACHE[cache_key] = parsed
                         return parsed
                 except Exception as e:
                     logger.warning("Gemini REST API (%s) failed: %s", model_name, e)

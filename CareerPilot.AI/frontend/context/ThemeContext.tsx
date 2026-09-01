@@ -65,76 +65,74 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
-  // Update DOM class and state whenever theme or system preference changes
+  // Update DOM class and state whenever theme or mounted state changes
   useEffect(() => {
     if (!mounted) return;
 
     const root = document.documentElement;
     const hasMatchMedia = typeof window !== "undefined" && typeof window.matchMedia === "function";
     const mediaQuery = hasMatchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-
-    const computeIsDark = (currentTheme: ThemeMode, sysMatches: boolean): boolean => {
-      if (currentTheme === "dark") return true;
-      if (currentTheme === "light") return false;
-      return sysMatches;
-    };
-
-    const applyTheme = (currentTheme: ThemeMode, sysMatches: boolean, animate: boolean = false) => {
-      const darkActive = computeIsDark(currentTheme, sysMatches);
-      setIsDark(darkActive);
-
-      if (animate) {
-        enableSmoothTransition();
-      }
-
-      if (darkActive) {
-        root.classList.add("dark");
-      } else {
-        root.classList.remove("dark");
-      }
-    };
-
     const currentSysDark = mediaQuery ? mediaQuery.matches : false;
     setSystemTheme(currentSysDark ? "dark" : "light");
-    applyTheme(theme, currentSysDark, mounted);
 
-    // Live System Configuration Change Listener (Auto-adapts in real-time)
-    if (mediaQuery) {
-      const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
-        const matches = "matches" in e ? e.matches : Boolean(e);
-        const newSys = matches ? "dark" : "light";
-        setSystemTheme(newSys);
+    const darkActive = theme === "dark" ? true : (theme === "light" ? false : currentSysDark);
+    setIsDark(darkActive);
 
-        // If user is on 'system' mode, automatically adapt the website with smooth animation
-        setThemeState((currentMode) => {
-          if (currentMode === "system") {
-            applyTheme("system", matches, true);
-          }
-          return currentMode;
-        });
-      };
-
-      if (typeof mediaQuery.addEventListener === "function") {
-        mediaQuery.addEventListener("change", handleMediaChange);
-        return () => {
-          mediaQuery.removeEventListener("change", handleMediaChange);
-          if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-        };
-      } else if (typeof (mediaQuery as unknown as { addListener?: (cb: (e: MediaQueryListEvent) => void) => void }).addListener === "function") {
-        const legacyQuery = mediaQuery as unknown as {
-          addListener: (cb: (e: MediaQueryListEvent) => void) => void;
-          removeListener: (cb: (e: MediaQueryListEvent) => void) => void;
-        };
-        legacyQuery.addListener(handleMediaChange);
-        return () => {
-          legacyQuery.removeListener(handleMediaChange);
-          if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
-        };
-      }
+    if (darkActive) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
     }
-  }, [theme, mounted, enableSmoothTransition]);
+  }, [theme, mounted]);
 
-  const setTheme = (mode: ThemeMode) => {
+  // Live System Configuration Change Listener (registered once on mount)
+  useEffect(() => {
+    if (!mounted) return;
+
+    const hasMatchMedia = typeof window !== "undefined" && typeof window.matchMedia === "function";
+    const mediaQuery = hasMatchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    if (!mediaQuery) return;
+
+    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      const matches = "matches" in e ? e.matches : Boolean(e);
+      const newSys = matches ? "dark" : "light";
+      setSystemTheme(newSys);
+
+      setThemeState((currentMode) => {
+        if (currentMode === "system") {
+          setIsDark(matches);
+          const root = document.documentElement;
+          enableSmoothTransition();
+          if (matches) {
+            root.classList.add("dark");
+          } else {
+            root.classList.remove("dark");
+          }
+        }
+        return currentMode;
+      });
+    };
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handleMediaChange);
+      return () => {
+        mediaQuery.removeEventListener("change", handleMediaChange);
+        if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+      };
+    } else if (typeof (mediaQuery as unknown as { addListener?: (cb: (e: MediaQueryListEvent) => void) => void }).addListener === "function") {
+      const legacyQuery = mediaQuery as unknown as {
+        addListener: (cb: (e: MediaQueryListEvent) => void) => void;
+        removeListener: (cb: (e: MediaQueryListEvent) => void) => void;
+      };
+      legacyQuery.addListener(handleMediaChange);
+      return () => {
+        legacyQuery.removeListener(handleMediaChange);
+        if (transitionTimeoutRef.current) clearTimeout(transitionTimeoutRef.current);
+      };
+    }
+  }, [mounted, enableSmoothTransition]);
+
+  const setTheme = useCallback((mode: ThemeMode) => {
     enableSmoothTransition();
     setThemeState(mode);
     try {
@@ -142,16 +140,35 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch (e) {
       console.warn("Failed to persist theme preference to localStorage:", e);
     }
-  };
+  }, [enableSmoothTransition]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     enableSmoothTransition();
-    const nextMode: ThemeMode = isDark ? "light" : "dark";
-    setTheme(nextMode);
-  };
+    setThemeState((currentTheme) => {
+      const isCurrentlyDark = currentTheme === "dark" || (currentTheme === "system" && systemTheme === "dark");
+      const nextMode: ThemeMode = isCurrentlyDark ? "light" : "dark";
+      try {
+        localStorage.setItem(THEME_STORAGE_KEY, nextMode);
+      } catch (e) {
+        console.warn("Failed to persist theme preference to localStorage:", e);
+      }
+      return nextMode;
+    });
+  }, [enableSmoothTransition, systemTheme]);
+
+  const contextValue = React.useMemo(
+    () => ({
+      theme,
+      isDark,
+      systemTheme,
+      setTheme,
+      toggleTheme,
+    }),
+    [theme, isDark, systemTheme, setTheme, toggleTheme]
+  );
 
   return (
-    <ThemeContext.Provider value={{ theme, isDark, systemTheme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

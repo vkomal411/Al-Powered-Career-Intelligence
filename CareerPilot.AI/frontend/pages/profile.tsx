@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import Topbar from "../components/Topbar";
 import { apiFetch, UserResponse, logoutUser, syncProfileFromResume, getApiBase } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
 import {
   UserIcon,
   BriefcaseIcon,
@@ -12,18 +14,20 @@ import {
   SaveIcon,
 } from "../components/icons";
 
-import PersonalTab from "../components/profile/PersonalTab";
-import CareerGoalsTab from "../components/profile/CareerGoalsTab";
-import EducationProjectsTab, { EducationItem, ProjectItem } from "../components/profile/EducationProjectsTab";
-import SkillsCertsTab, { CertificationItem } from "../components/profile/SkillsCertsTab";
-import SecurityTab from "../components/profile/SecurityTab";
+import type { EducationItem, ProjectItem } from "../components/profile/EducationProjectsTab";
+import type { CertificationItem } from "../components/profile/SkillsCertsTab";
+
+const PersonalTab = dynamic(() => import("../components/profile/PersonalTab"), { ssr: false });
+const CareerGoalsTab = dynamic(() => import("../components/profile/CareerGoalsTab"), { ssr: false });
+const EducationProjectsTab = dynamic(() => import("../components/profile/EducationProjectsTab"), { ssr: false });
+const SkillsCertsTab = dynamic(() => import("../components/profile/SkillsCertsTab"), { ssr: false });
+const SecurityTab = dynamic(() => import("../components/profile/SecurityTab"), { ssr: false });
 
 type TabType = "personal" | "preferences" | "education_projects" | "skills_certs" | "security";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, refreshUser, setUser } = useAuth();
   const [saving, setSaving] = useState(false);
   const [syncingProfile, setSyncingProfile] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>("personal");
@@ -69,25 +73,22 @@ export default function ProfilePage() {
   const [uploadingCert, setUploadingCert] = useState(false);
 
   useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then((data) => {
-        setUser(data);
-        setFullName(data.full_name);
-        setTargetRole(data.target_role || "");
-        setExperienceLevel(data.experience_level || "");
-        setIndustry(data.industry || "");
-        setEducationList(data.education || []);
-        setSkillsList(data.skills || []);
-        setCertificationsList(data.certifications || []);
-        setProjectsList(data.projects || []);
-      })
-      .catch(() => {
-        router.replace("/login");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [router]);
+    if (!loading && !user) {
+      router.replace("/login");
+      return;
+    }
+
+    if (user) {
+      setFullName(user.full_name || "");
+      setTargetRole(user.target_role || "");
+      setExperienceLevel(user.experience_level || "");
+      setIndustry(user.industry || "");
+      setEducationList(user.education || []);
+      setSkillsList(user.skills || []);
+      setCertificationsList(user.certifications || []);
+      setProjectsList(user.projects || []);
+    }
+  }, [user, loading, router]);
 
   async function handleLogout() {
     try {

@@ -4,7 +4,7 @@ import uuid
 import logging
 from typing import Optional, Dict, Any
 from datetime import datetime, timezone
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app import models
 from app.ai.career.recommender import CareerRecommenderEngine
@@ -29,9 +29,13 @@ class CareerCacheService:
     ) -> Optional[Dict[str, Any]]:
         """Looks up the most recent matching suggestion record in database."""
         try:
-            query = db.query(models.CareerSuggestion).filter(
-                models.CareerSuggestion.user_id == user_id,
-                models.CareerSuggestion.engine_version == CareerRecommenderEngine.ENGINE_VERSION
+            query = (
+                db.query(models.CareerSuggestion)
+                .options(joinedload(models.CareerSuggestion.items))
+                .filter(
+                    models.CareerSuggestion.user_id == user_id,
+                    models.CareerSuggestion.engine_version == CareerRecommenderEngine.ENGINE_VERSION
+                )
             )
 
             if resume_id:

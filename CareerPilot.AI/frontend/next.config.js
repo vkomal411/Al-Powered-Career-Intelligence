@@ -3,6 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   compress: true,
   poweredByHeader: false,
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
+  },
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

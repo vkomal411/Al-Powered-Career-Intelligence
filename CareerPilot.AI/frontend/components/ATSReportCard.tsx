@@ -43,34 +43,41 @@ function calculateSkillsScore(skills: string[]) {
   return 0;
 }
 
+function AnimatedCounter({ value }: { value: number }) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    let startTimestamp: number | null = null;
+    const duration = 1000;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      setDisplayValue(Math.floor(progress * value));
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    requestAnimationFrame(step);
+  }, [value]);
+
+  return <>{displayValue}%</>;
+}
+
 export default function ATSReportCard({
   parsed,
 }: {
   parsed: ParsedResume;
 }) {
-  const [animatedScore, setAnimatedScore] = useState(0);
+  const targetScore = parsed.ats.score;
 
   useEffect(() => {
-    let startTimestamp: number | null = null;
-    const duration = 1000; // 1s smooth counter animation
-    const targetScore = parsed.ats.score;
-
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const current = Math.floor(progress * targetScore);
-      setAnimatedScore(current);
-
-      if (progress < 1) {
-        requestAnimationFrame(step);
-      } else if (targetScore >= 75) {
-        // Trigger celebration confetti for score >= 75
-        fireConfetti();
-      }
-    };
-
-    requestAnimationFrame(step);
-  }, [parsed.ats.score]);
+    if (targetScore >= 75) {
+      fireConfetti();
+    }
+  }, [targetScore]);
 
   function fireConfetti() {
     if (typeof window === "undefined") return;
@@ -130,8 +137,10 @@ export default function ATSReportCard({
   // Calculate detailed breakdowns
   const contactScore = calculateContactScore(parsed.ats.contact);
   const sectionScore = calculateSectionScore(parsed.ats.sections);
-  const skillsScore = calculateSkillsScore(parsed.ats.skills);
+  const skillsScore = calculateSkillsScore(parsed.extracted_skills || []);
 
+  const totalPossible = 100;
+  const rawSum = contactScore + sectionScore + skillsScore;
   // Categorize recommendations
   const criticalRecs = parsed.ats.suggestions.filter(s =>
     s.toLowerCase().includes("email") || s.toLowerCase().includes("phone")
@@ -152,11 +161,11 @@ export default function ATSReportCard({
   let badgeText = "Looking great!";
   let badgeColorClass = "bg-emerald-50 dark:bg-emerald-500/15 text-verified dark:text-emerald-300 border-verified/20 dark:border-emerald-500/25";
 
-  if (animatedScore < 50) {
+  if (targetScore < 50) {
     strokeColor = "url(#scoreGradientRed)";
     badgeText = "Room to grow";
     badgeColorClass = "bg-amber-50 dark:bg-amber-500/15 text-signal dark:text-amber-300 border-signal/20 dark:border-amber-500/25";
-  } else if (animatedScore < 75) {
+  } else if (targetScore < 75) {
     strokeColor = "url(#scoreGradientAmber)";
     badgeText = "On the right track";
     badgeColorClass = "bg-amber-50 dark:bg-amber-500/15 text-signal dark:text-amber-300 border-signal/20 dark:border-amber-500/25";
@@ -216,7 +225,7 @@ export default function ATSReportCard({
                 strokeWidth="7"
                 fill="transparent"
                 strokeDasharray="263.89"
-                strokeDashoffset={263.89 - (263.89 * animatedScore) / 100}
+                strokeDashoffset={263.89 - (263.89 * targetScore) / 100}
                 strokeLinecap="round"
                 className="transition-all duration-1000 ease-out"
               />
@@ -225,7 +234,7 @@ export default function ATSReportCard({
             {/* Center percentage */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="font-display text-3xl font-extrabold text-ink dark:text-white leading-none">
-                {Math.round(animatedScore)}%
+                <AnimatedCounter value={targetScore} />
               </span>
               <span className="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase mt-1 tracking-wider">
                 Optimized

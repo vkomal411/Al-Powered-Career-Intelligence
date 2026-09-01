@@ -9,7 +9,7 @@ from typing import Optional, List, Dict, Any
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query, Request, BackgroundTasks
 from fastapi.responses import Response, JSONResponse, FileResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, desc, or_, and_, text
 
 from app.database import get_db, engine
@@ -190,9 +190,20 @@ def get_users_list(
     total = query.count()
     items = query.order_by(desc(models.User.created_at)).offset((page - 1) * page_size).limit(page_size).all()
 
+    user_ids = [u.id for u in items]
+    resume_counts = {}
+    if user_ids:
+        counts = (
+            db.query(models.Resume.user_id, func.count(models.Resume.id))
+            .filter(models.Resume.user_id.in_(user_ids))
+            .group_by(models.Resume.user_id)
+            .all()
+        )
+        resume_counts = {uid: count for uid, count in counts}
+
     result_items = []
     for u in items:
-        res_count = db.query(models.Resume).filter(models.Resume.user_id == u.id).count()
+        res_count = resume_counts.get(u.id, 0)
         result_items.append({
             "id": str(u.id),
             "full_name": u.full_name,
@@ -511,11 +522,17 @@ def get_resumes_list(
         )
 
     total = query.count()
-    items = query.order_by(desc(models.Resume.uploaded_at)).offset((page - 1) * page_size).limit(page_size).all()
+    items = (
+        query.options(joinedload(models.Resume.owner))
+        .order_by(desc(models.Resume.uploaded_at))
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
 
     res_list = []
     for r in items:
-        owner = db.query(models.User).filter(models.User.id == r.user_id).first()
+        owner = r.owner
         res_list.append({
             "id": str(r.id),
             "user_id": str(r.user_id),
@@ -1121,17 +1138,21 @@ def get_user_feedback(
         query = query.filter(models.UserFeedback.status == status_filter)
 
     total = query.count()
-    items = query.order_by(desc(models.UserFeedback.created_at)).offset((page - 1) * page_size).limit(page_size).all()
+    items = (
+        query.options(joinedload(models.UserFeedback.user))
+        .order_by(desc(models.UserFeedback.created_at))
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
 
     results = []
     for f in items:
         user_name = None
         user_email = None
-        if f.user_id:
-            u = db.query(models.User).filter(models.User.id == f.user_id).first()
-            if u:
-                user_name = u.full_name
-                user_email = u.email
+        if f.user:
+            user_name = f.user.full_name
+            user_email = f.user.email
 
         results.append({
             "id": str(f.id),
@@ -1393,10 +1414,18 @@ def check_export_job_status(
 
 @router.get("/alerts")
 def get_system_alerts(
+    skip: int = Query(0, ge=0, description="Offset"),
+    limit: int = Query(50, ge=1, le=100, description="Limit"),
     db: Session = Depends(get_db),
     admin_user: models.User = Depends(get_current_admin_user)
 ):
-    alerts = db.query(models.SystemAlert).order_by(desc(models.SystemAlert.created_at)).all()
+    alerts = (
+        db.query(models.SystemAlert)
+        .order_by(desc(models.SystemAlert.created_at))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
     return [
         {
             "id": str(a.id),
@@ -1622,11 +1651,18 @@ def get_audit_logs(
     admin_user: models.User = Depends(require_role("superadmin", "admin"))
 ):
     total = db.query(models.AdminAuditLog).count()
-    items = db.query(models.AdminAuditLog).order_by(desc(models.AdminAuditLog.created_at)).offset((page - 1) * page_size).limit(page_size).all()
+    items = (
+        db.query(models.AdminAuditLog)
+        .options(joinedload(models.AdminAuditLog.admin_user))
+        .order_by(desc(models.AdminAuditLog.created_at))
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
 
     logs = []
     for l in items:
-        admin_u = db.query(models.User).filter(models.User.id == l.admin_user_id).first()
+        admin_u = l.admin_user
         logs.append({
             "id": str(l.id),
             "admin_user_id": str(l.admin_user_id),

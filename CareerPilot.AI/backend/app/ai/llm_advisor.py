@@ -68,13 +68,17 @@ def generate_heuristic_advice(user_profile: Dict[str, Any], resume_data: Dict[st
 import time
 import hashlib
 
+from cachetools import TTLCache
+
 ADVISOR_PROMPT_VERSION = "v1.0"
 ADVISOR_CACHE_TTL = 86400  # 24 hours
-_ADVICE_CACHE: Dict[str, Dict[str, Any]] = {}
+_ADVICE_CACHE: TTLCache = TTLCache(maxsize=500, ttl=ADVISOR_CACHE_TTL)
+_ADVICE_SDK_CLIENT = None
 
 
 def generate_gemini_advice(user_profile: Dict[str, Any], resume_data: Dict[str, Any], custom_prompt: str = "") -> Dict[str, Any]:
     """Calls Gemini REST / SDK to generate AI Career Advice with TTL caching."""
+    global _ADVICE_SDK_CLIENT
     api_key = settings.gemini_api_key
     if not api_key:
         logger.info("Gemini API Key not set. Falling back to heuristic AI advisor.")
@@ -90,9 +94,9 @@ def generate_gemini_advice(user_profile: Dict[str, Any], resume_data: Dict[str, 
     cache_key = hashlib.sha256(cache_raw.encode("utf-8")).hexdigest()
 
     cached = _ADVICE_CACHE.get(cache_key)
-    if cached and (time.time() - cached["timestamp"] < ADVISOR_CACHE_TTL):
+    if cached is not None:
         logger.debug("Serving career advice from cache (%s)", cache_key[:10])
-        return cached["data"]
+        return cached
 
     prompt = f"""
 You are an expert AI Career Coach and Resume Intelligence Specialist.
@@ -116,8 +120,9 @@ Return ONLY valid raw JSON without markdown formatting.
     for model_name in models_to_try:
         if HAS_GEMINI_SDK:
             try:
-                client = genai.Client(api_key=api_key)
-                response = client.models.generate_content(
+                if _ADVICE_SDK_CLIENT is None:
+                    _ADVICE_SDK_CLIENT = genai.Client(api_key=api_key)
+                response = _ADVICE_SDK_CLIENT.models.generate_content(
                     model=model_name,
                     contents=prompt
                 )
@@ -127,7 +132,7 @@ Return ONLY valid raw JSON without markdown formatting.
                 elif text.startswith("```"):
                     text = text.replace("```", "", 1).rsplit("```", 1)[0].strip()
                 parsed = json.loads(text)
-                _ADVICE_CACHE[cache_key] = {"timestamp": time.time(), "data": parsed}
+                _ADVICE_CACHE[cache_key] = parsed
                 return parsed
             except Exception as e:
                 logger.warning("Gemini SDK (%s) failed: %s. Attempting REST fallback.", model_name, e)
@@ -147,7 +152,7 @@ Return ONLY valid raw JSON without markdown formatting.
                     elif raw_text.startswith("```"):
                         raw_text = raw_text.replace("```", "", 1).rsplit("```", 1)[0].strip()
                     parsed = json.loads(raw_text)
-                    _ADVICE_CACHE[cache_key] = {"timestamp": time.time(), "data": parsed}
+                    _ADVICE_CACHE[cache_key] = parsed
                     return parsed
             except Exception as e:
                 logger.warning("Gemini REST API (%s) failed: %s", model_name, e)

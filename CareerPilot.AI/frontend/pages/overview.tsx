@@ -10,6 +10,7 @@ import {
   logoutUser,
   UserResponse,
 } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
 import {
   AtsScoreIcon,
   ResumeBoostIcon,
@@ -62,8 +63,7 @@ export default function OverviewPage() {
   const router = useRouter();
 
   // Session & Analytics State
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [loadingSession, setLoadingSession] = useState(true);
+  const { user, loading: loadingSession } = useAuth();
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
 
   // Navigation State
@@ -71,24 +71,22 @@ export default function OverviewPage() {
   const [isEditingGoal, setIsEditingGoal] = useState<boolean>(false);
 
   useEffect(() => {
-    Promise.all([
-      apiFetch<UserResponse>("/auth/me"),
-      apiFetch<AnalyticsData>("/analytics/career-overview").catch(() => null),
-    ])
-      .then(([userData, analyticsData]) => {
-        setUser(userData);
-        setTargetRoleGoal(userData.target_role || "Software Engineer");
-        if (analyticsData) {
-          setAnalytics(analyticsData);
-        }
-      })
-      .catch(() => {
-        router.push("/login?redirect=/overview");
-      })
-      .finally(() => {
-        setLoadingSession(false);
-      });
-  }, [router]);
+    if (!loadingSession && !user) {
+      router.push("/login?redirect=/overview");
+      return;
+    }
+
+    if (user) {
+      setTargetRoleGoal(user.target_role || "Software Engineer");
+      apiFetch<AnalyticsData>("/analytics/career-overview")
+        .then((analyticsData) => {
+          if (analyticsData) {
+            setAnalytics(analyticsData);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [user, loadingSession, router]);
 
   const handleLogout = async () => {
     try {

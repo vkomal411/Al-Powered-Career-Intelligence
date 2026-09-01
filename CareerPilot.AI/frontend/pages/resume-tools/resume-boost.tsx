@@ -5,36 +5,29 @@ import Topbar from "../../components/Topbar";
 import BrandMark from "../../components/BrandMark";
 import GroupNavControl from "../../components/GroupNavControl";
 import { ResumeBoostCard } from "../../components/ResumeBoostCard";
-import { apiFetch, UserResponse, getResumeHistory, logoutUser } from "../../lib/api";
+import { getResumeHistory } from "../../lib/api";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ResumeBoostPage() {
   const router = useRouter();
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [checkingSession, setCheckingSession] = useState(true);
+  const { user, loading: checkingSession, logout } = useAuth();
   const [hasUserResume, setHasUserResume] = useState(false);
 
   useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then(async (userData) => {
-        setUser(userData);
-        try {
-          const resumes = await getResumeHistory();
+    if (user) {
+      getResumeHistory()
+        .then((resumes) => {
           setHasUserResume(resumes.length > 0);
-        } catch {
+        })
+        .catch(() => {
           setHasUserResume(false);
-        }
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => {
-        setCheckingSession(false);
-      });
-  }, []);
+        });
+    }
+  }, [user]);
 
   async function handleLogout() {
     try {
-      await logoutUser();
+      await logout();
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {

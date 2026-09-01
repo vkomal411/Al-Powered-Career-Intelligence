@@ -55,7 +55,7 @@ def _load_candidate_profile(
     response_model=schemas.JobMatchResponse,
     dependencies=[Depends(rate_limit("ai-match-job"))],
 )
-async def match_job_description(
+def match_job_description(
     payload: schemas.JobMatchRequest,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -81,7 +81,7 @@ async def match_job_description(
     response_model=schemas.SkillGapAnalysisResponse,
     dependencies=[Depends(rate_limit("ai-skill-gap-analysis"))],
 )
-async def skill_gap_analysis(
+def skill_gap_analysis(
     payload: schemas.SkillGapAnalysisRequest,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -109,7 +109,7 @@ async def skill_gap_analysis(
     response_model=schemas.CareerAdviceResponse,
     dependencies=[Depends(rate_limit("ai-career-advice"))],
 )
-async def get_career_advice(
+def get_career_advice(
     payload: schemas.CareerAdviceRequest,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -149,7 +149,7 @@ async def get_career_advice(
     response_model=schemas.CoverLetterResponse,
     dependencies=[Depends(rate_limit("ai-cover-letter"))],
 )
-async def generate_cover_letter(
+def generate_cover_letter(
     payload: schemas.CoverLetterRequest,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -214,7 +214,7 @@ async def generate_cover_letter(
     response_model=schemas.ExtendedATSBreakdownResponse,
     dependencies=[Depends(rate_limit("ai-ats-breakdown"))],
 )
-async def get_ats_breakdown(
+def get_ats_breakdown(
     payload: Optional[schemas.JobMatchRequest] = None,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -280,7 +280,7 @@ from app.config import settings
     response_model=schemas.CareerSuggestionResponse,
     dependencies=[Depends(rate_limit("ai-career-suggestion"))],
 )
-async def get_career_suggestions(
+def get_career_suggestions(
     payload: schemas.CareerSuggestionRequest,
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -360,7 +360,7 @@ async def get_career_suggestions(
     response_model=schemas.CareerSuggestionResponse,
     dependencies=[Depends(rate_limit("ai-career-suggestion-upload"))],
 )
-async def upload_and_suggest_careers(
+def upload_and_suggest_careers(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
@@ -382,7 +382,7 @@ async def upload_and_suggest_careers(
     chunk_size = 1024 * 1024
 
     while True:
-        chunk = await file.read(chunk_size)
+        chunk = file.file.read(chunk_size)
         if not chunk:
             break
         total_size += len(chunk)

@@ -3,9 +3,9 @@ FastAPI Router for CareerPilot AI Resume Studio v2.0.
 Exposes modular studio endpoints for resumes, upload, AI assistant, ATS 7-category scoring, job match heatmaps, and exports.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Response
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Response, Query
 from fastapi.responses import StreamingResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from typing import List, Optional
 import io
 import uuid
@@ -49,7 +49,7 @@ versioning_service = StudioVersioningService()
 
 
 @router.post("/resumes")
-async def create_studio_resume(
+def create_studio_resume(
     req: StudioResumeCreate,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
@@ -103,12 +103,21 @@ async def create_studio_resume(
 
 
 @router.get("/resumes")
-async def list_studio_resumes(
+def list_studio_resumes(
+    skip: int = Query(0, ge=0, description="Offset"),
+    limit: int = Query(20, ge=1, le=100, description="Limit"),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    """List all Studio Resumes belonging to user"""
-    resumes = db.query(StudioResume).filter(StudioResume.user_id == current_user.id).all()
+    """List all Studio Resumes belonging to user with pagination"""
+    resumes = (
+        db.query(StudioResume)
+        .filter(StudioResume.user_id == current_user.id)
+        .order_by(StudioResume.updated_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
     return [
         {
             "id": str(r.id),
@@ -123,21 +132,30 @@ async def list_studio_resumes(
 
 
 @router.get("/resumes/{resume_id}")
-async def get_studio_resume_detail(
+def get_studio_resume_detail(
     resume_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    """Get full details of a Studio Resume aggregate"""
+    """Get full details of a Studio Resume aggregate with eager loading"""
     try:
         r_uuid = uuid.UUID(resume_id)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid UUID")
 
-    resume = db.query(StudioResume).filter(
-        StudioResume.id == r_uuid,
-        StudioResume.user_id == current_user.id
-    ).first()
+    resume = (
+        db.query(StudioResume)
+        .options(
+            selectinload(StudioResume.experiences),
+            selectinload(StudioResume.projects),
+            selectinload(StudioResume.skills),
+        )
+        .filter(
+            StudioResume.id == r_uuid,
+            StudioResume.user_id == current_user.id
+        )
+        .first()
+    )
 
     if not resume:
         raise HTTPException(status_code=404, detail="Studio Resume not found")
@@ -177,15 +195,15 @@ async def get_studio_resume_detail(
 
 
 @router.post("/upload")
-async def import_resume_file(
+def import_resume_file(
     file: UploadFile = File(...),
     target_role: str = "UI/UX Designer",
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
     """Import and parse resume file (PDF, DOCX, TXT)"""
-    contents = await file.read()
-    file_ext = file.filename.split(".")[-1] if "." in file.filename else "txt"
+    contents = file.file.read()
+    file_ext = file.filename.split(".")[-1] if file.filename and "." in file.filename else "txt"
 
     parsed = parser_service.parse_file_bytes(contents, file_ext)
     contact = parsed.get("contact", {})
@@ -213,7 +231,7 @@ async def import_resume_file(
 
 
 @router.post("/ai/improve-summary")
-async def improve_summary(
+def improve_summary(
     req: StudioAIRewriteRequest
 ):
     """AI Summary Generator endpoint with tone switching"""
@@ -222,7 +240,7 @@ async def improve_summary(
 
 
 @router.post("/ai/rewrite-experience")
-async def rewrite_experience(
+def rewrite_experience(
     req: StudioAIRewriteRequest
 ):
     """AI STAR Bullet point rewriter with tone switching"""
@@ -231,7 +249,7 @@ async def rewrite_experience(
 
 
 @router.post("/ats/score")
-async def calculate_ats_score(
+def calculate_ats_score(
     resume_data: dict
 ):
     """7-Category ATS Scoring Audit Endpoint"""
@@ -240,7 +258,7 @@ async def calculate_ats_score(
 
 
 @router.post("/job-match")
-async def match_job_posting(
+def match_job_posting(
     req: StudioJobMatchRequest,
     resume_data: dict
 ):
@@ -250,7 +268,7 @@ async def match_job_posting(
 
 
 @router.get("/export/docx")
-async def export_docx(
+def export_docx(
     resume_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
@@ -295,7 +313,7 @@ async def export_docx(
 
 
 @router.post("/export/docx")
-async def export_editor_docx(resume_data: dict):
+def export_editor_docx(resume_data: dict):
     """Export the currently edited builder data as a real DOCX file."""
     docx_bytes = exporter_service.export_docx(resume_data)
     filename = str(resume_data.get("full_name", "resume")).strip().replace(" ", "_") or "resume"
@@ -303,7 +321,7 @@ async def export_editor_docx(resume_data: dict):
 
 
 @router.post("/export/pdf")
-async def export_editor_pdf(resume_data: dict):
+def export_editor_pdf(resume_data: dict):
     """Export the currently edited builder data as a real PDF file."""
     pdf_bytes = exporter_service.export_pdf(resume_data)
     filename = str(resume_data.get("full_name", "resume")).strip().replace(" ", "_") or "resume"
@@ -311,7 +329,7 @@ async def export_editor_pdf(resume_data: dict):
 
 
 @router.get("/export/txt")
-async def export_txt(
+def export_txt(
     resume_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)

@@ -1,11 +1,16 @@
 import React from "react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import Topbar from "../../components/Topbar";
 import BrandMark from "../../components/BrandMark";
 import GroupNavControl from "../../components/GroupNavControl";
-import { ResumeEditorStudio } from "../../components/studio/ResumeEditorStudio";
 import { useAuth } from "../../context/AuthContext";
+
+const ResumeEditorStudio = dynamic(
+  () => import("../../components/studio/ResumeEditorStudio").then((mod) => mod.ResumeEditorStudio),
+  { ssr: false }
+);
 
 export default function ResumeBuilderPage() {
   const router = useRouter();

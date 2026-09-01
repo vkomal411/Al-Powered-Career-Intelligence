@@ -27,7 +27,7 @@ class ResumeBuilder(Base):
     __tablename__ = "resume_builder_documents"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
     title = Column(String, default="My Professional Resume", nullable=False)
     target_role = Column(String, nullable=True)
     status = Column(String, default="draft", nullable=False)  # draft, published, archived
@@ -46,7 +46,7 @@ class ResumeSectionModel(Base):
     __tablename__ = "resume_builder_sections"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False, index=True)
     section_type = Column(String, nullable=False)  # summary, experience, education, skills, certifications, projects
     content = Column(JSON, nullable=False, default=dict)
     ai_score = Column(Float, nullable=True)
@@ -64,7 +64,7 @@ class ResumeExperienceModel(Base):
     __tablename__ = "resume_builder_experience"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    section_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_sections.id"), nullable=False)
+    section_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_sections.id"), nullable=False, index=True)
     job_title = Column(String, nullable=True)
     company = Column(String, nullable=True)
     location = Column(String, nullable=True)
@@ -85,7 +85,7 @@ class ResumeSkillModel(Base):
     __tablename__ = "resume_builder_skills"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    section_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_sections.id"), nullable=False)
+    section_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_sections.id"), nullable=False, index=True)
     skill_name = Column(String, nullable=False)
     category = Column(String, nullable=True, default="Technical")
     proficiency = Column(String, default="intermediate")
@@ -100,7 +100,7 @@ class ATSScoreModel(Base):
     __tablename__ = "resume_builder_ats_scores"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False, index=True)
     score = Column(Integer, nullable=False, default=70)
     keyword_matches = Column(Integer, default=0)
     formatting_issues = Column(JSON, default=list)
@@ -114,7 +114,7 @@ class JobMatchModel(Base):
     __tablename__ = "resume_builder_job_matches"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False, index=True)
     job_title = Column(String, nullable=False)
     job_description = Column(Text, nullable=False)
     extracted_keywords = Column(JSON, default=list)
@@ -130,7 +130,7 @@ class BulletEnhancementModel(Base):
     __tablename__ = "resume_builder_bullet_enhancements"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    experience_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_experience.id"), nullable=False)
+    experience_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_experience.id"), nullable=False, index=True)
     original_bullet = Column(Text, nullable=False)
     ai_suggestions = Column(JSON, default=list)
     selected_suggestion = Column(Text, nullable=True)
@@ -143,7 +143,7 @@ class ResumeVersionModel(Base):
     __tablename__ = "resume_builder_versions"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False)
+    resume_id = Column(UUID(as_uuid=True), ForeignKey("resume_builder_documents.id"), nullable=False, index=True)
     version_number = Column(Integer, nullable=False)
     snapshot = Column(JSON, nullable=False)
     created_by_action = Column(String, default="edit")

@@ -13,7 +13,6 @@ import Toast from "../../components/Toast";
 import ConfirmModal from "../../components/ConfirmModal";
 import { GapAnalysisIcon, SparkleIcon, FileIcon } from "../../components/icons";
 import {
-  apiFetch,
   UserResponse,
   getResumeHistory,
   deleteResume,
@@ -23,6 +22,7 @@ import {
   ResumeHistory,
   logoutUser,
 } from "../../lib/api";
+import { useAuth } from "../../context/AuthContext";
 import { ParsedResume } from "../../components/ResumeReportCard";
 
 function ResumeHealthSummary({ parsed }: { parsed: ParsedResume }) {
@@ -44,9 +44,9 @@ function ResumeHealthSummary({ parsed }: { parsed: ParsedResume }) {
           <span className="text-xl font-extrabold text-indigo-800 dark:text-indigo-300">{parsed.ats?.score ?? "—"}</span>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-3 gap-3">
         <div className="rounded-xl border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-slate-800/50 p-3">
-          <span className="text-[10px] font-bold uppercase text-slate-400">Skills detected</span>
+          <span className="text-[10px] font-bold uppercase text-slate-400">Skills found</span>
           <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">{parsed.extracted_skills?.length || 0}</p>
         </div>
         <div className="rounded-xl border border-slate-200 dark:border-white/[0.06] bg-slate-50 dark:bg-slate-800/50 p-3">
@@ -74,8 +74,7 @@ function ResumeHealthSummary({ parsed }: { parsed: ParsedResume }) {
 
 export default function SkillGapAnalysisPage() {
   const router = useRouter();
-  const [user, setUser] = useState<UserResponse | null>(null);
-  const [checkingSession, setCheckingSession] = useState(true);
+  const { user, loading: checkingSession, logout } = useAuth();
   const [file, setFile] = useState<File | null>(null);
 
   const [parsed, setParsed] = useState<ParsedResume | null>(null);
@@ -90,31 +89,29 @@ export default function SkillGapAnalysisPage() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   useEffect(() => {
-    apiFetch<UserResponse>("/auth/me")
-      .then(async (userData) => {
-        setUser(userData);
-        try {
-          const resumes = await getResumeHistory();
+    if (user) {
+      getResumeHistory()
+        .then((resumes) => {
           setHistory(resumes);
           if (resumes.length > 0) {
             setParsed(resumes[0] as unknown as ParsedResume);
           }
-        } catch (err) {
+        })
+        .catch((err) => {
           console.error("Failed to fetch resume history:", err);
-        }
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => {
-        setCheckingSession(false);
-        setHistoryLoading(false);
-      });
-  }, []);
+        })
+        .finally(() => {
+          setHistoryLoading(false);
+        });
+    } else if (!checkingSession) {
+      setHistoryLoading(false);
+    }
+  }, [user, checkingSession]);
 
   async function handleLogout() {
     try {
       await logoutUser();
+      logout();
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {

@@ -146,17 +146,26 @@ class CareerRecommenderEngine:
             if c["career_id"] not in top_ids and (top_score - c["match_score"]) <= 25.0
         ][:3]
 
-        # Enrich top candidates with LLM/heuristic explanations
-        for item in top_candidates:
-            exp_data = career_explainer.explain_career_match(
-                career_title=item["career_title"],
-                category=item["category"],
-                match_score=item["match_score"],
-                matching_skills=item["matching_skills"],
-                missing_skills=item["missing_skills"],
-                experience_level=candidate.experience_level
-            )
-            item.update(exp_data)
+        # Enrich top candidates with LLM/heuristic explanations concurrently
+        if top_candidates:
+            from concurrent.futures import ThreadPoolExecutor
+
+            def _enrich_candidate(item):
+                try:
+                    exp_data = career_explainer.explain_career_match(
+                        career_title=item["career_title"],
+                        category=item["category"],
+                        match_score=item["match_score"],
+                        matching_skills=item["matching_skills"],
+                        missing_skills=item["missing_skills"],
+                        experience_level=candidate.experience_level
+                    )
+                    item.update(exp_data)
+                except Exception as exc:
+                    logger.warning("Failed parallel explanation for %s: %s", item.get("career_title"), exc)
+
+            with ThreadPoolExecutor(max_workers=min(5, len(top_candidates))) as executor:
+                list(executor.map(_enrich_candidate, top_candidates))
 
         for item in alternatives:
             exp_data = career_explainer.generate_heuristic_explanation(

@@ -20,15 +20,24 @@ html.dark {
    Smooth Theme Transition Animation
    ========================================================================== */
 html.theme-transitioning,
-html.theme-transitioning *,
-html.theme-transitioning *::before,
-html.theme-transitioning *::after {
-  transition: background-color 350ms cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 350ms cubic-bezier(0.4, 0, 0.2, 1),
-              color 350ms cubic-bezier(0.4, 0, 0.2, 1),
-              fill 350ms cubic-bezier(0.4, 0, 0.2, 1),
-              stroke 350ms cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 350ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+html.theme-transitioning body,
+html.theme-transitioning div,
+html.theme-transitioning header,
+html.theme-transitioning nav,
+html.theme-transitioning main,
+html.theme-transitioning footer,
+html.theme-transitioning section,
+html.theme-transitioning aside,
+html.theme-transitioning button,
+html.theme-transitioning a,
+html.theme-transitioning span,
+html.theme-transitioning p,
+html.theme-transitioning input,
+html.theme-transitioning textarea {
+  transition: background-color 300ms ease,
+              border-color 300ms ease,
+              color 300ms ease,
+              box-shadow 300ms ease !important;
   transition-delay: 0s !important;
 }
 

@@ -2,10 +2,9 @@
 FastAPI Router for CareerPilot.AI Resume Builder Architecture.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Response
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Response, Query
 from fastapi.responses import StreamingResponse
-from starlette.concurrency import run_in_threadpool
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from typing import List, Optional
 import io
 import uuid
@@ -54,7 +53,7 @@ bullet_enhancer_service = BulletEnhancerService()
 
 
 @router.post("/upload")
-async def upload_resume(
+def upload_resume(
     file: UploadFile = File(...),
     title: str = "Uploaded Resume",
     target_role: str = "Software Engineer",
@@ -62,10 +61,10 @@ async def upload_resume(
     current_user=Depends(get_current_user)
 ):
     """Upload and parse resume file (PDF, DOCX, TXT)"""
-    contents = await file.read()
-    file_ext = file.filename.split(".")[-1] if "." in file.filename else "txt"
+    contents = file.file.read()
+    file_ext = file.filename.split(".")[-1] if file.filename and "." in file.filename else "txt"
 
-    parsed = await run_in_threadpool(parser_service.parse_file_content, contents, file_ext)
+    parsed = parser_service.parse_file_content(contents, file_ext)
 
     resume = ResumeBuilder(
         user_id=current_user.id,
@@ -147,12 +146,21 @@ async def upload_resume(
 
 
 @router.get("/")
-async def list_resumes(
+def list_resumes(
+    skip: int = Query(0, ge=0, description="Offset"),
+    limit: int = Query(20, ge=1, le=100, description="Limit"),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
     """List all resumes belonging to user"""
-    resumes = db.query(ResumeBuilder).filter(ResumeBuilder.user_id == current_user.id).all()
+    resumes = (
+        db.query(ResumeBuilder)
+        .filter(ResumeBuilder.user_id == current_user.id)
+        .order_by(ResumeBuilder.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
     return [
         {
             "id": str(r.id),
@@ -167,7 +175,7 @@ async def list_resumes(
 
 
 @router.get("/{resume_id}")
-async def get_resume_detail(
+def get_resume_detail(
     resume_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
@@ -178,10 +186,15 @@ async def get_resume_detail(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid UUID")
 
-    resume = db.query(ResumeBuilder).filter(
-        ResumeBuilder.id == r_uuid,
-        ResumeBuilder.user_id == current_user.id
-    ).first()
+    resume = (
+        db.query(ResumeBuilder)
+        .options(selectinload(ResumeBuilder.sections))
+        .filter(
+            ResumeBuilder.id == r_uuid,
+            ResumeBuilder.user_id == current_user.id
+        )
+        .first()
+    )
 
     if not resume:
         raise HTTPException(status_code=404, detail="Resume not found")
@@ -201,7 +214,7 @@ async def get_resume_detail(
 
 
 @router.post("/{resume_id}/score")
-async def score_resume(
+def score_resume(
     resume_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
@@ -237,7 +250,7 @@ async def score_resume(
 
 
 @router.post("/{resume_id}/match-job")
-async def match_job(
+def match_job(
     resume_id: str,
     job_input: JobMatchCreate,
     db: Session = Depends(get_db),
@@ -278,7 +291,7 @@ async def match_job(
 
 
 @router.post("/{resume_id}/enhance-bullets")
-async def enhance_bullets(
+def enhance_bullets(
     resume_id: str,
     req: BulletEnhanceRequest,
     db: Session = Depends(get_db),
@@ -291,7 +304,7 @@ async def enhance_bullets(
 
 
 @router.get("/{resume_id}/export/docx")
-async def export_docx(
+def export_docx(
     resume_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
@@ -321,7 +334,7 @@ async def export_docx(
 
 
 @router.get("/{resume_id}/export/txt")
-async def export_txt(
+def export_txt(
     resume_id: str,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import { registerUser, persistAccessToken } from "../lib/api";
+import { registerUser, persistAccessToken, UserResponse } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
 import AuthLayout from "../components/AuthLayout";
 import FormField from "../components/FormField";
 import {
@@ -15,6 +16,7 @@ import {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { refreshUser, setUser } = useAuth();
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,8 +26,13 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  function saveSessionAndRedirect() {
-    router.push("/dashboard");
+  async function saveSessionAndRedirect(userData?: UserResponse) {
+    if (userData) {
+      setUser(userData);
+    } else {
+      await refreshUser();
+    }
+    router.push("/overview");
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -44,7 +51,7 @@ export default function RegisterPage() {
       if (res.access_token) {
         persistAccessToken(res.access_token);
       }
-      saveSessionAndRedirect();
+      await saveSessionAndRedirect(res.user);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {

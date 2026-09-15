@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Link from "next/link";
-import { loginUser, registerUser, persistAccessToken, AuthResponse, requestPasswordReset, completePasswordReset } from "../lib/api";
+import { loginUser, registerUser, persistAccessToken, AuthResponse, UserResponse, requestPasswordReset, completePasswordReset } from "../lib/api";
+import { useAuth } from "../context/AuthContext";
 import AuthLayout from "../components/AuthLayout";
 import FormField from "../components/FormField";
 import {
@@ -18,6 +19,7 @@ function isConnectionError(err: unknown): boolean {
 
 export default function LoginPage() {
   const router = useRouter();
+  const { refreshUser, setUser } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -73,13 +75,18 @@ export default function LoginPage() {
     }
   }
 
-  function saveSessionAndRedirect() {
+  async function saveSessionAndRedirect(userData?: UserResponse) {
     setSuccess("Login successful! Redirecting to Overview...");
+    if (userData) {
+      setUser(userData);
+    } else {
+      await refreshUser();
+    }
     const redirectTarget = (router.query.redirect as string) || "/overview";
 
     setTimeout(() => {
       router.push(redirectTarget);
-    }, 300);
+    }, 150);
   }
 
   async function handleDemoLogin() {
@@ -105,7 +112,7 @@ export default function LoginPage() {
       if (res.access_token) {
         persistAccessToken(res.access_token);
       }
-      saveSessionAndRedirect();
+      await saveSessionAndRedirect(res.user);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Quick demo login failed. Please try again.");
     } finally {
@@ -125,7 +132,7 @@ export default function LoginPage() {
       if (res.access_token) {
         persistAccessToken(res.access_token);
       }
-      saveSessionAndRedirect();
+      await saveSessionAndRedirect(res.user);
     } catch (err: unknown) {
       let message = "Login failed. If you don't have an account yet, please register below or use Quick Demo Login.";
 
@@ -141,7 +148,7 @@ export default function LoginPage() {
           if (res.access_token) {
             persistAccessToken(res.access_token);
           }
-          saveSessionAndRedirect();
+          await saveSessionAndRedirect(res.user);
           return;
         } catch {
           // Keep original error message

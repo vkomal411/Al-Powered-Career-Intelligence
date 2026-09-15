@@ -23,6 +23,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const refreshUser = useCallback(async (): Promise<UserResponse | null> => {
     try {
+      const storedToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || localStorage.getItem("auth_token")
+          : null;
+      if (!storedToken) {
+        setUser(null);
+        return null;
+      }
       const userData = await apiFetch<UserResponse>("/auth/me");
       setUser(userData);
       return userData;

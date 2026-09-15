@@ -552,14 +552,35 @@ export default function AdminPortal() {
     }
   }, [adminFetch]);
 
-  // Live polling effect for System Health
+  // Smart DevOps Polling effect for System Health (pauses when tab is hidden or backgrounded)
   useEffect(() => {
     if (activeTab !== "system" || !isLivePolling) return;
+
+    let isDocumentVisible = typeof document !== "undefined" ? !document.hidden : true;
+    const onVisibilityChange = () => {
+      isDocumentVisible = typeof document !== "undefined" ? !document.hidden : true;
+      if (isDocumentVisible) {
+        handlePingApi();
+      }
+    };
+
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", onVisibilityChange);
+    }
+
     handlePingApi();
     const interval = setInterval(() => {
-      handlePingApi();
-    }, 3000);
-    return () => clearInterval(interval);
+      if (isDocumentVisible) {
+        handlePingApi();
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", onVisibilityChange);
+      }
+    };
   }, [activeTab, isLivePolling, handlePingApi]);
 
   const handleTriggerExport = async (reportType: string) => {
@@ -616,7 +637,12 @@ export default function AdminPortal() {
         <title>Admin Dashboard | CareerPilot AI</title>
       </Head>
 
-      <AdminLayout activeTab={activeTab} setActiveTab={setActiveTab}>
+      <AdminLayout
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onQuickAlert={() => setShowAlertModal(true)}
+        liveLatencyMs={latencyHistory.length > 0 ? latencyHistory[latencyHistory.length - 1].latency : 38.4}
+      >
         {/* Celebratory Role Promotion Toast */}
         {promotionToast && (
           <div className="fixed top-6 right-6 z-50 animate-slide-in-right max-w-md bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 p-4 rounded-2xl border border-indigo-500/40 shadow-2xl flex items-start gap-3">

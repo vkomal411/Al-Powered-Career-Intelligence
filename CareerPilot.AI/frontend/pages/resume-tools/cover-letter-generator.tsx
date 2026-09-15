@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Topbar from "../../components/Topbar";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import GroupNavControl from "../../components/GroupNavControl";
 import { apiFetch, logoutUser } from "../../lib/api";
 import { useAuth } from "../../context/AuthContext";
 
@@ -133,12 +134,7 @@ export default function CoverLetterGeneratorPage() {
         />
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-          <Breadcrumbs
-            items={[
-              { label: "Resume Tools", href: "/resume-tools/ats-score-analysis" },
-              { label: "Cover Letter Generator" },
-            ]}
-          />
+          <GroupNavControl group="resume-tools" activeId="cover-letter-generator" />
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
             <div>

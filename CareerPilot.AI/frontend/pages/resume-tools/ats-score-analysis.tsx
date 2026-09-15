@@ -49,10 +49,15 @@ export default function AtsScoreAnalysisPage() {
   useEffect(() => {
     if (user) {
       getResumeHistory()
-        .then((resumes) => {
+        .then(async (resumes) => {
           setHistory(resumes);
           if (resumes.length > 0) {
-            setParsed(resumes[0] as unknown as ParsedResume);
+            try {
+              const fullResume = await getResume(resumes[0].id);
+              setParsed(fullResume);
+            } catch {
+              setParsed(resumes[0] as unknown as ParsedResume);
+            }
           }
         })
         .catch((err) => {
@@ -119,7 +124,16 @@ export default function AtsScoreAnalysisPage() {
       const resumes = await getResumeHistory();
       setHistory(resumes);
       if (parsed?.id === id) {
-        setParsed(resumes.length > 0 ? (resumes[0] as unknown as ParsedResume) : null);
+        if (resumes.length > 0) {
+          try {
+            const fullResume = await getResume(resumes[0].id);
+            setParsed(fullResume);
+          } catch {
+            setParsed(resumes[0] as unknown as ParsedResume);
+          }
+        } else {
+          setParsed(null);
+        }
       }
       setToast({ message: "Resume deleted successfully.", type: "success" });
     } catch (err) {

@@ -354,11 +354,15 @@ export default function OverviewPage() {
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/[0.06] space-y-1.5 text-xs">
                     <div className="flex justify-between font-semibold">
                       <span className="text-slate-600 dark:text-slate-300">Contact Details Audit:</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">✓ Verified</span>
+                      <span className={`font-bold ${analytics && analytics.resume_uploaded ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400"}`}>
+                        {analytics && analytics.resume_uploaded ? "✓ Verified & Formatted" : "Pending Upload"}
+                      </span>
                     </div>
                     <div className="flex justify-between font-semibold">
                       <span className="text-slate-600 dark:text-slate-300">Primary Skill Term Count:</span>
-                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">12 Extracted</span>
+                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">
+                        {analytics && analytics.resume_uploaded ? `${analytics.skill_coverage.matched_count} Extracted` : "0 Extracted"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -393,11 +397,17 @@ export default function OverviewPage() {
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/[0.06] space-y-1.5 text-xs">
                     <div className="flex justify-between font-semibold">
                       <span className="text-slate-600 dark:text-slate-300">Active Suggestions:</span>
-                      <span className="text-amber-700 dark:text-amber-300 font-bold">4 High Impact</span>
+                      <span className="text-amber-700 dark:text-amber-300 font-bold">
+                        {analytics && analytics.resume_uploaded
+                          ? `${Math.max(1, analytics.skill_coverage.total_target_count - analytics.skill_coverage.matched_count)} Key Actions`
+                          : "Pending Scan"}
+                      </span>
                     </div>
                     <div className="flex justify-between font-semibold">
                       <span className="text-slate-600 dark:text-slate-300">Action Verb Density:</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">Strong</span>
+                      <span className={`font-bold ${analytics && analytics.resume_uploaded ? (analytics.resume_score.score >= 70 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400") : "text-slate-400"}`}>
+                        {analytics && analytics.resume_uploaded ? (analytics.resume_score.score >= 70 ? "Strong" : "Needs Expansion") : "Pending Upload"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -429,8 +439,8 @@ export default function OverviewPage() {
 
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/[0.06] space-y-1.5 text-xs">
                     <div className="flex justify-between font-semibold">
-                      <span className="text-slate-600 dark:text-slate-300">Selected Layout:</span>
-                      <span className="text-indigo-600 dark:text-indigo-400 font-bold">Modern Clean</span>
+                      <span className="text-slate-600 dark:text-slate-300">Target Role:</span>
+                      <span className="text-indigo-600 dark:text-indigo-400 font-bold truncate max-w-[140px]">{targetRoleGoal}</span>
                     </div>
                     <div className="flex justify-between font-semibold">
                       <span className="text-slate-600 dark:text-slate-300">Export Format:</span>
@@ -484,11 +494,13 @@ export default function OverviewPage() {
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/[0.06] space-y-1.5 text-xs">
                     <div className="flex justify-between font-semibold">
                       <span className="text-slate-600 dark:text-slate-300">Fit Calculation:</span>
-                      <span className="text-indigo-700 dark:text-indigo-300 font-bold">5-Factor Formula</span>
+                      <span className="text-indigo-700 dark:text-indigo-300 font-bold">
+                        {analytics ? `${analytics.skill_coverage.coverage_percentage}% Target Fit` : "5-Factor Formula"}
+                      </span>
                     </div>
                     <div className="flex justify-between font-semibold">
-                      <span className="text-slate-600 dark:text-slate-300">Roles Analyzed:</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold">20+ Tech Careers</span>
+                      <span className="text-slate-600 dark:text-slate-300">Target Role:</span>
+                      <span className="text-slate-800 dark:text-slate-200 font-bold truncate max-w-[130px]">{targetRoleGoal}</span>
                     </div>
                   </div>
                 </div>
@@ -523,12 +535,17 @@ export default function OverviewPage() {
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/[0.06] space-y-2 text-xs">
                     <span className="font-bold text-slate-700 dark:text-slate-300 block">Target Missing Skills:</span>
                     <div className="flex flex-wrap gap-1">
-                      <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 rounded font-semibold text-[10px]">
-                        System Architecture
-                      </span>
-                      <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 rounded font-semibold text-[10px]">
-                        GraphQL
-                      </span>
+                      {analytics?.skill_coverage?.missing_skills && analytics.skill_coverage.missing_skills.length > 0 ? (
+                        analytics.skill_coverage.missing_skills.slice(0, 3).map((skill, i) => (
+                          <span key={i} className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 rounded font-semibold text-[10px]">
+                            {skill}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-slate-400 dark:text-slate-500 italic text-[11px]">
+                          {analytics?.resume_uploaded ? "All target skills satisfied!" : "Upload resume to scan gaps"}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -562,12 +579,14 @@ export default function OverviewPage() {
 
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/[0.06] space-y-1.5 text-xs">
                     <div className="flex justify-between font-semibold">
-                      <span className="text-slate-600 dark:text-slate-300">Top Match Role:</span>
-                      <span className="text-sky-700 dark:text-sky-300 font-bold">Senior Frontend Dev</span>
+                      <span className="text-slate-600 dark:text-slate-300">Target Track:</span>
+                      <span className="text-sky-700 dark:text-sky-300 font-bold truncate max-w-[130px]">{targetRoleGoal}</span>
                     </div>
                     <div className="flex justify-between font-semibold">
-                      <span className="text-slate-600 dark:text-slate-300">Average Fit Score:</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">88%</span>
+                      <span className="text-slate-600 dark:text-slate-300">Average Match Fit:</span>
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                        {analytics ? `${analytics.job_market_fit.average_match_rate}%` : "—%"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -599,12 +618,14 @@ export default function OverviewPage() {
 
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/[0.06] space-y-1.5 text-xs">
                     <div className="flex justify-between font-semibold">
-                      <span className="text-slate-600 dark:text-slate-300">Top Recommendation:</span>
-                      <span className="text-emerald-700 dark:text-emerald-300 font-bold truncate max-w-[140px]">Microservices Patterns</span>
+                      <span className="text-slate-600 dark:text-slate-300">Focus Skill:</span>
+                      <span className="text-emerald-700 dark:text-emerald-300 font-bold truncate max-w-[140px]">
+                        {analytics?.skill_coverage?.missing_skills?.[0] || targetRoleGoal}
+                      </span>
                     </div>
                     <div className="flex justify-between font-semibold">
                       <span className="text-slate-600 dark:text-slate-300">Platforms:</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold">Coursera, Udemy</span>
+                      <span className="text-slate-800 dark:text-slate-200 font-bold">Coursera, Udemy, edX</span>
                     </div>
                   </div>
                 </div>
@@ -647,12 +668,14 @@ export default function OverviewPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-3 pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
                       <div>
-                        <span className="text-[10px] text-slate-400 font-medium block">Current Position:</span>
-                        <span className="font-bold text-slate-800 dark:text-white">Software Developer</span>
+                        <span className="text-[10px] text-slate-400 font-medium block">Target Trajectory:</span>
+                        <span className="font-bold text-slate-800 dark:text-white">{targetRoleGoal}</span>
                       </div>
                       <div>
-                        <span className="text-[10px] text-slate-400 font-medium block">Predicted Comp:</span>
-                        <span className="font-bold text-emerald-600 dark:text-emerald-400">₹18,00,000 - ₹25,00,000 (18-25 LPA)</span>
+                        <span className="text-[10px] text-slate-400 font-medium block">Roadmap Status:</span>
+                        <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                          {analytics?.resume_uploaded ? "Milestones Mapped" : "Pending Profile Setup"}
+                        </span>
                       </div>
                     </div>
                   </div>

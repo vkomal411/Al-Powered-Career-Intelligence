@@ -47,7 +47,7 @@ export const GroupNavControl: React.FC<GroupNavControlProps> = ({ group, activeI
     <div className="flex flex-col gap-2 pb-2">
       <div className="flex items-center justify-between">
         <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-          {group === "resume-tools" ? "Resume Tools Group" : "Career Tools Group"}
+          {group === "resume-tools" ? "Resume Tools & ATS" : "Career Navigation & Guidance"}
         </h2>
       </div>
       <SlidingSegmentedControl

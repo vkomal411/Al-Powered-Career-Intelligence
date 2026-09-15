@@ -15,6 +15,7 @@ import { GapAnalysisIcon, SparkleIcon, FileIcon } from "../../components/icons";
 import {
   UserResponse,
   getResumeHistory,
+  getResume,
   deleteResume,
   downloadResume,
   replaceResume,
@@ -91,10 +92,15 @@ export default function SkillGapAnalysisPage() {
   useEffect(() => {
     if (user) {
       getResumeHistory()
-        .then((resumes) => {
+        .then(async (resumes) => {
           setHistory(resumes);
           if (resumes.length > 0) {
-            setParsed(resumes[0] as unknown as ParsedResume);
+            try {
+              const fullResume = await getResume(resumes[0].id);
+              setParsed(fullResume);
+            } catch {
+              setParsed(resumes[0] as unknown as ParsedResume);
+            }
           }
         })
         .catch((err) => {
@@ -143,18 +149,9 @@ export default function SkillGapAnalysisPage() {
 
   async function handleViewResume(id: string) {
     try {
-      const match = history.find((r) => r.id === id);
-      if (match) {
-        setParsed(match as unknown as ParsedResume);
-        setSuccessMessage(`Active analysis source set to "${match.original_filename}".`);
-      } else {
-        const resumes = await getResumeHistory();
-        const found = resumes.find((r) => r.id === id);
-        if (found) {
-          setParsed(found as unknown as ParsedResume);
-          setSuccessMessage(`Active analysis source set to "${found.original_filename}".`);
-        }
-      }
+      const fullResume = await getResume(id);
+      setParsed(fullResume);
+      setSuccessMessage(`Active analysis source set to "${fullResume.original_filename || "Resume"}".`);
     } catch {
       setToast({ message: "Unable to load resume details.", type: "error" });
     }
@@ -171,7 +168,16 @@ export default function SkillGapAnalysisPage() {
       const updated = history.filter((h) => h.id !== id);
       setHistory(updated);
       if (parsed && parsed.id === id) {
-        setParsed(updated.length > 0 ? (updated[0] as unknown as ParsedResume) : null);
+        if (updated.length > 0) {
+          try {
+            const nextResume = await getResume(updated[0].id);
+            setParsed(nextResume);
+          } catch {
+            setParsed(updated[0] as unknown as ParsedResume);
+          }
+        } else {
+          setParsed(null);
+        }
       }
     } catch {
       setToast({ message: "Failed to delete resume.", type: "error" });

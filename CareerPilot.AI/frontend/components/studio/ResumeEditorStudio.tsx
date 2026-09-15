@@ -666,6 +666,75 @@ export const ResumeEditorStudio: React.FC = () => {
                 </div>
               ))}
             </div>
+
+            {/* Education */}
+            <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-white/[0.06]">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Education & Academic Background</h4>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setEducation([
+                      ...education,
+                      {
+                        id: Date.now().toString(),
+                        school: "",
+                        degree: "",
+                        year: "2020 - 2024"
+                      }
+                    ])
+                  }
+                  className="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-500/15 hover:bg-indigo-100 dark:hover:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 text-xs font-bold transition-all border border-indigo-200 dark:border-indigo-500/25"
+                >
+                  + Add Education
+                </button>
+              </div>
+              {education.map((edu) => (
+                <div key={edu.id} className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 space-y-2 relative group">
+                  {education.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => setEducation(education.filter((item) => item.id !== edu.id))}
+                      className="absolute top-2 right-2 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 text-xs font-bold px-1.5 py-0.5"
+                      title="Remove Education"
+                    >
+                      ×
+                    </button>
+                  )}
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={edu.degree}
+                      onChange={(e) =>
+                        setEducation(education.map((item) => (item.id === edu.id ? { ...item, degree: e.target.value } : item)))
+                      }
+                      placeholder="Degree (e.g. B.S. in Computer Science)"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
+                    />
+                    <input
+                      type="text"
+                      value={edu.year}
+                      onChange={(e) =>
+                        setEducation(education.map((item) => (item.id === edu.id ? { ...item, year: e.target.value } : item)))
+                      }
+                      placeholder="Graduation Year (e.g. 2018 - 2022)"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-semibold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      value={edu.school}
+                      onChange={(e) =>
+                        setEducation(education.map((item) => (item.id === edu.id ? { ...item, school: e.target.value } : item)))
+                      }
+                      placeholder="University / College Name (e.g. Stanford University)"
+                      className="w-full px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-xs font-medium text-slate-800 dark:text-slate-200 outline-none placeholder-slate-400 dark:placeholder-slate-500"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -755,6 +824,21 @@ export const ResumeEditorStudio: React.FC = () => {
                     ))}
                   </div>
                 )}
+
+                {education.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-bold text-indigo-950 dark:text-indigo-300 text-[11px] uppercase tracking-wider border-b border-indigo-100 dark:border-indigo-900/30 pb-1">Education</h4>
+                    {education.map((ed) => (
+                      <div key={ed.id} className="space-y-0.5">
+                        <div className="flex justify-between items-center font-bold text-slate-800 dark:text-slate-200 text-[11px]">
+                          <span>{ed.degree}</span>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-normal">{ed.year}</span>
+                        </div>
+                        <p className="text-slate-600 dark:text-slate-400 text-[10px] font-medium">{ed.school}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -815,6 +899,21 @@ export const ResumeEditorStudio: React.FC = () => {
                           {p.githubUrl && <span className="text-[10px] font-mono text-stone-700 dark:text-stone-300">{p.githubUrl}</span>}
                         </div>
                         <p className="text-stone-800 dark:text-stone-300 text-[10px] leading-relaxed text-justify">{p.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {education.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-bold text-center font-serif text-[11px] uppercase tracking-widest border-b border-stone-400 dark:border-stone-600 pb-1 text-stone-900 dark:text-stone-100">Education</h4>
+                    {education.map((ed) => (
+                      <div key={ed.id} className="space-y-0.5">
+                        <div className="flex justify-between font-bold text-stone-900 dark:text-stone-100 text-[11px]">
+                          <span>{ed.degree}</span>
+                          <span className="text-[10px] text-stone-600 dark:text-stone-400 font-sans">{ed.year}</span>
+                        </div>
+                        <p className="text-stone-700 dark:text-stone-300 text-[10px] italic">{ed.school}</p>
                       </div>
                     ))}
                   </div>
@@ -895,6 +994,21 @@ export const ResumeEditorStudio: React.FC = () => {
                           </div>
                         </div>
                         <p className="text-slate-600 dark:text-slate-300 text-[10px] leading-relaxed">{p.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {education.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-bold text-slate-800 dark:text-slate-200 text-[10px] uppercase tracking-widest border-b border-slate-200 dark:border-slate-800 pb-1">Education</h4>
+                    {education.map((ed) => (
+                      <div key={ed.id} className="space-y-0.5">
+                        <div className="flex justify-between items-center font-bold text-slate-900 dark:text-slate-100 text-[10px]">
+                          <span>{ed.degree}</span>
+                          <span className="text-[9px] text-slate-400 dark:text-slate-500 font-normal">{ed.year}</span>
+                        </div>
+                        <p className="text-slate-600 dark:text-slate-400 text-[9px] font-medium">{ed.school}</p>
                       </div>
                     ))}
                   </div>

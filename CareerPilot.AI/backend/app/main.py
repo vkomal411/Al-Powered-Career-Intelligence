@@ -8,13 +8,11 @@ from app.routers import (
     auth_router,
     resume_router,
     ai_router,
-    tailor_router,
     jobs_router,
     courses_router,
     analytics_router,
     roadmap_router,
     studio_router,
-    resume_builder_router,
     admin_router,
 )
 
@@ -242,12 +240,10 @@ app.include_router(auth_router.router)
 app.include_router(resume_router.router)
 app.include_router(studio_router.router)
 app.include_router(ai_router.router)
-app.include_router(tailor_router.router)
 app.include_router(jobs_router.router)
 app.include_router(courses_router.router)
 app.include_router(analytics_router.router)
 app.include_router(roadmap_router.router)
-app.include_router(resume_builder_router.router)
 app.include_router(admin_router.router)
 app.include_router(admin_router.public_feedback_router)
 app.include_router(admin_router.public_alerts_router)

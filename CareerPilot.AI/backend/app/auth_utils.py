@@ -242,14 +242,6 @@ def rotate_refresh_token(db: Session, raw_token: str) -> tuple[str, str, models.
     return new_access_token, new_raw_token, user
 
 
-def revoke_token_family(db: Session, family_id: uuid.UUID) -> None:
-    now = datetime.now(timezone.utc)
-    db.query(models.RefreshToken).filter(
-        models.RefreshToken.family_id == family_id
-    ).update({"revoked_at": now})
-    db.commit()
-
-
 def revoke_all_user_sessions(db: Session, user_id: uuid.UUID) -> None:
     """Revokes all active refresh tokens for a user (e.g. after password reset)."""
     now = datetime.now(timezone.utc)

@@ -438,17 +438,6 @@ class AdminExportJob(Base):
     admin_user = relationship("User", foreign_keys=[admin_user_id])
 
 
-from app.models.resume_builder_models import (
-    ResumeBuilder,
-    ResumeSectionModel,
-    ResumeExperienceModel,
-    ResumeSkillModel,
-    ATSScoreModel,
-    JobMatchModel,
-    BulletEnhancementModel,
-    ResumeVersionModel,
-)
-
 from app.models.career_suggestion import CareerSuggestion, CareerSuggestionItem
 
 __all__ = [
@@ -474,14 +463,6 @@ __all__ = [
     "UserFeedback",
     "SystemAlert",
     "AdminExportJob",
-    "ResumeBuilder",
-    "ResumeSectionModel",
-    "ResumeExperienceModel",
-    "ResumeSkillModel",
-    "ATSScoreModel",
-    "JobMatchModel",
-    "BulletEnhancementModel",
-    "ResumeVersionModel",
     "CareerSuggestion",
     "CareerSuggestionItem",
 ]

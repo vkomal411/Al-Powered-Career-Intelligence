@@ -2,10 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+ENV PYTHONUNBUFFERED=1
+ENV PORT=10000
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -21,7 +25,7 @@ COPY . .
 # Create upload directory
 RUN mkdir -p static/uploads
 
-EXPOSE 8000
 EXPOSE 10000
 
 CMD ["python", "start.py"]
+

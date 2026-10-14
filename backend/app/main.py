@@ -149,19 +149,23 @@ os.makedirs("static/uploads", exist_ok=True)
 
 is_prod = settings.environment.lower() == "production"
 
-allowed_origins_list = [
-    origin for origin in list(set([
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000",
-        "https://careerplatform-three.vercel.app",
-        settings.frontend_origin
-    ])) if origin
+raw_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://careerplatform-three.vercel.app",
 ]
+if settings.frontend_origin:
+    for item in settings.frontend_origin.split(","):
+        cleaned = item.strip().rstrip("/")
+        if cleaned:
+            raw_origins.append(cleaned)
 
-# Strict preview regex that only matches this specific project's preview branches on Vercel
-preview_origin_regex = r"^https://careerplatform(-[a-z0-9-]+)?\.vercel\.app$" if not is_prod else None
+allowed_origins_list = list(set(raw_origins))
+
+# Allow Vercel preview deployments and Render frontend deployments
+preview_origin_regex = r"^https://([a-zA-Z0-9-]+\.)*(vercel\.app|onrender\.com)$"
 
 app.add_middleware(
     CORSMiddleware,
@@ -262,6 +266,17 @@ app.include_router(admin_router.public_alerts_router)
 
 
 
+@app.get("/")
+def root():
+    return {
+        "name": "CareerPilot.AI API",
+        "status": "online",
+        "version": "1.0.0",
+        "docs": "/docs" if docs_enabled else None,
+        "health": "/health",
+    }
+
+
 @app.get("/health")
 def health_check():
     db_ok = True
@@ -272,3 +287,4 @@ def health_check():
     except Exception:
         db_ok = False
     return {"status": "ok", "db": db_ok}
+

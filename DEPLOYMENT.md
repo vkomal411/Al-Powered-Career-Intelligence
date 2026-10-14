@@ -38,7 +38,57 @@ Once running:
 
 ---
 
-## 3. Manual Setup
+## 3. Deploying Backend to Render (Recommended)
+
+Render provides managed hosting for the FastAPI backend and PostgreSQL database.
+
+### Option A: Render Blueprint (1-Click Automated Setup)
+The repository includes a ready-to-use [`render.yaml`](render.yaml) configuration:
+1. Log into your [Render Dashboard](https://dashboard.render.com).
+2. Click **New +** > **Blueprint**.
+3. Connect your repository: `vkomal411/Al-Powered-Career-Intelligence`.
+4. Render will automatically detect `render.yaml` and provision:
+   - **`careerpilot-backend`** (Python FastAPI Web Service)
+   - **`careerpilot-db`** (Managed PostgreSQL Database)
+   - **`careerpilot-frontend`** (Next.js Web Service)
+5. Fill in optional secrets when prompted (e.g., `GEMINI_API_KEY`).
+6. Click **Apply**. Render will run the build and pre-deploy migrations automatically.
+
+### Option B: Deploy Backend as a Web Service Manually
+If you prefer creating the backend service individually on Render:
+1. **Create PostgreSQL Database on Render**:
+   - Go to **New +** > **PostgreSQL**.
+   - Name: `careerpilot-db`, Database: `career_platform`, User: `postgres`.
+   - Copy the **Internal Database URL**.
+2. **Create Web Service for Backend**:
+   - Go to **New +** > **Web Service**.
+   - Connect your repository.
+   - Configure the service:
+     - **Name**: `careerpilot-backend`
+     - **Region**: Same region as your database (e.g., `Oregon (US West)`)
+     - **Branch**: `main`
+     - **Root Directory**: `backend`
+     - **Runtime**: `Python`
+     - **Build Command**: `pip install -r requirements.txt && python -m spacy download en_core_web_sm`
+     - **Pre-Deploy Command**: `alembic upgrade head`
+     - **Start Command**: `python start.py`
+     - **Health Check Path**: `/health`
+   - **Environment Variables**:
+     - `PYTHON_VERSION`: `3.11.9`
+     - `ENVIRONMENT`: `production`
+     - `DATABASE_URL`: *(Paste your Render database Internal Connection String)*
+     - `JWT_SECRET_KEY`: *(Click "Generate" or provide a 32+ character random string)*
+     - `JWT_ALGORITHM`: `HS256`
+     - `WEB_CONCURRENCY`: `1`
+     - `FRONTEND_ORIGIN`: `https://your-frontend-domain.vercel.app` (or your frontend Render URL)
+     - `AI_PROVIDER`: `gemini`
+     - `GEMINI_API_KEY`: *(Your Google Gemini API Key)*
+3. Click **Create Web Service**.
+
+---
+
+## 4. Manual Setup
+
 
 If you prefer deploying services individually without Docker Compose:
 

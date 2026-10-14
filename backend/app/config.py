@@ -1,0 +1,80 @@
+import os
+import secrets
+from pydantic import field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    database_url: str = "postgresql+psycopg://postgres:postgres@localhost:5432/career_platform"
+    jwt_secret_key: str = ""
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 15
+    google_client_id: str = ""
+    frontend_origin: str = "http://localhost:3000"
+
+    # --- Security / hardening settings ---
+    max_resume_upload_mb: int = 5
+    login_rate_limit_attempts: int = 5
+    login_rate_limit_window_seconds: int = 60
+    environment: str = "development"  # "development" | "production"
+
+    # --- AI Settings ---
+    ai_provider: str = "gemini"  # "gemini" | "openai" | "offline"
+    gemini_api_key: str = ""
+    openai_api_key: str = ""
+
+    # --- SMTP / Email Settings ---
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = "noreply@careerpilot.ai"
+    smtp_tls: bool = True
+
+    # --- Redis / Cache / Distributed Rate Limiting ---
+    redis_url: str = ""
+
+    @field_validator("database_url")
+    @classmethod
+    def normalize_database_url(cls, v: str) -> str:
+        if not v:
+            return "postgresql+psycopg://postgres:postgres@localhost:5432/career_platform"
+        if v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql+psycopg://", 1)
+        elif v.startswith("postgresql://") and not v.startswith("postgresql+psycopg://"):
+            v = v.replace("postgresql://", "postgresql+psycopg://", 1)
+        return v
+
+    @field_validator("frontend_origin")
+    @classmethod
+    def sanitize_frontend_origin(cls, v: str) -> str:
+        return v.strip().replace("\r", "").replace("\n", "") if v else "http://localhost:3000"
+
+    @field_validator("jwt_secret_key")
+    @classmethod
+    def jwt_secret_must_be_strong(cls, v: str) -> str:
+        placeholder_values = {
+            "change_this_to_a_long_random_string",
+            "secret",
+            "changeme",
+            "generate_a_secure_random_key_with_at_least_32_characters_here",
+            "",
+        }
+        val = (v or "").strip()
+        env = os.getenv("ENVIRONMENT", "development").lower()
+
+        if val.lower() in placeholder_values or len(val) < 32:
+            if env == "production":
+                raise ValueError(
+                    "CRITICAL SECURITY CONFIGURATION: JWT_SECRET_KEY must be set in production "
+                    "with at least 32 cryptographically secure random characters. Placeholder values are forbidden."
+                )
+            # In development/test mode, use a stable dev key or generate an ephemeral random key
+            dev_fallback = os.getenv("DEV_JWT_SECRET", "dev_secure_careerpilot_ephemeral_jwt_secret_key_2026_x9k2")
+            return dev_fallback
+        return val
+
+
+settings = Settings()

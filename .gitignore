@@ -1,32 +1,37 @@
-# Python Caches & Environments
-__pycache__/
+# Frontend & Next.js
+frontend/.next/
+frontend/node_modules/
+frontend/out/
+frontend/build/
+frontend/*.tsbuildinfo
+
+# Backend & Python
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/*/__pycache__/
+backend/*/*/__pycache__/
+backend/.pytest_cache/
 *.pyc
 *.pyo
 *.pyd
-.pytest_cache/
-venv/
-.venv/
-
-# Node & Next.js Caches
-node_modules/
-.next/
-out/
-build/
-dist/
-*.tsbuildinfo
 
 # Environment Files
 .env
 .env.local
-*.env
+backend/.env
+frontend/.env.local
 
-# Databases & Logs
+# Database, Uploads & Logs
 *.db
 *.sqlite
 *.sqlite3
 *.log
+backend/static/uploads/*
+!backend/static/uploads/.gitkeep
 
-# OS & Temp Files
+# OS & Editor Files
 .DS_Store
 Thumbs.db
-*.tmp
+.idea/
+.vscode/

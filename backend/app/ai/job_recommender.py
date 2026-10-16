@@ -42,6 +42,26 @@ def fetch_live_market_jobs(limit: int = 25) -> List[Dict[str, Any]]:
     Caches results in memory for 1 hour to maintain low latency and avoid rate limits.
     Falls back safely to empty list if network is unavailable.
     """
+    import os
+    if os.getenv("TESTING") == "true" or os.getenv("ENVIRONMENT") == "testing":
+        return [
+            {
+                "id": "live-remotive-mock-1",
+                "title": "Senior Python Backend Engineer",
+                "company": "CloudNative Labs",
+                "location": "Remote",
+                "work_type": "Remote",
+                "experience_level": "Senior",
+                "salary_range": "$110,000 - $140,000",
+                "description": "Building high-performance Python microservices with FastAPI and PostgreSQL.",
+                "required_skills": ["Python", "FastAPI", "PostgreSQL"],
+                "required_education": "Bachelor's Degree",
+                "apply_url": "https://remotive.com/job/mock-1",
+                "posted_date": "2026-10-15",
+                "source": "Remotive Live",
+            }
+        ][:limit]
+
     global _LIVE_JOBS_CACHE
     now = time.time()
     if _LIVE_JOBS_CACHE["jobs"] and (now - _LIVE_JOBS_CACHE["timestamp"] < 3600):

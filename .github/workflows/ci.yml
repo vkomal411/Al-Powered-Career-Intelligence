@@ -47,23 +47,25 @@ jobs:
           DATABASE_URL: postgresql+psycopg://postgres:postgres@127.0.0.1:5432/career_platform
           ENVIRONMENT: testing
           JWT_SECRET_KEY: test-secret-key-at-least-32-characters-long
+          ADMIN_INITIAL_PASSWORD: AdminPass123!
           PYTHONPATH: .
         run: |
           python -c "import socket, time; [socket.create_connection(('127.0.0.1', 5432), timeout=1).close() for _ in range(30) if time.sleep(1) is None]" || true
           cd backend
-          python -c "from app.database import Base, engine; from app import models; Base.metadata.create_all(bind=engine); print('Database schema initialized!')"
+          python -c "from app.database import Base, engine; from app import models; from app.main import auto_seed_database_if_needed; Base.metadata.create_all(bind=engine); auto_seed_database_if_needed(); print('Database schema initialized and seeded!')"
           alembic stamp head || true
 
       - name: Run Backend Pytest Suite
         env:
           DATABASE_URL: postgresql+psycopg://postgres:postgres@127.0.0.1:5432/career_platform
           ENVIRONMENT: testing
+          TESTING: "true"
           JWT_SECRET_KEY: test-secret-key-at-least-32-characters-long
           ADMIN_INITIAL_PASSWORD: AdminPass123!
           PYTHONPATH: .
         run: |
           cd backend
-          python -m pytest tests/ --cov=app --cov-report=term-missing
+          python -m pytest tests/ -v --tb=short --cov=app --cov-report=term-missing
 
   frontend-test:
     name: Frontend Test & Build Check

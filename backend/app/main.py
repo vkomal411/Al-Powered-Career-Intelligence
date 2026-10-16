@@ -75,9 +75,15 @@ def auto_seed_database_if_needed():
             )
             db.add(admin_user)
             logger.info("Auto-seeded superadmin user: %s", admin_email)
+        elif not is_prod:
+            admin_user.hashed_password = hash_password(admin_password)
+            admin_user.role = "superadmin"
+            admin_user.is_admin = True
+            admin_user.is_active = True
 
         # Check if ops admin exists
-        if not db.query(models.User).filter(models.User.email == ops_admin_email).first():
+        ops_user = db.query(models.User).filter(models.User.email == ops_admin_email).first()
+        if not ops_user:
             db.add(models.User(
                 id=uuid.uuid4(),
                 full_name="Operations Admin",
@@ -90,9 +96,15 @@ def auto_seed_database_if_needed():
                 experience_level="Senior",
                 industry="Operations",
             ))
+        elif not is_prod:
+            ops_user.hashed_password = hash_password(ops_admin_password)
+            ops_user.role = "admin"
+            ops_user.is_admin = True
+            ops_user.is_active = True
 
         # Check if moderator exists
-        if not db.query(models.User).filter(models.User.email == moderator_email).first():
+        mod_user = db.query(models.User).filter(models.User.email == moderator_email).first()
+        if not mod_user:
             db.add(models.User(
                 id=uuid.uuid4(),
                 full_name="Content & Feedback Moderator",
@@ -105,9 +117,15 @@ def auto_seed_database_if_needed():
                 experience_level="Mid",
                 industry="Quality Assurance",
             ))
+        elif not is_prod:
+            mod_user.hashed_password = hash_password(moderator_password)
+            mod_user.role = "moderator"
+            mod_user.is_admin = True
+            mod_user.is_active = True
 
         # Check if demo user exists
-        if not db.query(models.User).filter(models.User.email == demo_email).first():
+        demo_user = db.query(models.User).filter(models.User.email == demo_email).first()
+        if not demo_user:
             db.add(models.User(
                 id=uuid.uuid4(),
                 full_name="Demo User",
@@ -120,6 +138,9 @@ def auto_seed_database_if_needed():
                 experience_level="mid",
                 industry="Technology",
             ))
+        elif not is_prod:
+            demo_user.hashed_password = hash_password(demo_password)
+            demo_user.is_active = True
 
         db.commit()
     except Exception as e:

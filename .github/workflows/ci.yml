@@ -42,18 +42,20 @@ jobs:
           pip install -r backend/requirements.txt
           python -m spacy download en_core_web_sm || true
 
-      - name: Run Database Migrations
+      - name: Wait for PostgreSQL and Run Database Migrations
         env:
-          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/career_platform
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@127.0.0.1:5432/career_platform
           ENVIRONMENT: testing
           JWT_SECRET_KEY: test-secret-key-at-least-32-characters-long
+          PYTHONPATH: .
         run: |
+          python -c "import socket, time; [socket.create_connection(('127.0.0.1', 5432), timeout=1).close() for _ in range(30) if time.sleep(1) is None]" || true
           cd backend
           alembic upgrade head
 
       - name: Run Backend Pytest Suite
         env:
-          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/career_platform
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@127.0.0.1:5432/career_platform
           ENVIRONMENT: testing
           JWT_SECRET_KEY: test-secret-key-at-least-32-characters-long
           ADMIN_INITIAL_PASSWORD: AdminPass123!

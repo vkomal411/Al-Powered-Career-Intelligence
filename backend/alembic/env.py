@@ -29,9 +29,13 @@ target_metadata = Base.metadata
 
 # Override sqlalchemy.url in config from settings
 db_url = settings.database_url
-if db_url and db_url.startswith("postgresql+psycopg://"):
-    db_url = db_url.replace("postgresql+psycopg://", "postgresql://", 1)
-config.set_main_option("sqlalchemy.url", db_url.replace("%", "%%"))
+if db_url:
+    if db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
+    elif db_url.startswith("postgresql://") and not db_url.startswith("postgresql+psycopg://"):
+        db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+    config.set_main_option("sqlalchemy.url", db_url.replace("%", "%%"))
+
 
 
 

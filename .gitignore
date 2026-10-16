@@ -29,6 +29,7 @@ frontend/.env.local
 *.log
 backend/static/uploads/*
 !backend/static/uploads/.gitkeep
+static/
 
 # OS & Editor Files
 .DS_Store

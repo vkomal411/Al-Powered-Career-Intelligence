@@ -191,9 +191,13 @@ def forgot_password(
             reset_token,
         )
 
-    return {
+    response_data = {
         "message": "If an account with that email address exists, password reset instructions have been dispatched to your email."
     }
+    if (settings.environment.lower() == "testing" or os.getenv("TESTING") == "true") and reset_token:
+        response_data["reset_token"] = reset_token
+
+    return response_data
 
 
 @router.post(

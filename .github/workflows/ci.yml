@@ -42,14 +42,25 @@ jobs:
           pip install -r backend/requirements.txt
           python -m spacy download en_core_web_sm || true
 
-      - name: Run Backend Pytest Suite
+      - name: Run Database Migrations
         env:
           DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/career_platform
           ENVIRONMENT: testing
           JWT_SECRET_KEY: test-secret-key-at-least-32-characters-long
         run: |
           cd backend
-          pytest tests/ --cov=app --cov-report=term-missing
+          alembic upgrade head
+
+      - name: Run Backend Pytest Suite
+        env:
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/career_platform
+          ENVIRONMENT: testing
+          JWT_SECRET_KEY: test-secret-key-at-least-32-characters-long
+          ADMIN_INITIAL_PASSWORD: AdminPass123!
+          PYTHONPATH: .
+        run: |
+          cd backend
+          python -m pytest tests/ --cov=app --cov-report=term-missing
 
   frontend-test:
     name: Frontend Test & Build Check
@@ -77,6 +88,9 @@ jobs:
           npm test
 
       - name: Run Next.js Production Build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+          NEXT_PUBLIC_API_BASE: http://localhost:8000
         run: |
           cd frontend
           npm run build

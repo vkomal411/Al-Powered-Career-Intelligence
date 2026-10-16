@@ -49,7 +49,12 @@ except Exception as e:
 def parse_resume_with_spacy(text: str) -> Dict[str, Any]:
     """Runs spaCy NER pipeline on resume text to extract skills and structured entities."""
     if not HAS_SPACY or NLP is None:
-        return {"skills": [], "entities": []}
+        try:
+            from app.ats.skill_detector import detect_skills
+            fallback_skills = detect_skills(text)
+            return {"skills": fallback_skills, "entities": []}
+        except Exception:
+            return {"skills": [], "entities": []}
 
     try:
         doc = NLP(text)
